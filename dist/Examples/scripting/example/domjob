@@ -1,0 +1,15 @@
+domino < script01
+guzzler script01.plt  script01.cln  script01.rxn
+explot  script01.cln  script01.ps
+domino < script02
+guzzler script02.plt  script02.cln  script02.rxn
+explot  script02.cln  script02.ps
+domino < script03
+guzzler script03.plt  script03.cln  script03.rxn
+explot  script03.cln  script03.ps
+domino < script04
+guzzler script04.plt  script04.cln  script04.rxn
+explot  script04.cln  script04.ps
+domino < script05
+guzzler script05.plt  script05.cln  script05.rxn
+explot  script05.cln  script05.ps

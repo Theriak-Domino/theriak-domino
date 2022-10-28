@@ -1,0 +1,11 @@
+10   140         Thickness of successive garnet shells (Delta r_shell) [mue] and size of radius class [mue]
+0.4              no. of garnets in radius class 1 [grt/ccm] of the rock volume (add a line for each radius class)
+0.8
+2.4
+8
+10.8
+12
+10
+7.2
+2
+0.4

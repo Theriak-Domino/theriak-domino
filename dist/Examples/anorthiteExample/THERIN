@@ -1,0 +1,18 @@
+!-----Version: 21.05.06
+    500       10000
+0   SI(2.37)AL(1.63)CA(0.63)NA(0.37)O(8) H(200)O(100)SI(10)O(20)   *   plagioclase An63 (K. Bucher) + h2o+qz
+0   SI(2.37)AL(1.63)CA(0.63)NA(0.37)O(8)    *   plagioclase An63 (K. Bucher)
+0   SI(2.37)AL(1.63)CA(0.63)NA(0.37)O(8) H(200)O(100)   *   plagioclase An63 (K. Bucher) + h2o
+
+
+0   CA(1)AL(2)SI(2)O(8) SI(10)O(20) H(20)O(10)   *     anothite + h20 + qz
+0   CA(1)AL(2)SI(2)O(8)    *     anothite
+0   CA(1)AL(2)SI(2)O(8) H(20)O(10)   *     anothite + h2o
+
+
+
+
+
+0   CA(1)AL(2)SI(2)O(8)NA(1)AL(1)SI(3)O(8) SI(10)O(20) H(20)O(10)   *     anothite+albite
+0   NA(1)AL(1)SI(3)O(8) SI(10)O(20) H(20)O(10)   *     albite
+0   SI(2.37)AL(1.63)CA(0.63)NA(0.37)O(8) H(200)O(100)   *   plagioclase An63 (K. Bucher)

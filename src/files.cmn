@@ -1,0 +1,74 @@
+!-----Version: 28.05.2022
+!****  Common block variables introduced by kostas
+!
+!++++++ Block to edit in case a new I/O unit must be defined
+!
+        integer &
+        ini,hlp,spt,job,kbd,scr,dat,dbs, &
+        log,out,bin,drv,tab,tcp,plt,cln, &
+        rxn,grd,pst,fig,lpl,lbk,ibk,pgm,inf
+!
+        integer nrunits, ifix, nofix, itpath, iwpath
+!
+        parameter (nrunits=25, ifix=6, nofix=nrunits-ifix)
+!
+        common /UnitType/ &
+        ini,hlp,spt,job,kbd,scr,dat,dbs, &
+        log,out,bin,drv,tab,tcp,plt,cln, &
+        rxn,grd,pst,fig,lpl,lbk,ibk,pgm,inf
+!
+!++++++ End of changes in block
+!
+!       in the following significant arrays related to flenames are defined.
+!       Some are ovious, but
+!       DESCR is a short description of the file contents
+!       EXT is the file extention of type ".XXX" following the filename. Depending
+!           on user preferences (see file THERIAK.INI), EXT may be empty or identical
+!           to Filetype.
+!       FILETYPE is the type of file, e.g., input file, output file etc. See file thblock.cmn
+!       FNL is the non-blank length of the filename (without EXT, if EXT not empty)
+!
+        character descr(nrunits)*70, filetype(nrunits)*3
+        character filename(nrunits)*80, ext(nrunits)*10
+        common /files1/ descr, filename, filetype, ext
+!
+!!!! just to make nofix and ifix not unused !!!!
+!!!!        integer fnl(nrunits)  
+        integer fnl(nofix+ifix)
+        common /files2/ fnl
+!
+!*****  LINE a character sring used for input
+!       TPATH is the path pointing to the directory where the programs files
+!          reside
+!       ITPATH is the significant length if TPATH
+!       WPATH is the path pointing to the working directory
+!       IWPATH is the significant length if WPATH
+!       DIR is character / or \ (depends on operating system, see file THERIAK.INI)
+!       STATE is the value of STATUS, cf. OPEN-STATEMENT
+
+!
+        character line*500,tpath*500,wpath*500,path*500,akzess*10, &
+        state*7,dir*1
+        common /files3/ line,tpath,wpath,path,akzess,state,dir
+        common /files4/ iwpath,itpath
+!
+!*****  Here some parameters related to the program . Some are obvious
+!       TASK is a short description of what the program does
+!       OS is the operating system (see file THERIAK.INI)
+!
+        character progname*15, vers*20, task*80, sdate*21, os*20
+        common /prog/ task, sdate, vers, progname, os
+!
+!****** Here are some control variables for program run defined (see file
+!       THERIAK.INI)
+!
+        integer ghelp, clear, batch
+        common /various/ ghelp, clear, batch
+!
+!****** LARGUM contains the argument(s) following program's call from OS-prompt,
+!       e.g.
+!       guzzer DomPlt01.txt
+!
+        character largum(5)*80
+        common /CommandLine/ largum
+!

@@ -1,0 +1,12 @@
+
+PS1="`whoami` \#> "
+alias  ther="cd  TheriakDominoMAC/Working"
+alias ls="ls -aF --color"
+
+#
+export THERDOM=/home/capi/TheriakDominoMAC/Programs
+export PATH=$PATH:$THERDOM
+echo ~.bash_profile read
+echo pwd: $PWD
+#
+

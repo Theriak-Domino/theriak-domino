@@ -1,0 +1,16 @@
+PROMPT='%n %h %#>'
+alias  ther="cd  TheriakDominoMAC/Working"
+alias ls="ls -aF"
+#
+# from .profile
+#add color to ls
+export CLICOLOR=1
+PATH=.:$HOME/bin:${PATH:-/usr/bin:.}
+export PATH
+#
+export THERDOM=/Users/capi/TheriakDominoMAC/Programs
+export PATH=$PATH:$THERDOM
+echo ~.zhrc read
+echo pwd: $PWD
+#
+

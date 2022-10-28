@@ -1,0 +1,1167 @@
+C-----Version: 28.05.2022
+
+Format of file thhelp.txt (don't change the name of this file; it is hard-coded)
+--------------------------------------------------------------------------------
+
+Significant lines in this file are only those enclosed in a block of the 
+form 
+  $BLOCKNAME
+  ......... 
+  .........
+  $END
+
+  $BLOCKNAME is the only argument passed to subroutine HelpMe from the 
+calling program unit. For example 
+         Call HelpMe('$DOM-SCRIPT')
+To be valid, the block-delimiting strings $BLOCKNAME and $END should begin at 
+position 1 of the line. Significant lines are shown on screen just as they are 
+written here. For convenience of reading on screen, significant lines should 
+not be longer than 80 chars. Screen paging of lengthy blocks can be achived 
+by empty lines with character § at position 1. Such lines are not shown on 
+screen, but cause subroutine HelpMe to stop listing the block and ask the user to 
+
+'Hit any key to continue!' 
+
+This file is help for all programs. For easy book-keeping, blocknames begin
+with something identifying the program followed by a string from the context
+of the help requested, see below. 
+
+START OF HELP INFORMATION
+--------------------------------------------------------------------------------
+
+$GENERAL
+PLEASE NOTE !
+
+Input may be a (case sensitive) keyword, a file name or just striking a key.
+
+   Valid keywords are enclosed in " ". They may need additional input parameters.
+   Alternative keywords are given in [ ] and are separated by |.  
+   CR is the "Carriage Return" or "Enter" key.
+   Input of last run is given within < >.
+   Where indicated, enter "?" for help !
+
+If you don't need this information any more, edit file 'theriak.ini' 
+and set $GHELP= to value 0.
+
+$END
+
+$THK-START
+--------------------------------------
+Help: database definition ($THK-START)
+--------------------------------------
+
+     CR                  : to accept <last input> (if any) and continue.
+
+     "files"             : to see the default names, types and descriptions 
+                           of files associated with the program. You may
+                           change these defaults by editing file theriak.ini 
+                           with a common text editor.
+
+     database            : file name of database to be used (dbs-file).
+     database  phase1  phase2  etc.    : file name of database to be used
+                                         followed by names of phases to include
+                                         in calculations.
+
+NOTE!
+Depending of your operating system, file names may be case sensitive !
+------------------------------------------------------------------------------
+
+$END
+
+$THK-SPECIAL
+------------------------------------------------
+Help: define type of calculations ($THK-SPECIAL)
+------------------------------------------------
+    
+   "no"      : Do no special calculations, just calculate with T and P values
+               defined in your dat-file.
+
+    CR       : Accept the last run entry enclosed in < >.
+
+    "bin" s  s1: Calculate a pseudo-binary in "s" steps (default = 100) using  
+                 the 'endmember' bulk compositions defined in your dat-file. 
+                 In this case, all variables are written into the tab- and tcp-files 
+                 (see note below). Gmix (Gtot transformed to be 
+                 0 for x=0 and x=1) is written into the bin-file.
+                 if s1 not zero (or blank): calculate only loop s1 (for testing purposes)
+
+    "check"      Used to test the subroutine ÒGETVALÓ. After equilibrium calculation you
+                 can enter phase  var  (Phase name and variable name) repeatedly.
+                 (see program Òprtcal.f90Ó)
+
+    "loop"   : Prompts for new T and P values after each calculation.
+
+    file name: If the input is not recognized as one of the keywords above,
+               it is interpreted as the name of a drv-file. This file
+               drives equilibria calculations, e. g., along a given PT-path. 
+               It may contain the following directives:
+§
+    "REF" t1  p2         : defines the eqilibrium assemblage at the reference
+                           t1, p2. This is the  "reference assemblage" adding
+                           the variable "G_overstep" to the tab- and tcp-files. 
+
+
+    "COMP"  formula  use : Defines the bulk composition for the calculations.
+                           "formula" and "use" follow the same format as
+                           in dat-files.
+                           Example:
+                          
+                                COMP   SI(3)AL(1)MG(3)K(1)O(12)H(2)   *
+
+    "ADD"  formula       : Adds the given formula to the current bulk com-
+                           position. The amounts may be negative, but only so
+                           much will be substracted that all components 
+                           remain >= 0. Example:
+
+                                ADD   H(20)O(10)
+
+    "REMOVE"  phase  p   : After each of the following calculations, the com-
+                           position of stable "phase" will be (partly) removed
+                           from the bulk. "p" is the percentage of "phase" that
+                           is to be removed. Example:
+
+                                REMOVE  GARNET  100
+
+     "TP"  t2  p2  s     : Calculates equilibria along a linear TP-path. T and
+                           P change between the current values t1, p1 and t2, p2.
+                           The current values t1, p1 are input 
+                              1. either from the dat-file, 
+                              2. or from a preceeding "TP" or "REF" directive  
+                           within the drv-file. 
+                          "s" is the number of calculation steps (default= 1) 
+                           along the path. All variable values for each step are 
+                           written into the tab- and tcp-files. Example: 
+
+                                TP   800   5000   10
+NOTE: 
+A tab-file is a comma-delimited table of all variable values that are
+calculated at every step. It can be read by most spreadsheet programs (e.g. 
+"Excel"). A tcp-file is simmilar and can be used as input to program 
+"TecPlot". 
+-------------------------------------------------------------------------------
+
+$END
+
+$THK-GETVAL
+-----------------------------------------
+Help: define testing GETVAL ($THK-GETVAL)
+-----------------------------------------
+
+    phase: name of phase or 'bulk'
+    var:   Variable. May be var/divisor
+
+    If phase is 'bulk' variable may be:
+       G: Total Gibbs free Energy, (from G(elements)=0)
+       VG: Total volume calculated as (dG/dP) by finite differences
+       HG, SG, CPG: S=(dG/dT), H=G+T*S, CP=(dH/dT)
+                    calculated by finite differences
+       H-H0: calculated by finite differences
+       VSOL, WTSOL, RHOSOL: volume, weight and density of stable solids
+       element: Total amount of element.
+
+    If phase is stable variable may be:
+       V: molar volume
+       VG: molar volume calculated as (dG/dP) by finite differences
+       V2: Just a test: three points (P-d, P, P+d) define quadratic equation.
+           calculate derivative at P
+       N: amount of phase
+
+    If phase is stable or unstable variable may be:
+       G: Gibbs free Energy relative to stable assemblage (=0 for stable phases)
+       FE# or MG#: Fe/(Fe+Mg) of Mg/(Fe+Mg) for phase
+       BETA: -1/V*(dV/dP) by finite differences
+       element: amount of element in phase
+       element(site): amount of element on site
+
+The keywords are not(!) case sensitive. Unrecognized phase or variable will reurn zero.
+An empty line will quit the program.
+examples:
+    bulk   Fe/3
+    GARN   FE#
+    garn   Fe(M1)
+    A-QUARTZ   V/V0
+-------------------------------------------------------------------------------
+
+$END
+
+$THK-LOOP
+-----------------------------------
+Help: enter new T and P ($THK-LOOP)
+-----------------------------------
+
+      CR           : stop looping and exit THERIAK.
+
+      "end"        : Same as CR.
+      
+      T(C)  P(bar) : start a new calculation with new T and P values.
+---------------------------------------------------------------------
+
+$END
+
+$DOM-SCRIPT
+---------------------------------------
+Help: database definition ($DOM-SCRIPT)
+---------------------------------------
+
+      CR                : to use the thermodynamic database used in the
+                          last run and run DOMINO interactivelly.  
+
+      "files"           : to see the default names, types and descriptions 
+                          of files associated with the program. You may
+                          change this default beaviour by editing file 
+                          "theriak.ini".                 
+
+     database            : file name of database to be used (dbs-file).
+     database  phase1  phase2  etc.    : file name of database to be used
+                                         followed by names of phases to include
+                                         in calculations.
+
+      "script"          : to start creating script files (spt-file) 
+                          that are used to run DOMINO unattended (e.g. over-
+                          night). For more information about scripting, see 
+                          below.
+                         
+NOTE: Depending of your operating system, input might be case sensitive !
+§
+
+DOMINO-SCRIPTING
+----------------
+
+DOMINO can be instructed to calculate many different phase diagrams 
+non-interactively, for example overnight. For each of these phase diagrams, 
+the input normally needed by DOMINO, e.g. name of the database, definition 
+of X and Y axis, calculation parameters etc., must be prepared and saved in 
+a SCRIPT file (spt-file) beforehand. The names of script files may
+be defined individually, or are generated by default as files named 
+"scriptXX.spt", where XX is an integer between 01 and 99. Each of the script 
+files substitutes for the keyboard, i.e. for your responses to questions 
+that DOMINO normally asks you. So, you may let DOMINO do its job unattended 
+without you being present and answering the questions. The script files 
+may be executed by means of an executable BATCH JOB file. 
+
+§
+
+Structure of the executable batch files
+---------------------------------------
+
+By default, the name of this executable file is as follows.
+
+   Unix/Linux/Mac : domjob  (might need setting the execute attribute before 
+                             execution, e.g. "chmod u+x domjob")
+   DOS-Win        : DomJob.bat
+
+During execution, you have the possibility to give the batch job file a name 
+of your choice. In this case, the SCRIPT files are accordingly named and 
+numbered sequentially. For example, if you defined the name of the BATCH JOB 
+file as
+
+         myplot,
+                     
+the SCRIPT files to be created will be named as
+
+         myplot01.spt, myplot02.spt, myplot03.spt etc. ...
+
+The executable BATCH JOB file "myplot.bat" (DOS, Windows) or "myplot" (Unix 
+and derivates) will contain then the following records:
+
+        domino < myplot01.spt
+        guzzler  myplot01.plt   myplot01.cln  myplot01.rxn
+        explot   myplot01.cln   myplot01.ps
+        domino < myplot02.spt
+        guzzler  myplot02.plt   myplot02.cln  myplot02.rxn
+        explot   myplot02.cln   myplot02.ps
+        etc.
+
+The first of these records calls DOMINO and instructs it that the information
+it needs for calculation of phase diagram myplot01 is provided by script file 
+"myplot01.spt". The graphics data will be written into a plt-file 
+having the name myplot1.plt. This is given as input argument to gropram  
+GUZZLER in the second line. GUZZLER will create appropriately named files 
+that, again, are input arguments to program EXPLOT in the third line. The 
+final result will be a PostScript file named myplot01.ps.
+
+NOTE: BATCH JOB files may be edited carefully with any text editor!
+
+§
+
+Structure of SCRIPT files
+-------------------------
+
+Each script file contains records with the following information needed by
+DOMINO. Text in parentheses are comments.
+
+    script.myplot1.spt  (keyword "script." is diagnostic, don't change!)
+    myplot1.plt     (graphics output file name)
+    name of database
+    calculation parameters
+    1 to 6 lines of chemical information from file THERIN; 2-6 are mostly empty)
+    definition of X-axis variable
+    definition of Y-axis variable
+    type of calculation
+    choice of labels
+    T and P if constant
+    folder name for pixel map information
+
+NOTE: SCRIPT files may be edited carefully with any text editor!
+
+Here is an example of a SCRIPT file:
+    script.script01.spt
+    script01.plt
+    jun92bs.txt
+        1.0 350 0.01 0.1E-08 0.1E-06 0.1E+01 0.1E-04 25 15 100
+    0   AL(2)SI(1)O(?)     *   this calculates the triple point
+
+
+
+
+
+    TC  300  1000
+    P  1  10000
+    .
+    1
+    0.0000000E+00   0.0000000E+00
+    _script01_pix\
+End of example
+----------------------------------------------------------------------------------
+$END
+
+$DOM-SCR_JOB
+------------------------------------------
+Help: creating job file ($DOM-SCR_JOB)
+------------------------------------------
+
+      CR         : to accept the proposed job filename and 
+                   continue creating SCRIPT files.
+                   
+      new name   : define a new job filename and 
+                   continue creating SCRIPT files.
+-------------------------------------------------------------------------------
+$END
+
+$DOM-SCR_SCR
+------------------------------------------
+Help: creating script file ($DOM-SCR_SCR)
+------------------------------------------
+
+      CR         : to accept the proposed script name and 
+                   continue creating SCRIPT file.
+                   
+      new name   : define a new script name and 
+                   continue creating SCRIPT file.
+                           
+      "end"      : to stop creating SCRIPT files and exit DOMINO. 
+-------------------------------------------------------------------------------
+$END
+
+$DOM-XAXES*
+X-variable may be: TC, TK, P, A(abc), LNA(abc), LOGA(abc), MA(abc), BIN, TER
+$END
+
+$DOM-XAXES
+---------------------------------------
+Help: definition of X-axis ($DOM-XAXES)
+---------------------------------------
+
+Valid input for X-varible are:
+
+    "TC"         : Temperature in deg. C.
+    "TK"         : Temperature in K.
+    "P"          : Pressure in bar.
+    "A(abc)"     : Activity of phase abc.
+    "LNA(abc)"   : Natural logarithm of activity for phase abc (phase name abbreviation).
+    "LOGA(abc)"  : Logarithm of activity for phase abc (phase name abbreviation).
+    "MA(abc)"    : chemical potential of phase abc (phase name abbreviation).
+    "BIN"        : Binary (compositions are taken from input file (dat-file)).
+    "TER"        : Ternary (compositions taken from input file (dat-file)).
+
+Arguments should be delimited by at least two spaces. Parameters enclosed in 
+parentheses are optional. If ommited, their default values will be used. 
+
+NOTE: "abc" is the case sensitive abbreviation of a phase referred in the 
+      thermodynamic database. (The phase is usually an endmember of a solution,
+      but may be any non-solution phase)
+      
+Examples:
+            TC  400  800
+            LNA(Ab)  0.5   1.2
+-----------------------------------------------------------------------------------
+$END
+
+$DOM-YAXES*
+Y-variable may be: TC, TK, P, PT, THG, A(abc), LNA(abc), LOGA(abc), MA(abc), BIN
+$END
+
+$DOM-YAXES
+---------------------------------------
+Help: definition of Y-axis ($DOM-YAXES)
+---------------------------------------
+
+Valid input for Y-varible are:
+
+    "TC"         : Temperature in deg. C.
+    "TK"         : Temperature in K.
+    "P"          : Pressure in bar.
+    "PT"         : Temperature in deg. C, with P bound to geothermal gradient,
+                   used by Bucher & Frey (1991) 
+                   P=1062.091685+2.567123*TC+0.01085*TC**2).
+    "THG"  thgr  : (thermal gradient) Temperature in deg. C, with P bound to 
+                   thermal gradient: P=(TC-25.0D0)*thgr+1.0D0
+    "A(abc)      : Activity of endmember abc.
+    "LNA(abc)"   : Natural logarithm of activity for endmember abc.
+    "LOGA(abc)"  : Logarithm of activity for endmember abc.
+    "MA(abc)"    : chemical potential of phase abc (phase name abbreviation).
+    "BIN"        : Binary (compositions are taken from dat-file).
+
+Arguments should be delimited by at least two spaces. Parameters enclosed in 
+parentheses are optional. If ommited, their default values will be used. 
+
+NOTE: "abc" is the case sensitive abbreviation of a phase referred in the 
+      thermodynamic database. (The phase is usually an endmember of a solution,
+      but may be any non-solution phase)
+
+Examples:
+            P  1000  10000
+            LNA(Ab) 0.5  1.2
+-----------------------------------------------------------------------------------
+§
+$END
+
+$DOM-ISO*
+to calculate                          enter
+------------                          -----
+equilibrium phase diagram              "." (dot)
+isolines:
+   special funtions:                          Key      min  max  step
+   non-solution phases:                Name   Key      min  max  step
+   solution phases:                    Name   Key  Nr  min  max  step
+
+For help with isoline definition type "i".
+
+$END
+
+$DOM-ISO
+---------------------------------
+Help: calculation type ($DOM-ISO)
+---------------------------------
+Enter
+     
+     "list"  : to list names for phases, endmembers and solutions
+               in the database.
+               
+     "point" : Allows to calculate equilibria for individual x-y-values. 
+               (seful when x or y is "BIN", LOGA(..) etc.)
+               
+     "."     : to calculate an equilibrium phase diagram.
+
+For isopleths calculation, input of the following forms must be entered.
+
+     Key             min  max  step     (Form 1 for bulk rock properties)
+     Name  key       min  max  step     (Form 2 for non-solution phases)
+     Name  Key  Nr   min  max  step     (Form 3 for solution phases)
+
+where
+
+    Name         : Is the name of a pure endmember or solution phase. 
+                   You may list the valid names by entering "list".
+                    
+    Key          : Is one of the keywords listed below.
+    
+    min max step : Is the minimum, maximum and step values for the isolines. 
+                   The maximum number of isopleths calculated is 50.
+                                           
+    Nr           : If more than one phase of the same solution is stable, the 
+                   phase with the highest "Key"-value is numbered 1, the next 
+                   lower is numbered 2 and so on.
+
+Note: All input arguments must be delimited by at least 2 spaces.
+§
+
+ISOPLETH KEYWORDS
+=================
+
+   Bulk rock properties (Form 1:             "Key         min  max  step")
+   _______________________________________________________________________
+
+      Volume of solids [ccm]               : "volsol"
+      Weight of solids [g]                 : "wtsol"
+      Density of solids [g/ccm]            : "rhosol"
+      Total Gibbs Free Energy [J]          : "gtot"
+      Wt% of H2O in solids                 : "%h2o.sol"  
+
+   Non-solution phase properties (Form 2:   "Name   Key    min  max  step")
+   ________________________________________________________________________
+
+      Amount of phase abc [mol]            : abc    "mol"   
+      Volume of phase abc [ccm]            : abc    "vol"  
+      Molar volume of phase abc [ccm/mol]  : abc    "mvol"  
+      Weight of phase abc [g]              : abc    "wt"    
+      Molar weight of phase abc [g/mol]    : abc    "mwt"   
+      Density of phase abc [g/ccm]         : abc    "rho"  
+      Volume% of phase abc (% of solids)   : abc    "vol%"  
+
+   Solution phase properties (Form 3:       "Name   Key         Nr  min  max  step")
+   _________________________________________________________________________________
+
+      Isopleths [mol fractions]            : abc    species     Nr  
+      Site occupancies                     : abc    El(site)    Nr  
+      Amount of phase abc [mol]            : abc    "mol"       Nr 
+      Volume of phase abc [ccm]            : abc    "vol"       Nr 
+      Molar volume of abc phase [g/mol]    : abc    "mvol"      Nr  
+      Weight of phase abc [g]              : abc    "wt"        Nr  
+      Molar weight of phase abc [g/mol]    : abc    "mwt"       Nr 
+      Density of phase abc [g/ccm]         : abc    "rho"       Nr 
+      Ratio Mg/(Mg+Fe) of phase abc        : abc    "Mg#"       Nr 
+      Volume% of phase abc (% of solids)   : abc    "vol%"      Nr
+
+Note: abc and species are case sensitive names or abbreviations of phases and endmembers
+§
+
+Summary
+=======
+      
+To calculate                          enter
+------------                          -----
+An equilibrium phase diagram          "." (dot)
+
+Property isopleths of
+   Bulk rock                                  Key      min  max  step
+   Non-solution phases:                Name   Key      min  max  step
+   Solution phases:                    Name   Key  Nr  min  max  step      
+      
+Examples for isopleths: 
+-----------------------
+To plot grossular isopleths in garnet between 0.3 and 0.6 in steps of 0.02
+           
+                  GARNET  Grs  1   0.3  0.6  0.02
+                  
+To plot iso-density lines of quartz (non-solution phase)
+between 2.5 and 2.7 in steps of 0.02
+
+                  A-QUARTZ  rho   2.5   2.7   0.02
+                  
+To plot iso-density lines of feldspar (solution phase)
+between 2.5 and 2.7 in steps of 0.02
+           
+                  FSP  rho   1  2.5   2.7   0.02
+                  
+To plot Wt% of H2O in solids between 0 and 10 in steps of 0.5
+           
+                  %h2o.sol    0   10   0.5
+-----------------------------------------------------------------------------
+§
+$END
+
+$DOM-ISO1
+
+If more than one phase of the same solution is stable, the 
+phase with the highest "Key"-value is numbered 1, the next 
+lower is numbered 2 and so on.
+
+$END
+
+$DOM-LABEL*
+Labels: 1=assemblages, 2=new phases, 3=reactions, -1=special
+$END
+
+$DOM-LABEL
+----------------------------------------
+Help: labeling of reactions ($DOM-LABEL)
+----------------------------------------
+define the way reactions are labeled in the diagram. 
+
+The input is:     "Label  (prec  smooth)"
+
+Parameters in parentheses may be ommitted.
+All input arguments must be delimited by at least two spaces.
+
+"Label" can take the following values.
+ 
+     "1"   For labeling reactions on each side with the stable assemblage, e.g. 
+                  A B C = A B D
+     "2"   For labeling reactions only by new phases produced, e.g. 
+                  (C) = (D)
+     "3"   For labeling reactions with a balanced equation, e.g. 
+                  A + 2 B + C = 3 D
+           If more than one reaction is involved, the coefficients are 
+           ommitted, e.g. 
+                  A B C = D
+    "-1"   similar to "1", but solutions are named by their dominant endmember.
+           e.g. instead of "(2)FSP" its labeled "[Ab] [Kfs]"
+
+"prec"    is the precision in cm, (default=0.005). 
+"smooth"  is the smoothness in cm, (default=0.04).
+-----------------------------------------------------------------------------
+§
+$END
+
+
+$GUZ-CALL
+-------------------------------------------------------------
+Help: running guzzler with command line arguments ($GUZ-CALL)
+-------------------------------------------------------------
+
+    GUZZLER can be called with as much as three command line arguments, i.e.
+
+        guzzler  in-file  out-file  rxn-list
+
+    where
+
+        in-file:  Graphics file from DOMINO and TWEEQU
+        out-file: Tided-up file
+        rxn-list: list of reactions or assemblages
+
+    If no command line arguments are passed, GUZZLER runs interactively
+    and asks the user for the input file name, labels size etc. The  out-
+    file and rxn-list are assigned their default file names defined in
+    file "theriak.ini".
+
+    If less than three command line arguments are passed, those files not 
+    explicitly defined are assigned the default file names.
+$END
+
+
+$GUZ-START
+----------------------------------
+Help: running guzzler ($GUZ-START)
+----------------------------------
+
+     CR                  : to accept <last input> (if any) and continue.
+
+     graphics file name  : name of a graphics file to be used as input.
+--------------------------------------------------------------------------------
+$END
+
+$GUZ-SIZE
+----------------------------------
+Help: size of labels ($GUZ-SIZE)
+----------------------------------
+
+     CR               : to accept <last input> (if any) and continue.
+
+     size of labels   : (in cm) useful value for most purposes is 0.2
+
+--------------------------------------------------------------------------------
+$END
+
+$GUZ-LABELS
+labeling: CR=automatic   "0"=change global option    r1,r2...=reaction numbers
+$END
+
+$GUZ-LABEL
+------------------------------------------
+Help: GUZZLER labeling method ($GUZ-LABEL)
+------------------------------------------
+
+      CR            : to accept the default labeling method (see below).
+
+      "0"           : to change the labeling method (see below).
+
+      r1,r2, ...    : to specify which reactions need special label handling.
+                      r1, r2, etc. are comma-sepparated  reaction numbers from
+                      the list printed earlier on screen.
+
+Labeling methods
+----------------
+
+The internal code for labels is:
+
+     3: Full labels writen along line.
+     2: Reaction number written in line
+     1: Reaction number written offset, connected to curve with a fine line
+     0: Line is not labeled
+     
+The default method is (3). If a label overlaps with others, method (2) is used. 
+If labels still interfere, method (1) is applied, and finally if there is no 
+room for a number near the line, it remains unlabeled.
+
+Generally, a reaction line shorter than 0.02 cm (=minimum length) is not 
+labeled.
+--------------------------------------------------------------------------------
+§
+$END
+
+$GUZ-GLOBS
+Most important options for labeling:
+ -3: automatic (default)      0: no labels or numbers      5: no offset numbers
+$END
+--------------------------------------------------------------------------------
+
+$GUZ-GLOB
+---------------------------------------------------------
+Help: GUZZLER set global option for labeling ($GUZ-LABEL)
+---------------------------------------------------------
+
+The global option is used to simplify later editing of the plot with a 
+PostScript editor. Generally, a reaction line shorter than the minimum length
+(default = 0.02 cm) is not labeled.
+
+The options are:
+-3: (default) Write as much information as possible on the diagram.
+ 3: Force full labels on every curve. This may be useful, if few lines are
+    present and the overlapping labels are to be moved manually with an editor.
+-2: Use only numbers (no text-labels). The numbers may be either in the curve 
+    or offset.
+ 2: Force the reaction numbers to be written in each curve.
+-1: (force offset numbers, option not recommended)
+ 1: (use offset numbers only, option not recommended)
+
+ 0: Do not label curves. This option removes all labels and produces a clean
+    diagram which can be labeled and colored manually.
+ 5: No offset numbers. This option produces a nice readable diagram.
+    Short lines will not be labeled.
+ 4: Label all curves with either full text-labels or with numbers in line.
+--------------------------------------------------------------------------------
+§
+$END
+
+$EXP-START
+Enter
+
+     "files"                  : to see the files associated with the program.
+
+     graphics input file name : to define the requested plt- or cln-file name.
+$END
+
+*****************************************************************************************
+HELP TEXT FOR THALIA
+*****************************************************************************************
+
+$THA-START
+---------------------------------------
+Help: define database name ($THA-START)
+---------------------------------------
+
+     CR                       : to accept <last input> (if any) and continue.
+     
+     "files"                  : to see the files associated with the program.
+
+     database filename        : file name of database to be used (dbs-file).
+-----------------------------------------------------------------------------------
+$END
+
+$THA-XS
+X-variable may be: TC, TK, 1000/K, P
+$END
+
+$THA-X
+--------------------------------
+Help: define X-variable ($THA-X)
+--------------------------------
+Define X-variable by choosing:
+
+    TC      : Temperature in deg. C
+    TK      : Temperature in K
+    1000/T  : (1000/T) Temperature in K
+    P       : Pressure in Bar
+    X       : to plot G-X, mi-X, a-X diagrams
+    
+
+By entering "X", you will be asked later for solution phase and compositions.
+-----------------------------------------------------------------------------
+$END
+
+$THA-Y1S 
+
+Y-variable definition possibilities
+-------------------------------------------------- 
+G       V      CP      H      S      LNK   LOGK  K
+G-G0    V-V0   CP-CP0  H-H0   S-S0 
+G.CP           CP.CP   H.CP   S.CP 
+G.DIS   V.DIS  CP.DIS  H.DIS  S.DIS 
+G.TR    V.TR   CP.TR   H.TR   S.TR    
+G.VOL   V.VOL 
+G.GAS   V.GAS
+$END
+
+$THA-Y1L
+----------------------------------
+Help: define Y-variable ($THA-Y1L)
+----------------------------------
+Here you may enter the following:
+
+    "B"   : to moove 1 step back
+
+    "end" : terminate program
+
+or define the Y-variable by choosing:
+
+The following "standard" thermodynamic functions,     
+    CP  : for Heat capacity       
+    H   : for Enthalpy       
+    S   : for Entropy       
+    V   : for Volume       
+    G   : for Gibbs free energy
+    LNK : for -G/RT  
+    LOGK: for -G/(RT*ln10)
+    K   : for exp(-G/RT) 
+§ 
+or delta functions in respect to 25 C, 1 Bar,
+    G-G0     V-V0     CP-CP0     H-H0     S-S0     
+
+or Cp-integral value in functions
+    G.CP              CP.CP      H.CP     S.CP     
+    
+or disorder contribution in functions,
+    G.DIS    V.DIS    CP.DIS     H.DIS    S.DIS    
+
+or contribution from lamda transition
+    G.TR     V.TR     CP.TR      H.TR     S.TR     
+
+or contribution from volume-function,   
+    G.VOL    V.VOL 
+                            
+or contribution from gas-function.
+    G.GAS    V.GAS
+§
+
+Input examples:
+    G-G0
+    G-G0/xx
+     
+In the second example, the function value will be devided by xx,
+where xx is any non-zero number.
+------------------------------------------------------------------
+$END
+
+$THA-FORMU
+---------------------------------
+Help: define formula ($THA-FORMU)
+---------------------------------
+Here you may enter the following:
+
+    "B"   : to moove 1 step back
+
+    "end" : to terminate the program
+
+or a single phase name or formula. In the latter case, follow rules below.
+
+    n1 A + n2 B + C - n4 D - E ...
+
+where
+
+    A, B, C ... are the phase name abbreviations 
+    n1, n2 ... are the stoichiometric coefficients (if 1 may be omitted)
+
+    All items in the formula must be separated by one blank space
+---------------------------------------------------------------------------
+$END
+
+$THA-SOL
+--------------------------------------
+Help: define solution phase ($THA-SOL)
+--------------------------------------
+     CR                   : to accept <last input> (if any) and continue.
+
+     "end"                : to terminate the program
+     
+     solution-name        : name of solution phase.
+----------------------------------------------------------------------------
+$END
+
+
+$THA-ENDCOMP
+----------------------------------------
+Help: define compositions ($THA-ENDCOMP)
+----------------------------------------
+Here you may enter the following:
+
+    "B"   : to moove 1 step back
+
+    "end" : to terminate the program
+
+or define the "binary endmember" cmpositions of your diagram. These
+"binary endmember" compositions may be 
+
+        (a) either two of the pure endmembers available for the selected
+            solution (see list on screen!) or 
+
+        (b) "mol fraction mixtures" thereof. 
+
+For example, if the solution is feldspar, the listed available pure 
+endmembers will be 
+
+     ab     kfs   an
+
+Your first "binary endmember" might then be
+     1      0     0
+and your second
+     0      0     1
+
+Alternatevely, you may define mixtures for your endmembers, e.g.
+     0.7    0    0.3
+     0.5    0    0.5
+
+Note: All concentrations should be positive. (Negative numbers will be
+set to 0.) The numbers in each row will be normalized to a sum of 1.
+----------------------------------------------------------------------
+$END
+
+$THA-Y2L
+----------------------------------
+Help: define Y-variable ($THA-Y2L)
+----------------------------------
+Here you may enter the following:
+
+    "b"   : to move 1 step back (Define a new solution)
+
+    "end" : to terminate the program
+
+
+or define the Y-variable that may be
+
+    "G"      : Total Gibbs free energy (Gmech + Gconf + Gexs)
+    "GR"     : Total Gibbs free energy (Sum(X(i) * mue(i))
+
+    "GCON"   : Configurational contribution to G. (may contain
+               non-ideal contributions if G is calculaed in an
+               external subroutine)
+
+    "GEX"    : Excess G-contribution. (may contain configurational 
+               contributions if G is calculaed in an external subroutine)
+    "GREX"   : GREX=GR-GMECH-GCONF
+
+    "GMIX"   : Gibbs free energy of mixing
+
+    "MUE"  n : Chemical potential of n-th endmember
+
+    "ACT"  n : Activity of n-th endmember
+--------------------------------------------------------------------------
+$END
+
+$THA-Y2S
+Y-variable may be: G, GCON, GEX, GMIX, MUE  n, ACT  n 
+$END
+
+$THA-PT
+------------------------------
+Help: define T and P ($THA-PT)
+------------------------------
+Here you may enter the following:
+
+    "B"    : move 1 step back (Define a new Y-variable)
+
+    "end"  : to terminate the program
+
+     T  P  : Temperature in deg. C and pressure in Bar.
+--------------------------------------------------------------------
+$END
+
+$THB-START
+---------------------------------------
+Help: define database name ($THB-START)
+---------------------------------------
+
+     CR                  : to accept <last input> (if any) and continue.
+
+     "files"             : to see the default names, types and descriptions 
+                           of files associated with the program. You may
+                           change these defaults by editing file theriak.ini 
+                           with a common text editor.
+
+     database filename   : file name of database to be used (UNIT=dbs).
+----------------------------------------------------------------------------
+$END
+
+
+$THB-ENDMEMB
+--------------------------------------
+Help: define endmembers ($THB-ENDMEMB)
+--------------------------------------
+
+Type
+     
+     "list"                   : to get a list of all considered phases
+
+     CR                       : to accept last input (if any) and continue.
+
+     endmember n (formula n)  : to enter the name and the formula of the n'th 
+                                endmember. If the phase is one of the phases already 
+                                considered, the formula may be omitted.
+                                
+Examples:
+              aQz
+              phaseX    SI(1)AL(0.5)
+----------------------------------------------------------------------------
+$END
+
+$THB-YVAR
+-----------------------------------
+Help: define Y-variable ($THB-YVAR)
+-----------------------------------
+
+     CR                       : to accept last input (if any) and continue.
+
+     Y-variable  ymin  ymax   : Possible values for the Y-variable are:
+     
+                                TC: Temperature in (C)
+                                TK: Temperature in (K)
+                                P : Pressure in (Bar)
+                                
+                                ymin and ymax are the minimal and maximal 
+                                values for the Y-axix of the binary diagram.
+----------------------------------------------------------------------------
+$END
+
+$THB-PT
+-----------------------------------
+Help: define P or T ($THB-YVAR)
+-----------------------------------
+
+     CR            : to accept last input (if any) and continue.
+     
+     pressure      : The constant presure (bar) for a binary T-X diagram.
+     temperature   : The constant temperature (deg C) for a binary P-X diagram.
+-------------------------------------------------------------------------------
+$END
+
+
+$THM-START
+---------------------------------------
+Help: define database name ($THM-START)
+---------------------------------------
+
+     "?"                      : to get this help.
+
+     CR                       : to accept <last input> (if any) and continue.
+     
+     "files"                  : to see the files associated with the program.
+
+     database filename        : file name of database to be used (UNIT=dbs).
+-----------------------------------------------------------------------------
+$END
+
+$THM-WAS
+-----------------------------
+Help: define phase ($THB-WAS)
+-----------------------------
+
+     CR            : to accept last input (if any) and continue.
+
+     "list"        : Show a list of all phases in the database.
+     
+     "end"         : Stop the program.
+     
+     "TP" t p      : Set the Temperature (C) and Pressure (Bar)
+     
+     "g"           : Calculate a table of G-values 
+     "gc"          : Calculate a table of G-values in Cal/mol, relative to G0.
+                     (useful to compare with supcrt92 output)
+                       
+     "v"           : Calculate a table of Vol-values 
+     "vg"          : Compare table of Vol-values with those calculated as
+                     V = (dG/dP)
+     
+     phases        : single phase
+                or : list of phases (separated by two blanks)
+                or : "all"
+                 
+                     G, H, S, Cp and V are calulated, The table includes : 
+                     
+                     Standard state values (1 Bar, 25 C)
+                     Values at T and P (defined above)
+                     
+                     Contributions from: - Cp-function
+                                         - Volume function (solids)
+                                         - Disorder function
+                                         - Volume function (gases)
+                                         - Lamda transitions
+                                         - External functions
+-----------------------------------------------------------------------------
+$END
+
+$MAP-INF
+------------------------------
+Help: start MAKEMAP ($MAP-INF)
+------------------------------
+
+     CR            : to accept last input (if any) and continue.
+     
+     "files"       : to see the files associated with the program.
+     
+     "list"        : to list folders with pixelmap information.
+     
+     folder-Nr     : to choose one of the shown folders by its number.
+                     The folders shown contain pixel information. Their names 
+                     start with "_". 
+
+$END
+
+$PIX-ABBREV*
+[b]: b-rich solution    n: mass [mol]    wt: weight    x: mole fraction 
+$END
+
+$MAP-KEY
+------------------------------
+Help: start MAKEMAP ($MAP-KEY)
+------------------------------
+
+     CR         : to accept last input (if any) and continue.
+     
+     functionNr : the number corresponding to the desired function.
+     
+     key        : Entering one of the fhe following keys is optional:
+
+        "x1"   : map the first derivative of the chosen function f
+                 in respect to the X-variable of the plot diagram 
+                 (df/dX).
+
+        "y1"   : map the first derivative of the chosen function f
+                 in respect to the Y-variable of the plot diagram
+                 (df/dY).
+
+        "alpha": map  (1/f)*(df/dX)
+
+        "beta" : map -(1/f)*(df/dY)
+
+                     
+        The keys "alpha" and "beta" are pimarily defined having in  
+        mind the volume function (corresponding to thermal expansion
+        coefficient and isothermal compessibility coefficient, respec-
+        tively). However, they may be used for any other function too.
+
+NOTE: As usual, "key" must be separated from funtionNr by at least two blanks!
+-------------------------------------------------------------------------------
+§ 
+$END
+
+$XY-START
+------------------------------
+Help: start PLOTXY ($XY-START)
+------------------------------
+
+     CR            : to accept last input (if any) and continue.
+     
+     "files"       : to see the files associated with the program.
+
+     filename      : name of a file containing a table of themodynamic
+                     variables corresponding to an theriak output tab-file.
+$END
+
+$XY-ABBREV*
+[b]: b-rich solution  a : activity    blk: bulk     Mg# : Mg/(Mg+Fe)    mvol: molar volume 
+n  : mass [mol]       pc: percent     wt : weight   x   : mole fraction 
+$END
+
+$XY-AXES*
+definition example for axes: 3,5,6+7,8+9                    
+$END
+
+$XY-AXES
+
+     CR            : to accept last input (if any) and continue.
+     
+     number(s)     : list of variable numbers or variable expressions sepa-
+                     rated by commas. A variable expression has the format 
+                        var1+var2+var3 ...
+                     
+                     Note: One of the axes must have only one variable number or
+                     expression.
+
+                     EXAMPLE:
+                     For X: 1
+                     For Y: 3, 5, 6+7, 8+9
+ 
+§                    
+$END
+
+

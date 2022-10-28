@@ -1,0 +1,20 @@
+PS1="`whoami` \#> "
+# Make bash check it's window size after a nrocess completes
+shopt -s checkwinsize
+alias  ther="cd  TheriakDominoMAC/Working"
+alias ls="ls -aF"
+#
+# from .profile
+#add color to ls
+export CLICOLOR=1
+PATH=.:$HOME/bin:${PATH:-/usr/bin:.}
+export PATH
+#
+export THERDOM=/Users/capi/TheriakDominoMAC/Programs
+export PATH=$PATH:$THERDOM
+echo ~.bash_profile read
+echo pwd: $PWD
+#
+
+
+test -r /sw/bin/init.sh && . /sw/bin/init.sh

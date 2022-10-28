@@ -1,0 +1,73 @@
+!-----Version: 28.05.2022
+!*****  Data initialization for THERIAK-DOMINO
+!
+!       Logical unit names associatet to fortran I/O-units
+!       For description of the variables, see file files.cmn
+!
+!++++++ Block to edit in case a new I/O unit is added
+!
+!       The following data statements assign logical unit numbers to physical
+!       unit numbers
+!
+        data ini, hlp, spt, job, kbd, scr, dat, dbs, log, out, bin &
+             / 1,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11/
+        data drv, tab, tcp, plt, cln, rxn, grd, pst, fig, lpl, lbk, ibk &
+             /12,  13,  14,  15,  16,  17,  18,  19,  20, 21,  22,  23/
+        data pgm, inf &
+             /24,  25/
+!
+!
+        data filename /'theriak', 'thhelp', 'script', 'domjob', &
+        'Keybord', 'Screen', nofix*' '/
+!
+! imprtant: leave ext for log and dat blank (for java GUI)
+!
+        data ext /'.ini', '.txt',' ', 3*' ', nofix*' '/
+!
+        data fnl /7, 6, 6, 6, 7, 6, nofix*1/
+!
+        data descr / &
+        'Program initialization data file', &
+        'Program help file', &
+        'Domino default script file name root', &
+        'Domino default batch job file', &
+        'Keyboard (standard input)', &
+        'Screen (standard output)', &
+        'User''s general input file', &
+        'Thermodynamic database file', &
+        'User responses during  last program run', &
+        'Program results to print or view on screen', &
+        'Graphic data for "pseudo-binary system" calculations', &
+        '"Special calculations" directives to run theriak', &
+        'Table of variable values; input to spreadsheet programs', &
+        'Table of variable values; input to program "TecPlot"', &
+        'Graphics data; input to GUZZLER or EXPLOT', &
+        'Reaction labels in graphics files; input to EXPLOT', &
+        'Reaction/assemblage list', &
+        'Grid information for GUZZLER', &
+        'Graphics file in PostScript(R) format', &
+        'Directory name for pixelmaps (no filename extension!)', &
+        'Graphics data; long format input to GUZZLER or EXPLOT', &
+        'Last bulk calculated by THERIAQ', &
+        'Initial aqueous bulk for THERIAQ', &
+        'Pixelmap file in pgm format (Portable Gray Map)', &
+        'info for tables of variable values' /
+!
+!       File type strings associated to logical unit numbers
+!
+        data filetype / &
+        'ini','hlp','spt','job','kbd','scr','dat','dbs', &
+        'log','out','bin','drv','tab','tcp','plt','cln', &
+        'rxn','grd','pst','fig','lpl','lbk','ibk','pgm','inf'/
+!
+!++++++ End of edit block
+!
+        data tpath, wpath, path, line, akzess, state, dir  /6*' ','/'/ &
+        iwpath, itpath /2*0/
+!
+        data task, sdate, vers, progname, os /5*' '/
+!
+        data ghelp, clear, batch  /2*-1, 0/
+!
+        data largum /5*' '/
+!

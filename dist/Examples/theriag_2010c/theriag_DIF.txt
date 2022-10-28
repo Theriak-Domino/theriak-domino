@@ -1,0 +1,4 @@
+Kinetic parameters from Chakraborty and Ganguly (1992) at fO2 defined by graphite buffer
+5.1D-4    60569.0D0    6.0D0             MN: pre-exponential constant, activation energy, activation volume
+6.4D-4    65824.0D0    5.6D0             FE: pre-exponential constant, activation energy, activation volume
+1.1D-3    67997.0D0    5.3D0             MG: pre-exponential constant, activation energy, activation volume

@@ -1,0 +1,32 @@
+AL2O3 LIQ              -------> phase excluded (outside binary system)
+CORUNDUM               -------> phase excluded (outside binary system)
+TRIC. ALUMINATE        -------> phase excluded (outside binary system)
+CALC. ALUMINATE        -------> phase excluded (outside binary system)
+CA-DIALUMINATE         -------> phase excluded (outside binary system)
+CA-HEXALUMINATE        -------> phase excluded (outside binary system)
+ANDALUSITE             -------> phase excluded (outside binary system)
+KYANITE                -------> phase excluded (outside binary system)
+SILLIMANITE            -------> phase excluded (outside binary system)
+ANORTHITE              -------> phase excluded (outside binary system)
+GEHLENITE              -------> phase excluded (outside binary system)
+GROSSULAR              -------> phase excluded (outside binary system)
+
+considered phases:
+SIO2 LIQ        
+CAO LIQ         
+B-TRIDYMITE     
+B-CRISTOBALITE  
+B-QUARTZ        
+A-QUARTZ        
+LIME            
+PS-WOLLASTONITE 
+WOLLASTONITE    
+RANKINITE       
+A-LARNITE       
+A'-LARNITE      
+G-LARNITE       
+B-LARNITE       
+TRIC. SILICATE  
+
+exit THERBIN
+24.06.2020 - 10:57:38  CPU time:    0h 00m 00.25s

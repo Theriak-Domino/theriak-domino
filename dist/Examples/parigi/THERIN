@@ -1,0 +1,196 @@
+!-----Version: 21.05.06
+    600     30000
+0   AL(82)MG(51)FE(1)K(14)SI(200)H(200)O(?)     *   Parigi-Pyrop rock Coggon&Holland
+
+
+
+
+
+0   MG(2)SI(1)O(4) SI(0.1)O(0.2)    *
+0   MG(1.2)SI(0.6)O(2.4) SI(0.4)O(0.8)    *
+0   FE(1)O(200)   *,HM
+0   SI(57.03)AL(23.88)CA(8.56)MG(11.58)FE(6.00)NA(6.76)H(200)O(?)    *    Dale 2005, Fig13
+
+
+0   CA(0.4)MG(1.6)C(2)O(6)    *     HOPO 2003 
+
+
+
+1   SI(56.7242)TI(0.8832)AL(24.3905)FE(7.0416)MN(0.0882)MG(3.3463)CA(0.4871)NA(2.3506)K(4.6882)H(50)O(?)    *    Gaidies, 12f03.1,ohne mn
+0   SI(20)AL(2)MG(0.9)FE(0.1)H(4)O(?)     *   carpholite
+0   SI(20)AL(2)MG(0.5)FE(0.5)H(4)O(?)     *   carpholite
+0   MG(3)FE(1)AL(4)SI(2)O(18)H(8)MG(3.5)FE(2)AL(1)SI(3.5)O(18)H(8)     *     CHLORITE
+0   NA(1)AL(1)SI(3)O(8) CA(1)AL(2)SI(2)O(8) K(1)AL(1)SI(3)O(8) H(20)O(10)    *
+0   AL(2)SI(1)O(?)     *   this calculates the triple point
+0   AL(2)SI(0)O(?)     *   this calculates the triple point
+0   AL(0)SI(1)O(?)     *   this calculates the triple point
+0   SI(46.751)AL(17.853)FE(6.983)MG(10.754)MN(0.125)CA(11.513)NA(5.002)K(0.106)O(152.534)H(40)O(20)O(20)  *,qfm      MORB 2 1   SI(1)MG(1)O(3)   *
+1   SI(1)MG(2)O(4)   *
+1   SI(2)O(4)   *
+0   CA(2)AL(3)SI(3)O(13)H(1) FE(2)O(3) SI(10)O(20)     *
+
+
+0   SI(53.2759)TI(0.7936)AL(27.4856)FE(6.6744)MN(0.1437)MG(2.9780)CA(0.8480)NA(1.7904)K(6.0104)H(50)O(?)    *    Gaidies, 40f03.b
+0   SI(62.8279)TI(0.6658)AL(21.1147)FE(5.4373)MN(0.0484)MG(2.8666)CA(0.4692)NA(1.8826)K(4.6876)H(50)O(?)    *    Gaidies, 11f03
+0   SI(56.7608)TI(0.7197)AL(24.3352)FE(7.1242)MN(0.1605)MG(3.5316)CA(0.6802)NA(2.0577)K(4.6300)H(50)O(?)    *    Gaidies, 43f03
+1   SI(56.7242)TI(0.8832)AL(24.3905)FE(7.0416)MN(0.0882)MG(3.3463)CA(0.4871)NA(2.3506)K(4.6882)H(50)O(?)    *    Gaidies, 12f03.1
+0   SI(37.4397)TI(0.0353)AL(25.2599)FE(28.2688)MN(4.9510)MG(2.3431)CA(1.7022)O(?)H(40)   *   Gaidies,12f03(G-core)
+
+
+
+
+
+
+
+0   SI(56.7242)TI(0.8832)AL(24.3905)FE(7.0416)MN(0.0882)MG(3.3463)CA(0.4871)NA(2.3506)K(4.6882)H(50)O(?)    *    Gaidies, 12f03.1,ohne mn
+1   SI(56.7242)TI(0.8832)AL(24.3905)FE(7.0416)MN(0.0882)MG(3.3463)CA(0.4871)NA(2.3506)K(4.6882)H(50)O(?)    *    Gaidies, 12f03.1
+0   SI(37.4397)TI(0.0353)AL(25.2599)FE(28.2688)MN(4.9510)MG(2.3431)CA(1.7022)O(?)H(40)   *   Gaidies,12f03(G-core)
+0   H(2)O(1)   *
+
+    200     2000
+0   CA(10)MG(10)C(20)O(60)SI(1)O(2) C(0.1)O(0.2)H(0.2)O(0.1)     *
+    
+0    FE(2.0)MG(4.0)AL(4)SI(6)O(24) K(1)FE(1.0)MG(2.0)AL(1)SI(3)O(12)H(2)     *      Gr + Bi
+0    K(1)AL(3)SI(3)O(12)H(2) AL(2)O(3)SI(3)O(6) H(20)O(10)    *
+0   SI(62.12)AL(22.15)FE(5.74)MG(2.46)CA(0.35)NA(2.18)K(5.00)O(169.605)H(60)O(30)      *   L29 ohne Ti & Mn
+
+
+
+1   CA(1)FE(4)MG(1)K(1)AL(3)SI(6)H(2) CA(3)AL(6)SI(6) SI(10)AL(5)O(?)    *    thermobaro
+
+0    NA(1)AL(1)SI(3)O(8)     *   albite
+
+
+
+
+0   K(0.75)NA(0.25)AL(2.7)MG(0.1)FE(0.05)SI(3.15) NA(0.88)CA(0.12)AL(1.12)SI(2.88) AL(20)SI(100) H(200)O(?)   *   musc++
+0   K(0.1)NA(0.9)AL(3)SI(3)O(12)H(2) AL(2)O(3) SI(100)O(200) H(-2)O(-1)   *   musc++
+0   MG(3)SI(4)O(12)H(2) MG(4)SI(4)O(12)     *   Tc+Fo
+0   SI(38.78)AL(9.49)FE(0.84)MG(0.86)NA(3.94)K(2.81)H(14.46)O(?)     *    Tjerk
+0   CA(1)FE(4)MG(1)K(1)AL(3)SI(6)H(2) CA(3)AL(6)SI(6) SI(10)AL(5)O(?)    *    thermobaro
+
+0   SI(62.12)AL(22.15)FE(5.74)MG(2.46)CA(0.35)NA(2.18)K(5.00)O(169.605)H(60)O(30)      *   L29 ohne Ti & Mn
+0   SI(58.63)AL(26.32)FE(6.59)MG(2.79)CA(0.19)NA(1.80)K(3.68)O(169.050)H(60)O(30)      *   L62 ohne Mn&Ti
+
+
+0   AL(2)SI(1)O(?)     *   this calculates the triple point
+1   K(1)AL(3)SI(3)O(12)H(2) AL(2)O(3)SI(3)O(6) H(20)O(10)    *   musc+as+2qz
+0   SI(1)O(2) H(2)O(1)   *   qz+W
+0   K(1)AL(1)SI(2)O(6) H(2)O(1)    *   lc+W
+0   AL(2)O(3) H(2)O(1)   *   Al+W
+0   
+1    MG(4.5)SI(2.5)O(9) CA(0.1)O(0.1) H(200)O(100)      *
+0    SI(7)O(14) CA(0.1)O(0.1) H(200)O(100)      *
+0    MG(5)SI(2)O(9) CA(0.1)O(0.1) H(200)O(100)      *
+
+0   FE(2)MG(0.7)CA(0.3)AL(2)SI(10)H(20)O(?)   *
+    
+0    MG(2)SI(1)O(4) H(200)O(100)      *
+
+0    CA(1)O(1) H(200)O(100)      *
+0    MG(1)O(1) H(200)O(100)      *
+0    SI(1)O(2) H(200)O(100)      *
+    
+    
+0   AL(2)SI(1)O(?)     *   this calculates the triple point
+0   NA(1)AL(1)SI(3)O(8)K(1)AL(1)SI(3)O(8)CA(1)AL(2)SI(2)O(8)     *
+0   MG(1)FE(1)SI(1)O(1)     *
+0   MG(2)SI(1)O(4)     *
+0   FE(2)SI(1)O(4)     *
+0   SI(1)AL(10)MG(2)FE(1)O(20)SI(10)O(20)H(20)O(10)     *     sapp
+
+0   MG(3)FE(1)AL(4)SI(2)O(18)H(8)MG(3.5)FE(2)AL(1)SI(3.5)O(18)H(8)     *     CHLORITEhp
+0   SI(2)AL(4)MG(4)O(18)H(8)    *     ames
+0   SI(4)MG(6)O(18)H(8)    *     afchl
+0   SI(3)AL(2)FE(5)O(18)H(8)    *     daph
+
+0   AL(12)SI(6)O(54)H(24)     *     
+0   AL(0)SI(8)O(36)H(16)     *          *     
+0   MG(12)     *     
+0   FE(12)     *     
+0   SI(2)AL(4)MG(2)FE(2)O(18)H(8)     *     ame+fame
+0   
+0   MG(3)FE(1)AL(4)SI(2)O(18)H(8)MG(3.5)FE(2)AL(1)SI(3.5)O(18)H(8)     *     CHLORITE
+0   AL(44)SI(22)O(198)H(88)     *     
+0   AL(8)SI(28)O(144)H(64)     *          *     
+0   MG(44)     *     
+0   FE(44)     *     
+0   
+0   SI(3.5)AL(1)O(18)H(8)     *
+0   SI(2)AL(4)O(18)H(8)     *
+0   MG(5.5)     *
+0   FE(5.5)     *
+
+0   MG(1)FE(1)AL(4)SI(5)O(18)H(20)O(10)    *    cordierite
+0   MG(2)AL(4)SI(5)O(18)    *    cordierite
+0   FE(2)AL(4)SI(5)O(18)    *    fe-cordierite
+0   SI(0)     *    nothing
+0   H(4)O(2)     *     2 water
+
+-2   SI(74.274)AL(19.168)MG(9.050)FE(3.264)K(6.254)H(1.404)O(?)     *   Kelsey,2004,Fig5a,Audibert,1995,M2
+0   SI(73.632)AL(19.078)MG(10.599)FE(2.399)K(6.264)H(1.396)O(?)     *   Kelsey,2004,Fig5a,Audibert,1995,M3
+
+1   MG(2)AL(4)SI(5)O(18)H(20)O(10)    *    cordierite+H2O
+0   MG(5)AL(2)SI(3)O(18)H(8)MG(2)SI(1)O(4)MG(2)SI(2)O(6)H(20)O(10)    *
+    
+0   K(1)FE(1.5)FE(1.5)AL(1)SI(3)O(12)K(1)AL(1)SI(3)O(8)H(20)O(10)SI(10)O(20)AL(20)SI(10)O(49)   *
+
+-2   SI(1)AL(10)MG(3)O(20)SI(2)AL(8)FE(4)O(20)     *    fspr4+spr5
+
+0   SI(10)AL(5)MG(2)K(1)O(30)SI(11)AL(3)FE(3)K(1)O(30)   *   osm1+fosm2
+0   SI(10)AL(5)MG(1)FE(1)K(1)O(30)     *    osm
+0   SI(10)AL(5)MG(2)K(1)O(30)     *    osm1
+0   SI(11)AL(3)MG(3)K(1)O(30)     *    osm2
+0   SI(10)AL(5)FE(2)K(1)O(30)     *    fosm
+0   SI(11)AL(3)FE(3)K(1)O(30)     *    fosm2
+
+
+-1   SI(59.58)AL(24.32)FE(4.87)MG(2.79)CA(0.53)NA(2.53)K(5.38)O(167.785)H(60)O(30)   * 
+0   FE(1)MG(0)O(1)K(1)AL(1)SI(3)O(8)SI(200)O(400)H(200)O(100)   *  afm0
+0   FE(0)MG(1)O(1)K(1)AL(1)SI(3)O(8)SI(200)O(400)H(200)O(100)   *  afm1
+0   FE(1)MG(0)O(1)K(1)AL(1)SI(3)O(8)SI(200)O(400)H(200)O(100)   *  afm2
+0   AL(2)O(3)SI(200)O(400)H(200)O(100)   *  afm3
+
+0   SI(1)AL(2)O(?)    *
+
+
+-1   AL(61.32)MG(12.47)FE(23.74)K(19.66)H(40.78)O(158.41)SI(1000)O(2000)    *   Fig5, White et al., 2000, auch test theriak2
+
+0   FE(1)MG(1)AL(1)SI(1)O(6)   *   OPX test
+0   MG(2)SI(2)O(6)    *
+0   FE(2)SI(2)O(6)    *
+0   AL(2)O(3)    *
+
+0   SI(2)O(4)   *   OPX test
+0   AL(2)SI(1)O(5)   *   OPX test
+0   MG(2)O(2)   *   OPX test
+0   FE(2)O(2)   *   OPX test
+
+0   MG(1)FE(1)SI(2)O(6)   *   OPX test
+
+0   SI(63.87)AL(31.72)CA(0.54)MG(3.08)FE(8.00)MN(0.0)K(5.2)NA(1.52)TI(0.78)H(8.84)O(?)     *     Fig8a, White et al., 2004, auch test theriak2
+0   AL(61.32)MG(12.47)FE(23.74)K(19.66)H(40.78)O(158.41)SI(1000)O(2000)    *   Fig5, White et al., 2000, auch test theriak2
+0   SI(5)AL(4)MG(2)O(18)SI(5)AL(4)FE(2)O(18)H(20)O(10)     *    cordierite
+0   AL(2)SI(1)O(5)   *
+
+0   SI(53.9)AL(38.2)CA(0.2)MG(3.2)FE(6.3)K(3.6)NA(1.2)MN(0.2)H(29.2)O(?)H(100)SI(10)      *      ARB,Martinez et al., 2004
+0   SI(54.6)AL(27.6)CA(0.2)MG(3.8)FE(7.4)K(4.2)NA(1.4)MN(0.0)H(34.2)O(?)      *      ORC,Martinez et al., 2004
+
+0   SI(37.74)AL(26.42)FE(7.55)MG(22.64)CA(0.00)NA(1.89)K(3.77)O(148.13)H(60)O(30)    *     BAKER,average
+
+0   SI(1)O(2)    *
+0   SI(5)AL(4)MG(1)FE(1)O(19)H(2)SI(5)AL(4)MG(1)FE(1)O(18)    *   cordierite
+0   SI(5)AL(4)MG(2)O(19)H(2)    *   hcrd
+0   SI(5)AL(4)FE(2)O(18)    *   fcrd 
+
+
+
+0   MG(2)    *
+0   FE(2)    *
+0   SI(5)AL(4)O(18)    *
+0   SI(5)AL(4)O(19)H(2)    *
+
+0   SI(75.73)AL(13.84)MG(4.27)FE(6.40)K(7.10)H(6.24)O(?)     *   Kelsey,2004,Fig6a,LH
+0   SI(68.81)AL(30.84)MG(9.70)FE(0.00)K(6.46)H(5.68)O(?)     *   Kelsey,2004,Fig6a,RH
+
+0   SI(68.81)AL(30.84)MG(3.88)FE(5.82)K(6.46)H(5.68)O(?)     *   Kelsey,2004 FSP

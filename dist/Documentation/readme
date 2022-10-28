@@ -1,0 +1,272 @@
+C-----Version: 28.05.2022   of Theriak-Domino
+
+Getting started: Short instruction for installation are given below.
+Examples and description of the programs are given in the document "TheriakDominoGuide".
+
+All programs provide some help with the "?" keyword in the input dialogues.
+
+------------------------------------------------------------------------------------------
+List of distributed files and folders
+-------------------------------------
+In the Folder ThrtiakDominoMAC or TheriakDominoWIN:
+(The difference between ThrtiakDominoMAC and TheriakDominoWIN are the executables, the theriak.ini 
+file and the line endings of text files. Mac:  <CR>, DOS:  <CR><LF>)
+
+Folders:
+	Documentation
+	Working
+	Programs
+	Examples
+
+-------------------------------------
+In folder Documentation
+	readme
+	history
+	TheriakDominoGuide.pdf
+	ExplotGuide.pdf
+	commented_theriak.pdf	(commented run of theriak)
+	commented_domino.pdf	(commented run of domino)
+
+-----------------------------------------
+In folder working (working directory)
+
+	THERIN (user input file)
+	JUN92.bs (database)
+	tcdb55c2d (database)
+	tds62c (database)
+	sialca (database)
+	bash_profile (for MAC)
+	zshrc (for MAC)
+	start.bat (Batch file for PC)
+	
+JUN92.bs
+-------- 
+This database is identical (almost) to the one used by the "TWQ" software. See also:
+Berman R.G., Brown T.H., Greenwood H.J. (1985): An internally consistent thermodynamic
+database for minerals in the system Na2O-K2O-CaO-MgO-FeO-Fe2O3-Al2O3-SiO2-TiO2-H2O-CO2.
+Atomic Energy of Canada Ltd. Technical Report 377,62p.
+Perkins E.H., Brown T.H., Berman R.G. (1986): PTX-SYSTEM:three programs for calculation of
+pressure-temperature-composition phase diagrams. Computers & Geosciences, v. 12, p. 749-755
+Includes some new solution models for WHITE MICA (L. Keller, 2004) SPIN, OPX, CHL4 (P. Hunziker 2003)
+
+tcdb55c2d
+---------
+These are translations readable for Theriak and Domino of the THERMOCALC database
+tcds55.txt, personal communication of R. Powell, September 2004.
+(Some solution models. (e.g. Chlorite solution cannot be translated to the Theriak philosophy)
+Includes the solution models proposed in White, RW, Powell, R & Holland, TJB (2007): Progress relating to 
+calculation of partial melting equilibria for metapelites. Journal of Metamorphic Geology, 25, 511-527.
+(translated from tx-NCKFMASHTO.txt in tc330 download.)
+Older solution models are commented out.
+
+tcds62cid
+---------
+Translation of tc-ds62.txt from http://www.metamorph.geo.uni-mainz.de/thermocalc/dataset6/index.html
+last line: tc-ds62.txt produced at 20.08 on Mon 6 Feb,2012 (sigfit =  1.028)
+note: iron is commented out, because it tends to become stable.
+You may have to comment out further phases if not desired: e.g. zoisite, stilpnomelane, microcline
+If not needed, comment out the F3-phases.
+
+sialca
+------
+This data is from from:
+Berman R.G., Brown T.H. (1984): A thermodynamic model for multicomponent melts, with application
+to the system CaO-Al2O3-SiO2. Geochim. Cosmochim. Acta 48:661-678
+
+-------------------------------------
+In folder programs (program directory) source codes and compiled versions
+main programs
+	theriak.f90	(Calculates equilibrium assemblages)
+	domino.f90	(Calculates equilibrium assemblage phase diagrams)
+	therbin.f90	(Calculates binary phase diagrams)
+	therter.f90	(Calculates ternary phase diagrams)
+	thermo.f90	(Calculates basic thermodynamic functions at T and P)
+	thalia.f90	(Calculates diagrams of basic thermodynamic functions))
+	theriaq.f90	(Calculates aqueous equilibria with stable assemblages. Beta-version, please ignore)
+	therion.f90	(Checks databases versus experimental data, not quite ready yet)
+	jphases.f90	(used to write input when programs are used with the Java GUI)
+	jfiles.f90	(used to write input when programs are used with the Java GUI)
+	cat2.f90	(used by therion)
+plot programs
+	guzzler.f90	(manipulates the output from thalia and domino)
+	explot.f90	(translates graphic output to a PostScript file)
+	makemap.f90	(translates pixelmaps to PostScript and .pgm)
+	plotxy.f90	(reads tables an makes X-Y-plots)
+essential files
+	thhelp.txt	(Help text printed when user-input is '?')
+	theriak.ini	(initialization file with definitions for file names. Is usually identical to theriakMAC.ini)
+	theriakMAC.ini	(initialization file with definitions for file names, preferred by CdC)
+	theriakWIN.ini	(initialization file with definitions for file names, preferred by KP)
+makefile (1)
+	Makefile	(Is usually identical to MakefileMAC)
+	MakefileWIN	(Makefile to compile for Win)
+	MakefileMAC	(Mkefile to compile for UNIX or Mac)
+	
+common block files
+	theriak.cmn
+	files.cmn
+	thblock.cmn
+	theriak.cmn
+	checkdb.cmn
+	expl.cmn
+	map.cmn
+	aqua.cmn
+Subroutine files
+	activi.f90
+	dasave.f90
+	dbread.f90
+	fsol.f90
+	gcalc.f90
+	gmini.f90
+	help.f90
+	hprogs.f90
+	prinin.f90
+	prtcal.f90
+platform dependent subroutine files
+	platf-osx.f90
+	platf-unix.f90
+	platf-win.f90
+	platf-win2.f90
+additional files (added just to test the compilation)
+	THERIN (user input file)
+	JUN92.bs (database)
+	theriak.last
+	domino.last
+	guzzler.last
+	explot.last
+-----------------------------------------
+In folder TheriakExamples
+
+Content may vary. Each folder includes a database, a dat-file and a log-file where the input for
+the demo is stored. For testing, run the program for which a log-file exists and use the proposed input.
+
+trippt/				Triple point of AS. Very simple example to get started.
+afmfor/				Demonstration on how a "AFM-like" diagram may be produced by domino.
+anorthiteExample/		Simple Diagrams with Bulk=an-rich plagioclase [+ SiO2 + H2O]
+fo_qz_melt/			Fo-Qzt-melt example from Holland and Powell (2003)
+kelsey04_fig5/			Phase diagram example after Kelsey et al. (2004), Fig 5a.
+scripting/			Examples of scripts with diagrams in the System Si-Na-K-Al-O-H
+shawL55/			Phasediagram for metapelite Nr.55, composition from Shaw (1955)
+shawL62/			Phasediagram for metapelite Nr.62, composition from Shaw (1955)
+sialca_examples/		Example of Binary and Ternary phase diagrams with the database "sialca"
+parigi/				Example from Coggon and Holland (2002), Fig. 6. (with fixed H2O activity)
+
+
+====================================================================================
+Installation on Macintosh OS X (Is tested on OS X 3.7 - 10.15.4)
+====================================================================================
+Unzip TheriakDominoMAC.zip (double-clicking should work, else donwload the free
+expander software from http://www.stuffit.com/mac/index.html.
+
+Prepare the Terminal application 
+The terminal application is usually located on the start-up disk in the Folder
+"Applications/Utilities"
+Put the Terminal application in the Dock.
+In the menu "Terminal / Preferences" choose the shell and the appropriate settings
+(e.g. Text and background colours). Define the Dimensions with 133 Columns and 30 to 50 Rows.
+
+Copy the Folder "TheriakDominoMAC" to your Home Directory.
+(The name of the Home Directory is your user name.)
+
+In order to start the programs from a Terminal and to keep your input files
+separate from the programs, you need to set the THERDOM environment variable
+to the path where the programs are stored and also to add this path to the searchpath for
+executing programs.
+
+The folder "Working" contains the file "bash_profile" and “.zshrc”
+Copy "bash_profile" (for bash) or "zshrc" (for zsh) to your Home directory.
+Edit it to define the Program directory. (use e.g. BBEdit or TextEdit)
+Write the name of your Home directory instead of "capi"
+(If your user name contains blanks these have to be written as "\ " (backslash, blank))
+
+	export THERDOM=/Users/capi/TheriakMAC/TheriakDomino
+change to 
+	export THERDOM=/Users/UserName/TheriakMAC/TheriakDomino
+
+Save the file as ".bash_profile" or ".zshrc" in the Home directory.(The first
+character is a dot, there is no extension (like .txt etc.). )
+Some editors refuse to save a name beginning with ".".
+If all fails, save without the dot, then start the Terminal and type:
+ "mv bash_profile .bash_profile", or "mv zshrc .zshrc"then quit the Terminal.
+
+Note: Because of the dot, the file ".bash_profile" becomes invisible.
+
+Note: the path+filenames should not exceed 250 characters.
+
+The following are my personal preferences, You may as well delete these lines.
+PS1="`whoami` \#>  (or PROMPT='%n %h %#>') 
+	(defines the text of the Terminal prompt (username and line-number))
+alias  ther="cd..."  (go to working directory, is just for convenience)
+alias ls="ls -aF"
+echo ~.bash_profile read  (confirms, that the .bash_profile file was read)
+echo pwd: $PWD (prints the path to the Home directory at login)
+
+Get ready to use THERIAK-DOMINO
+
+Open the Folder "Working", and place its window where it will not be completely hidden
+by the Terminal. All opening and editing of files is made from this window.
+The THERIAK-DOMINO programs are run from the Terminal.
+
+Start the Terminal application
+cd to the working directory.
+Or use "cdto" (see: https://github.com/jbtule/cdto )
+You are now ready to use THERIAK-DOMINO. You can invoke any program by typing its name.
+
+Some UNIX commands you need, to run THERIAK-DOMINO on a Mac
+-----------------------------------------------------------
+pwd             displays the name of the current working directory.
+cd              changes the current working directory:
+       cd       (go to your Home directory)
+       cd ../   (one directory level up)
+       cd name  (change to directory "name" (inside working directory))
+ls              list files and directories in working directory
+mv name1 name2  rename the file "name1" to "name2"
+rm name         delete (remove) file "name"
+exit            close the Terminal
+
+
+============================================================================
+Installation on WIN
+============================================================================
+Unstuff TheriakDominoWIN/Programs.zip 
+
+Copy the folder "TheriakDominoWin" to a folder of your choice, for example C:\ 
+Note that in this case, the programs reside in the folder 
+C:\TheriakDominoWin\Programs
+(if you put it somewhere else you have to edit the start.bat file and set
+THERDOM= to the path of the Programs folder)
+
+In order to start the programs from a Terminal and to keep your input files
+separate from the programs, copy the "start.bat" file to any directory containing
+a THERIN file and a database.
+
+It is recommended for your work with theriak/domino, that you unhide file extensions.
+(Click on the “Tools” menu and select “Folder Options…”. Click on the “View” tab.
+In the opened “View” tab, find the option “Hide extensions for known file types” and
+uncheck the box beside it. Click on “Apply to All Folders” and then on “OK”)
+
+Double-click on start.bat. This will open a (usually) black console window titled
+“C:\WINNT\System32\cmd.exe”. Adjust the “Screen buffer size” to a width of 133 and
+a height of at least 200. Adjust also the physical “Window size” according to the size
+of your monitor
+Open the file "start.bat"
+You can invoke any program by typing its name.
+
+Some useful commands to use in a console window
+-----------------------------------------------
+cd (chdir)        displays the name of the current working directory or changes to another directory. Examples.
+      cd ..\      (change directory one level higher)
+      cd name     (change to directory "name" inside your working directory)
+      cd ..\Docs  (change one level higher and then to directory Docs) example to move 
+dir               (list files and directories in working directory)
+ren name1 name2   (rename the file "name1" to "name2")
+del name          (delete file "name")
+exit              (quits the console window (terminates cmd.exe)
+
+------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
+I hope you encounter no major difficulties
+     
+sincerely  
+
+Christian de Capitani

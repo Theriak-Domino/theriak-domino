@@ -1,0 +1,49 @@
+! -----Version: 05.09.06
+! Comments in this file start with ! at position 1.
+!
+! The sructure of input data includes two parts: (a) External conditions for calculation (e.g. T and P) and
+! (b) Bulk system composition given as element amounts.
+! The first significant line should contain the external conditions as follows.
+!
+!   temperature(deg C)   pressure(bar)   optionally-[PGAS]-ratio 
+!   where 
+!           [PGAS]-ratio = (fluid pressure)/(total pressure)
+!
+! The second and further significant lines contain the bulk composition have the following form.
+! 
+!   print-code   bulk-formula    use-code   optional_comment
+!  
+!   where 
+!       print-code should start at position 1 and may take the following values. 
+!       < -1:   print information about selected or rejected phases from the database. 
+!               NO EQUILIBRIUM CALCULATED. 
+!       =-1:    print composition, considered phases and solution models. 
+!               NO EQUILIBRIUM CALCULATED. 
+!       = 0:    short output (stable assemblage) 
+!       = 1:    long output (composition, considered phases, solution models, stable 
+!               assemblage, activities of all phases 
+!
+!       bulk-formula is the element bulk composition written as follows.
+!       ELEMENT1(Amount1)ELEMENT2(Amount2).....
+!           A ? for the oxygen amount instructs the program to assign exactly 
+!           the stoiciometric oxygene atoms to the other elements.
+!
+!       use-code controlls which phases are read from the database. Usually this is "*" 
+!       for all phases matching the chemical system defined by bulk-formula.
+!
+!       optional comment 
+!
+! ----------> dont' forget: at least two blanks between items!!! <----------
+!
+!   For the most typical case, only one chemical input line is needed. The following lines are
+!       ignored. For calculation of binary or ternary diagrams however, two or three additionalchemical
+!       input lines are needed that define the the system«s endmember compositions.
+!----------------------------------------------------------------------------------------
+    400     2000
+1   AL(2)SI(1)O(?)     *   this calculates the triple point
+1   SI(54.39)AL(26.79)FE(6.20)MG(3.54)CA(0.60)NA(1.52)K(6.96)O(163.545)H(60)O(30)      *   TN307.aus tabelle
+1   K(0.5)NA(0.5)AL(3)SI(3)O(12)H(2) SI(10)O(20) H(20)O(10)    *
+1   CA(1)S(1)O(4)H(40)O(20)   *
+1   CA(1)C(1)O(3)H(20)O(10)    *
+1   SI(1)O(2)H(20)O(10)     *
+1   SI(1)O(2)     *

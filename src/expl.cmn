@@ -1,0 +1,24 @@
+!-----Version: 28.05.2022
+!******************************************************************
+!-----COMMON BLOCK FOR EXPLOT
+!-
+      CHARACTER(500) REC
+      CHARACTER(32) PSFONT,SVGFONT
+      CHARACTER(3) ABC
+      CHARACTER(7) SVGSTRO,SVGFILL
+      CHARACTER(64) IMACH
+      REAL(8) X0,Y0,B,H,L,R,U,O,S,FAT,SVGFAT,CMPX, &
+      LGRAY,FGRAY,LCOLR,LCOLG,LCOLB,FCOLR,FCOLG,FCOLB, &
+      DASH1,GAP1,DASH2,GAP2,IMAX,IMAY,IMAB,IMAH
+      INTEGER(4) SYSTEM,STYLE,LINCOL,FILCOL,IMAN
+      LOGICAL(4) MAKEPS,MAKESVG,LINDASH
+      COMMON /GLOCH/ REC,PSFONT,SVGFONT,ABC,SVGSTRO,SVGFILL,IMACH
+      COMMON /GLORE/ X0,Y0,B,H,L,R,U,O,S,FAT,SVGFAT,CMPX, &
+      LGRAY,FGRAY,LCOLR,LCOLG,LCOLB,FCOLR,FCOLG,FCOLB, &
+      DASH1,GAP1,DASH2,GAP2,IMAX,IMAY,IMAB,IMAH
+      COMMON /GLOIN/ SYSTEM,STYLE,LINCOL,FILCOL,IMAN
+      COMMON /GLOLO/ MAKEPS,MAKESVG,LINDASH
+!******************************************************************
+      integer(4)  hlp,kbd,scr,log,cln,plt,rxn,grd,pst,svg
+      common /iounits/ hlp,kbd,scr,log,cln,plt,rxn,grd,pst,svg
+!----- end of common variables
