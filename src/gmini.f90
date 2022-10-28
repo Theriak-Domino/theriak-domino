@@ -361,7 +361,7 @@
       IF (TEST.LT.0.0D0) THEN
         WRITE (scr,1017) (SUGG(I),I=1,NUN)
         WRITE (out,1017) (SUGG(I),I=1,NUN)
- 1017 FORMAT (' new ass:  ',7(I7,10X),100(/8X,7(I7,10X)))
+ 1017 FORMAT (' new ass:  ',7(I7,10X),100( /8X,7(I7,10X)))
       END IF
 
 
@@ -1244,20 +1244,20 @@
       IF (TEST.LT.0.0D0) THEN
       WRITE (scr,1010) SUGG(IEX),(WARUM(I),I=1,NUN)
       WRITE (out,1010) SUGG(IEX),(WARUM(I),I=1,NUN)
- 1010 FORMAT (' dG < 0 : ',I7,2X,11A12,100(/,12X,11A12))
+ 1010 FORMAT (' dG < 0 : ',I7,2X,11A12,100( /,12X,11A12))
       IF (IFOUND.NE.0) THEN
         WRITE (scr,1012) IEX,SUGG(IEX),IFOUND,SUGG(IFOUND), &
         (DX0(I),I=1,NUN)
         WRITE (out,1012) IEX,SUGG(IEX),IFOUND,SUGG(IFOUND), &
         (DX0(I),I=1,NUN)
  1012 FORMAT (' exchange col:',I4,' (sug',I7,') col',I4,' (sug',I7, &
-      ') |',/,' new NN:',7(2X,1PE15.8),100(/8X,7(2X,1PE15.8)))
+      ') |',/,' new NN:',7(2X,1PE15.8),100( /8X,7(2X,1PE15.8)))
         WRITE (scr,1016) (TEXT(I),I=1,NUN)
         WRITE (out,1016) (TEXT(I),I=1,NUN)
- 1016 FORMAT (' old ass:  ',7(1X,A16),100(/8X,7(1X,A16)))
+ 1016 FORMAT (' old ass:  ',7(1X,A16),100( /8X,7(1X,A16)))
         WRITE (scr,1017) (SUGG(I),I=1,NUN)
         WRITE (out,1017) (SUGG(I),I=1,NUN)
- 1017 FORMAT (' old ass:  ',7(I7,10X),100(/8X,7(I7,10X)))
+ 1017 FORMAT (' old ass:  ',7(I7,10X),100( /8X,7(I7,10X)))
       ELSE
         WRITE (scr,1014) NULWERT
         WRITE (out,1014) NULWERT
@@ -2959,11 +2959,11 @@
       WRITE (scr,1031) IMEGA,FFX,BREMS,(DX0(I),I=1,N1)
       WRITE (out,1031) IMEGA,FFX,BREMS,(DX0(I),I=1,N1)
  1031 FORMAT (1X,I4,' FFX,BREMS,DX0:',6(2X,1PE15.8), &
-      :,100(/,54X,4(2X,1PE15.8)))
+      :,100( /,54X,4(2X,1PE15.8)))
       WRITE (scr,1032) IMEGA,GG0,GPROG,(XX0N(I),I=1,N0)
       WRITE (out,1032) IMEGA,GG0,GPROG,(XX0N(I),I=1,N0)
  1032 FORMAT (1X,I4,' G,DG,last Xi :',6(2X,1PE15.8), &
-      :,100(/,54X,4(2X,1PE15.8)))
+      :,100( /,54X,4(2X,1PE15.8)))
       END IF
 !==
       IF (IMEGA.EQ.1) RETURN

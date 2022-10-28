@@ -1482,7 +1482,7 @@
       WRITE (UNIT=out,FMT=114) MPOMAX,POL,(MANAM(I),I=1,DIM)
   114 FORMAT (//' The maximum polynomial for the Margules parameters', &
       ' is set to ',I5/ &
-      ' A value of ',I5,' is needed for:',100(/10X,A16))
+      ' A value of ',I5,' is needed for:',100( /10X,A16))
       WRITE (UNIT=scr,FMT=115)
       WRITE (UNIT=out,FMT=115)
   115 FORMAT ( &
@@ -1500,7 +1500,7 @@
       100I1)
       WRITE (UNIT=scr,FMT=117) (MANAM(K),K=1,DIM)
       WRITE (UNIT=out,FMT=117) (MANAM(K),K=1,DIM)
-  117 FORMAT (' subsystem:',100(/10X,A16))
+  117 FORMAT (' subsystem:',100( /10X,A16))
       STOP
       END IF
   520 CONTINUE
