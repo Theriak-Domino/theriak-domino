@@ -143,21 +143,18 @@ module flags
             case("OUTFLAGS")
               CALL LOWUP(tstr2)
               if(tstr2 == 'TRUE') OUTFLAGS = .TRUE.
+            case("DOBINGVA")
+              CALL LOWUP(tstr2)
+              if(tstr2 == 'TRUE') DOBINGVA = .TRUE.
+            case("DOEXTRAPPNSVA")
+              CALL LOWUP(tstr2)
+              if(tstr2 == 'TRUE') DOEXTRAPPNSVA = .TRUE.
+              if(tstr2 == 'FALSE') DOEXTRAPPNSVA = .FALSE.
               !
             case("DOMINMAXSIELST")
               print *, "Found DOMINMAXSIELST, but not implemented"
               CALL LOWUP(tstr2)
               if(tstr2 == 'TRUE') DOMINMAXSIELST = .TRUE.
-            case("DOEXTRAPPNSVA")
-              print *, "Found DOEXTRAPPNSVA, but not implemented"
-              CALL LOWUP(tstr2)
-              if(tstr2 == 'TRUE') DOEXTRAPPNSVA = .TRUE.
-              if(tstr2 == 'FALSE') DOEXTRAPPNSVA = .FALSE.
-            case("DOBINGVA")
-              print *, "Found DOBINGVA, but not implemented"
-              CALL LOWUP(tstr2)
-              if(tstr2 == 'TRUE') DOBINGVA = .TRUE.
-
             case("SWITCHGCMAX")  !2021-12-19: for SR ETC
               print *, "Found SWITCHGCMAX, but not implemented"
               CALL LOWUP(tstr2)

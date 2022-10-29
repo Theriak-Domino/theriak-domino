@@ -117,6 +117,7 @@
 !**********************************************************************
 !
         SUBROUTINE initialize(tag, ierr)
+        USE flags, ONLY: CALCFLAGS
         IMPLICIT NONE
         INCLUDE "files.cmn"
 !-----  Local variables
@@ -170,6 +171,7 @@
         if(line(1:7).eq.'$BATCH=') &
         read(line(8:8),*) batch
         IF (line(1:12).EQ.'$CALC-PARAMS') CALL CALCPAR
+        IF (line(1:11).EQ.'$CALC-FLAGS')  CALL CALCFLAGS
 !
 !---- changes by Capi: check if dat-file is mentioned in theriak.ini
       CHECKDAT=0
