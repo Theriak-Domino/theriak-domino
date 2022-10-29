@@ -1876,6 +1876,7 @@
       INTEGER(4) I,IS,START,STEP,STEP2,NSTEP,L3,L1,II,I001,I002, &
       I1,FRAC,COMBO(10),IC,BESTN,BESTS,ANUMBER,IPM,VERSUCH, &
       GNOMSOFAR,DOMEM
+      INTEGER(4) VACODE
       REAL(8) XXSC(EMAX),GSC,XXX(3,EMAX),GGG(3),AR001(EMAX), &
       AR002(EMAX),SUMME,F001,FF,LESCAN,MUE(EMAX), &
       AR003(EMAX),REFX(EMAX),REFG,BESTG,REFG0,PLUMI,DDX,GAIN
@@ -2283,7 +2284,9 @@
       DO STEP2=1,NEND(IS)
         IF (STEP2.NE.1) VEKTOR(STEP2-1)=-AR001(STEP2-1)
         VEKTOR(STEP2)=1.0D0-AR001(STEP2)
-        CALL VECADD(IS,AR001,F001,XXSC)
+        VACODE=1
+        CALL VECADD(IS,AR001,F001,XXSC,VACODE)
+        IF(VACODE == 0) CYCLE
         CALL GNONID(IS,XXSC,GSC)
         IF (GSC.LT.GGG(L1)) THEN
         MINKOM='endm.'
@@ -2298,7 +2301,9 @@
         DO I=1,NEND(IS)
           VEKTOR(I)=STREM(IS,II,I)-AR001(I)
         END DO
-        CALL VECADD(IS,AR001,F001,XXSC)
+        VACODE=1
+        CALL VECADD(IS,AR001,F001,XXSC,VACODE)
+        IF(VACODE == 0) CYCLE
         CALL GNONID(IS,XXSC,GSC)
         IF (GSC.LT.GGG(L1)) THEN
         MINKOM='str.em'
@@ -3122,6 +3127,7 @@
       INCLUDE 'theriak.cmn'
 !-----END OF COMMON VARIABLES
       INTEGER(4) IS,I,II,I001
+      INTEGER(4) VACODE
       REAL(8) XSTART(EMAX),GSTART,XOLD(EMAX),GOLD,XNEW(EMAX), &
       GNEW,DELIX
 !-----
@@ -3130,16 +3136,22 @@
       DO I001=1,NEND(IS)
         XOLD(I001)=XSTART(I001)
       END DO
-      CALL VECADD(IS,XSTART,DELIX,XNEW)
+      VACODE=1
+      CALL VECADD(IS,XSTART,DELIX,XNEW,VACODE)
+      IF(VACODE == 0) THEN
+        VACODE=1
+        GOTO 1
+      END IF
       CALL GNONID(IS,XNEW,GNEW)
       DO II=1,GCMAX
-        IF (GNEW.GE.GOLD) GO TO 1
+        IF (GNEW.GE.GOLD.OR.VACODE.EQ.0) GO TO 1
         DELIX=DELIX+DELTAX
         GOLD=GNEW
         DO I001=1,NEND(IS)
           XOLD(I001)=XNEW(I001)
         END DO
-        CALL VECADD(IS,XOLD,DELIX,XNEW)
+        VACODE=1
+        CALL VECADD(IS,XOLD,DELIX,XNEW,VACODE)
         CALL GNONID(IS,XNEW,GNEW)
       END DO
     1 GNEW=GOLD
@@ -3149,7 +3161,12 @@
       DO I=1,GCMAX
         IF (GNEW.LT.GSTART.OR.DELIX.LE.DXMIN) GO TO 2
         DELIX=DELIX/2.0D0
-        CALL VECADD(IS,XSTART,DELIX,XNEW)
+        VACODE=1
+        CALL VECADD(IS,XSTART,DELIX,XNEW,VACODE)
+        IF(VACODE == 0) THEN
+          !VACODE=1
+          CYCLE
+        END IF
         CALL GNONID(IS,XNEW,GNEW)
       END DO
     2 IF (GNEW.GT.GSTART) THEN
@@ -3162,12 +3179,107 @@
       END
 !-----
 !******************************
-      SUBROUTINE VECADD(IS,X1,DELIX,X2)
+    !added return code VACODE. Called by sr marmin, etc
+    SUBROUTINE VECADD(IS,X1,DELIX,X2,VACODE)
+      USE flags, ONLY : DOEXTRAPPNSVA, VAFFSCALE
+      IMPLICIT NONE
+      INCLUDE 'theriak.cmn'
+      !-----END OF COMMON VARIABLES
+      INTEGER(4) IS,I,CODE
+      REAL(8) X1(EMAX),X2(EMAX),DELIX,SUMME,FF
+      INTEGER(4), INTENT(OUT) :: VACODE
+      !-----
+
+      !return if x1 fails spacetest on entry
+      CODE=1
+      CALL SPACETEST(IS,X1,CODE)
+      IF (CODE.EQ.0) THEN
+        !      WRITE (6,1000) SOLNAM(IS),(X1(I),I=1,NEND(IS))
+        ! 1000 FORMAT (1X,A16,' x1 in VECADD is outside space ',20(1PE12.5))
+        !X2(I)=1.0D0/DBLE(NEND(IS))
+        X2(1:NEND(IS)) = X1(1:NEND(IS)) !set back to X1 instead of center comp
+        VACODE=0
+        RETURN
+      END IF
+      
+      !calc FF scale factor on vektor before adding;
+      !use largest magnitude of delix,dxmin (or most 
+      !neg if delix neg)
+      FF=DMAX1(DELIX,DXMIN)
+      IF (DELIX.LT.0.0D0) FF=DMIN1(DELIX,-DXMIN)
+      X2(1:NEND(IS)) = X1(1:NEND(IS)) + VEKTOR(1:NEND(IS))*FF
+      !IF(DOEXTRAPPNSVA.EQV..TRUE.) CALL NORMPPNS
+
+    !-----
+    1 CODE=2
+      CALL SPACETEST(IS,X2,CODE)
+      IF (CODE.EQ.0) THEN
+        !reset to last x1 if st failed, and scale if ff<dxmin
+        IF (DABS(FF).LT.DXMIN) THEN
+          X2(1:NEND(IS)) = X1(1:NEND(IS))
+          VACODE = CODE
+          RETURN
+        END IF
+        !otherwise dec ff if st failed and try again
+        FF=FF*VAFFSCALE
+        X2(1:NEND(IS)) = X1(1:NEND(IS)) + VEKTOR(1:NEND(IS))*FF
+        IF(DOEXTRAPPNSVA.EQV..TRUE.) CALL NORMPPNS
+        !DC
+        IF (NNEGEM(IS).GT.0) THEN
+          CODE=2
+          CALL SPACETEST(IS,X2,CODE)
+          IF (CODE.EQ.0) THEN
+            DO I=1,NEND(IS)
+              IF (X2(I).GT.FF) THEN  !dkt testing on FF instead of default 1D-2
+                X2(I)=X2(I)-FF       !dkt trying FF instead of default 1D-3
+              ELSE
+                X2(I)=X2(I)+FF       !dkt trying FF instead of default 1D-2
+              END IF
+            END DO
+            CALL NORMPPNS            !dkt needed since arbritrary shift above
+            !CALL GETSTINFO          !dkt uncomment if LTCODE=0
+          END IF
+        END IF
+        !DC
+        GOTO 1 !trying again with adjusted X2
+      END IF 
+      !---
+      !-----
+      !dkt need to norm ppns if NORMPPNS not called above 
+      IF(DOEXTRAPPNSVA .EQV. .FALSE.)  CALL NORMPPNS
+      VACODE = CODE
+      RETURN
+
+      CONTAINS
+      
+        !bdkt Adding sub-subroutine to normalize ppns to 1
+        SUBROUTINE NORMPPNS
+          SUMME = 0.0D0
+          DO I = 1, NEND(IS)
+            SUMME = SUMME + X2(I)
+          END DO
+          !print*,' summe in vecadd normppns = ',SUMME
+          IF (DABS(1.0D0-SUMME) .GT. 1.0D-20) THEN  !dt huh? Shouldn't this be Abs(1.0D0-SUMME) since SUMME close to 1.0?  !dt magcon
+            DO I = 1, NEND(IS)
+                X2(I) = X2(I)/(SUMME)
+            END DO
+          END IF
+          RETURN
+        END SUBROUTINE NORMPPNS
+
+      END SUBROUTINE VECADD
+!-----
+!******************************
+      !This is original 28.09.2022 VECADD, but with VACODE added, that
+      !does nothing in this case; this is here for comparison later 
+      !with VECADD above.
+      SUBROUTINE VECADD_ORIGINAL(IS,X1,DELIX,X2,VACODE)
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
 !-----END OF COMMON VARIABLES
       INTEGER(4) IS,I,CODE
       REAL(8) X1(EMAX),X2(EMAX),DELIX,SUMME,FF
+      INTEGER(4), INTENT(INOUT) :: VACODE
 !-----
       CODE=1
       CALL SPACETEST(IS,X1,CODE)
@@ -3230,7 +3342,7 @@
       END DO
       END IF
       RETURN
-      END
+      END SUBROUTINE VECADD_ORIGINAL
 !-----
 !******************************
       SUBROUTINE SPACETEST(IS,X1,CODE)
