@@ -55,7 +55,8 @@
 !--
       call clearscreen
       progname='DOMINO'
-      vers='28.05.2022'
+      !vers='28.05.2022'
+      vers = _CURRBUILDNAME_
       task='"Computation of phase diagrams in complex systems"'
       isimu=0
       sdate=' '

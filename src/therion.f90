@@ -32,7 +32,8 @@
 !-    The global variable for the directory is NEWDIR
 !*****
       progname='THERION'
-      vers='28.05.2022'
+      !vers='28.05.2022'
+      vers = _CURRBUILDNAME_
       task='"check consistency of databases"'
       ierr=0
       call initialize('$THERION-FILES',ierr)

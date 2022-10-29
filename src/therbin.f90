@@ -69,7 +69,8 @@
 !*****
 !CCCC      CALL CPUTIME(ZEITSTRING)
       progname='THERBIN'
-      vers='28.05.2022'
+      !vers='28.05.2022'
+      vers = _CURRBUILDNAME_
       task='"Computation of binary phase diagrams"'
       ierr=0
       call initialize('$THERBIN-FILES',ierr)

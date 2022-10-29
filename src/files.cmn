@@ -56,7 +56,7 @@
 !       TASK is a short description of what the program does
 !       OS is the operating system (see file THERIAK.INI)
 !
-        character progname*15, vers*20, task*80, sdate*21, os*20
+        character progname*30, vers*30, task*80, sdate*21, os*20
         common /prog/ task, sdate, vers, progname, os
 !
 !****** Here are some control variables for program run defined (see file

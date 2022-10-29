@@ -28,7 +28,8 @@
       CHARACTER*500 CH001,CH002,SYREC,CHIN(2),ZEITSTRING
 !*****
       progname='THERIAK'
-      vers='11.03.2020'
+      !vers='11.03.2020'
+      vers = _CURRBUILDNAME_
       task='"Computation of equilibrium assemblages at given PT"'
       EINS=1
       call initialize('$THERIAK-FILES',ierr)
@@ -2349,7 +2350,7 @@
       '-----------------------------------------------', &
       '-----------------------------------------------', &
       '-----------------'/ &
-      'gen',1X,'shell',2X,'temperature (¡C)',1X,'pressure (bar)', &
+      'gen',1X,'shell',2X,'temperature (ï¿½C)',1X,'pressure (bar)', &
       3X,'tot.time (my)', &
       4X,'radius (cm)',6X,'X(node) (cm)',5X,'Xmn',14X,'Xfe', &
       14X,'Xmg',14X,'Xca')
@@ -2487,7 +2488,7 @@
       '-----------------------------------------------', &
       '-----------------------------------------------', &
       '----------------------'/ &
-      'shell',2X,'temperature (¡C)',1X,'pressure (bar)', &
+      'shell',2X,'temperature (ï¿½C)',1X,'pressure (bar)', &
       3X,'time (my)',8X,'radius (cm)',6X,'Xmn',14X,'Xfe',14X,'Xmg', &
       14X,'Xca',14X,'assemblage')
       ELSE
@@ -3295,9 +3296,9 @@
 !1      OPEN (UNIT=15,FILE='amalai',STATUS='UNKNOWN')
 !1      OPEN (UNIT=16,FILE='mmat',STATUS='UNKNOWN')
 !----
-!     TC       temperature in ¡C
+!     TC       temperature in ï¿½C
 !     P        pressure in bar
-!     length   adius of garnet in µm (10µm=0.01mm=0.001cm)
+!     length   adius of garnet in ï¿½m (10ï¿½m=0.01mm=0.001cm)
 !     nr       number of spatial nodes
 !     TT       total time of diffusion in 1Ma years
 !     TSS      Time step size in years

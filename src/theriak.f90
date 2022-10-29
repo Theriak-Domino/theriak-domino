@@ -47,7 +47,8 @@
       CHARACTER(500) CH001,CH002,SYREC,CHIN(3),ZEITSTRING
 !*****
       progname='THERIAK'
-      vers='28.05.2022'
+      !vers='28.05.2022'
+      vers = _CURRBUILDNAME_
       task='"Computation of equilibrium assemblages at given PT"'
       EINS=1
       ierr=0

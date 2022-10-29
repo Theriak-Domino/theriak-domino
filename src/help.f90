@@ -28,7 +28,7 @@
         write(*,35)
 50      continue
         read(hlp,35,end=150) line
-        if(line(1:1).eq.'§')then
+        if(line(1:1).eq.'ï¿½')then
             write(*,35)
             write(*,35) ' Press the RETURN-key to continue!'
             read(*,*)
@@ -55,10 +55,13 @@
 !***************************************************************
 !
       subroutine writetit (iu)
+      use ISO_FORTRAN_ENV
       implicit none
       include "files.cmn"
 !
       integer i, j, k, iu
+      character(len=40) :: cdateandtime
+      character(len=:),allocatable :: compver
 !
       call LASTCHAR(progname,i)
       call LASTCHAR(vers,j)
@@ -68,8 +71,8 @@
       WRITE (iu,1000) progname(1:i),vers(1:j),os(1:k)
       j=i+j+k
 1000  FORMAT (/, &
-      ' Program',1x,a,', Version (dd.mm.yy)',1x,a,1x,'(',a,')')
-      write(iu,2) ('=',i=1,32+j)
+      ' Program',1x,a,', Version (dd.mm.yyyy)',1x,a,1x,'(',a,')')
+      write(iu,2) ('=',i=1,32+2+j)
 2     format(1x,130a1)
       call LASTCHAR(task,i)
       write(iu,101) task(1:i)
@@ -81,6 +84,27 @@
       /,11x,'Konstantin Petrakakis (Vienna, Austria)', &
       /,11x,'E-mail: Konstantin.Petrakakis@univie.ac.at'/)
       write(iu,2) ('=',j=1,80)
+      !bdkt - write compilation info
+      CALL getdate(cdateandtime)
+      compver = COMPILER_VERSION()
+      !compopt=compiler_options()
+      !PRINT *, ''
+      PRINT *, 'Compile date: '//cdateandtime
+      !print *, 'Compiled by:  Doug Tinkham'
+      !print *, 'Source:       Minor modifications of Theriak-Domino source release '//_INITIALSRCDATE_
+      !print *, ''
+      PRINT *, 'Compiler version:'
+      PRINT *, compver
+      !print *, ''
+      !PRINT *, 'Script compiler options:'
+      !PRINT *, _CURRCFLAGSTR_
+      !print *, ''
+      !PRINT *, 'Script linker options:'
+      !PRINT *, _CURRLFLAGSTR_
+      PRINT *, ''
+      DEALLOCATE(compver)
+      !deallocate(compopt)
+      !edkt
       if(iu.eq.6.and.ghelp.eq.1) then
           i=clear
           if(clear.eq.1) clear=0

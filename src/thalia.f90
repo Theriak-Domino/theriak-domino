@@ -36,7 +36,8 @@
 !-----END OF COMMON VARIABLES
 !*****
       progname='THALIA'
-      vers='28.05.2022'
+      !vers='28.05.2022'
+      vers = _CURRBUILDNAME_
       task='"Calculation and plot of thermodynamic functions"'
       ierr=0
       CALL initialize('$THALIA-FILES',ierr)

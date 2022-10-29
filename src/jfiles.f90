@@ -28,7 +28,8 @@
       INTEGER(4) I1,J,ierr
 !--
       progname='JFILES'
-      vers='28.05.2022'
+      !vers='28.05.2022'
+      vers = _CURRBUILDNAME_
       task='"read/write files in javathings/..."'
 !*****
       ierr=0

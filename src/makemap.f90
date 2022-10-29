@@ -89,7 +89,8 @@
 !-----
 !!!      CALL clearscreen
       progname='MAKEMAP'
-      vers='28.05.2022'
+      !vers='28.05.2022'
+      vers = _CURRBUILDNAME_
       task='draw greymap images of phase diagrams'
       sdate=' '
       ierr=0

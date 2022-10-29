@@ -70,7 +70,8 @@
       COPHASE(3),ICH
 !*****
       progname='THERTER'
-      vers='28.05.2022'
+      !vers='28.05.2022'
+      vers = _CURRBUILDNAME_
       task='"Computation of ternary phase diagrams"'
       ierr=0
       CALL initialize('$THERTER-FILES',ierr)

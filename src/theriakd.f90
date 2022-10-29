@@ -85,7 +85,8 @@
 !      CHARACTER*500 ZEITSTRING
 
       progname='THERIAK'
-      vers='11.03.2020'
+      !vers='11.03.2020'
+      vers = _CURRBUILDNAME_
       task='"Computation of equilibrium assemblages at given PT"'
       EINS=1
       ierr=9                                         ! is set to 9 to suppress output

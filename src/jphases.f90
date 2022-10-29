@@ -38,7 +38,8 @@
       CHARACTER(500) XLINE
 !--
       progname='jphases'
-      vers='28.05.2022'
+      !vers='28.05.2022'
+      vers = _CURRBUILDNAME_
       task='"read/write files in javathings/..."'
 !-----
       LARG=0

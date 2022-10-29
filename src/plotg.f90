@@ -72,7 +72,8 @@
       INFODA=.FALSE.
 !***** 
       progname='PLOTXY'
-      vers='11.03.2020'
+      !vers='11.03.2020'
+      vers = _CURRBUILDNAME_
       task='"XY-plots from tables of variables"'
 !      EINS=1
       ierr=0

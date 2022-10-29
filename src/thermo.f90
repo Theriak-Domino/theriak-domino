@@ -36,7 +36,8 @@
 !*****
       CALL CPUTIME(ZEITSTRING)
       progname='THERMO'
-      vers='28.05.2022'
+      !vers='28.05.2022'
+      vers = _CURRBUILDNAME_
       task='"Computation of thermodynamic functions"'
       ierr=0
       call initialize('$THERMO-FILES',ierr)

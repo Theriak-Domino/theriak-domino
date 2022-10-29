@@ -46,7 +46,8 @@
 !-    The global variable for the directory is NEWDIR
 !*****
       progname='THERIAK3'
-      vers='11.03.2020'
+      !vers='11.03.2020'
+      vers = _CURRBUILDNAME_
       task='"check internal consistency of databases"'
       ierr=0
       call initialize('$THERIAK3-FILES',ierr)

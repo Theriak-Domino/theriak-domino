@@ -2925,7 +2925,7 @@
       IF (line.NE.tag) GOTO 30
 !-----
    50 READ(UNIT=hlp,FMT='(A)',END=150) line
-      IF (line(1:1).EQ.'§') THEN
+      IF (line(1:1).EQ.'ï¿½') THEN
         WRITE (UNIT=scr,FMT='(/A)') 'press CR to continue!'
         READ (kbd,*)
         GOTO 50
@@ -2947,11 +2947,12 @@
       SUBROUTINE writetit(iu,os)
       implicit none
       INCLUDE 'expl.cmn'
-      character progname*15,vers*20,task*80
+      character progname*30,vers*30,task*80
       character *(*) os
       integer i, j, k, iu
       progname='EXPLOT'
-      vers='28.05.2022'
+      !vers='28.05.2022'
+      vers = _CURRBUILDNAME_
       task='"Create a PostScritp(TM) file from graphics input"'
       call LABLA(progname,i)
       call LABLA(vers,j)
