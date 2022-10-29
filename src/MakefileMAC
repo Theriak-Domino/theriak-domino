@@ -109,22 +109,26 @@ help.o : help.$(SEX) files.cmn thblock.cmn SETUPDIRS
 $(PLAT).o : $(PLAT).$(SEX) SETUPDIRS
 	$(COMP90) -c $(PLAT).$(SEX) -o $(ODIR)/$(PLAT).o
 
+#nag produces both .mod and .o during comp stage, but links the .o thus, changed
+flags.$(MOD_EXT) : flags.$(SEX) files.cmn SETUPDIRS
+	$(COMP90) -c flags.$(SEX) -o $(ODIR)/flags.$(MOD_EXT)
+
 theriak.o : theriak.$(SEX) theriak.cmn files.cmn SETUPDIRS
 	$(COMP90) -c theriak.$(SEX) -o $(ODIR)/theriak.o
 
-theriak : theriak.o $(OBJECTS)
+theriak : $(OBJECTS) theriak.o 
 	$(COMP90) -o $(BDIR)/theriak $(ODIR)/theriak.o $(LOBJECTS) $(LFLAGS)
 
 theriakd.o : theriakd.$(SEX) theriak.cmn files.cmn SETUPDIRS
 	$(COMP90) -c theriakd.$(SEX) -o $(ODIR)/theriakd.o
 
-theriakd : theriakd.o $(OBJECTS)
+theriakd : $(OBJECTS) theriakd.o 
 	$(COMP90) -o $(BDIR)/theriakd $(ODIR)/theriakd.o $(LOBJECTS) $(LFLAGS)
 
 domino.o : domino.$(SEX) theriak.cmn files.cmn SETUPDIRS
 	$(COMP90) -c domino.$(SEX) -o $(ODIR)/domino.o
 
-domino : domino.o $(OBJECTS)
+domino : $(OBJECTS) domino.o 
 	$(COMP90) -o $(BDIR)/domino $(ODIR)/domino.o $(LOBJECTS) $(LFLAGS)
 
 guzzler.o : guzzler.$(SEX) SETUPDIRS
@@ -142,61 +146,61 @@ explot : explot.o $(PLAT).o
 therbin.o : therbin.$(SEX) theriak.cmn files.cmn SETUPDIRS
 	$(COMP90) -c therbin.$(SEX) -o $(ODIR)/therbin.o
 
-therbin : therbin.o $(OBJECTS)
+therbin : $(OBJECTS) therbin.o 
 	$(COMP90) -o $(BDIR)/therbin $(ODIR)/therbin.o $(LOBJECTS) $(LFLAGS)
 
 therbinc.o : therbinc.$(SEX) theriak.cmn files.cmn SETUPDIRS
 	$(COMP90) -c therbinc.$(SEX) -o $(ODIR)/therbinc.o
 
-therbinc : therbinc.o $(OBJECTS)
+therbinc : $(OBJECTS) therbinc.o 
 	$(COMP90) -o $(BDIR)/therbinc $(ODIR)/therbinc.o $(LOBJECTS) $(LFLAGS)
 
 therter.o : therter.$(SEX) theriak.cmn files.cmn SETUPDIRS
 	$(COMP90) -c therter.$(SEX) -o $(ODIR)/therter.o
 
-therter : therter.o $(OBJECTS)
+therter : $(OBJECTS) therter.o 
 	$(COMP90) -o $(BDIR)/therter $(ODIR)/therter.o $(LOBJECTS) $(LFLAGS)
 
 thermo.o : thermo.$(SEX) theriak.cmn files.cmn SETUPDIRS
 	$(COMP90) -c thermo.$(SEX) -o $(ODIR)/thermo.o
 
-thermo : thermo.o activi.o dasave.o dbread.o fsol.o gcalc.o hprogs.o help.o $(PLAT).o
-	$(COMP90) -o $(BDIR)/thermo $(ODIR)/thermo.o $(ODIR)/activi.o $(ODIR)/dasave.o $(ODIR)/dbread.o $(ODIR)/fsol.o $(ODIR)/gcalc.o $(ODIR)/hprogs.o $(ODIR)/help.o $(ODIR)/$(PLAT).o $(LFLAGS)
+thermo : thermo.o flags.$(MOD_EXT) activi.o dasave.o dbread.o fsol.o gcalc.o hprogs.o help.o $(PLAT).o
+	$(COMP90) -o $(BDIR)/thermo $(ODIR)/thermo.o $(ODIR)/flags.$(MOD_EXT) $(ODIR)/activi.o $(ODIR)/dasave.o $(ODIR)/dbread.o $(ODIR)/fsol.o $(ODIR)/gcalc.o $(ODIR)/hprogs.o $(ODIR)/help.o $(ODIR)/$(PLAT).o $(LFLAGS)
     
 thalia.o : thalia.$(SEX) theriak.cmn files.cmn SETUPDIRS
 	$(COMP90) -c thalia.$(SEX) -o $(ODIR)/thalia.o
 
-thalia : thalia.o activi.o dasave.o dbread.o fsol.o gcalc.o hprogs.o help.o $(PLAT).o
-	$(COMP90) -o $(BDIR)/thalia $(ODIR)/thalia.o $(ODIR)/activi.o $(ODIR)/dasave.o $(ODIR)/dbread.o $(ODIR)/fsol.o $(ODIR)/gcalc.o $(ODIR)/hprogs.o $(ODIR)/help.o $(ODIR)/$(PLAT).o $(LFLAGS)
+thalia : thalia.o flags.$(MOD_EXT) activi.o dasave.o dbread.o fsol.o gcalc.o hprogs.o help.o $(PLAT).o
+	$(COMP90) -o $(BDIR)/thalia $(ODIR)/thalia.o $(ODIR)/flags.$(MOD_EXT)  $(ODIR)/activi.o $(ODIR)/dasave.o $(ODIR)/dbread.o $(ODIR)/fsol.o $(ODIR)/gcalc.o $(ODIR)/hprogs.o $(ODIR)/help.o $(ODIR)/$(PLAT).o $(LFLAGS)
 
 theriaq.o : theriaq.$(SEX) theriak.cmn files.cmn aqua.cmn SETUPDIRS
 	$(COMP90) -c theriaq.$(SEX) -o $(ODIR)/theriaq.o
 
-theriaq : theriaq.o $(OBJECTS)
+theriaq : $(OBJECTS) theriaq.o 
 	$(COMP90) -o $(BDIR)/theriaq $(ODIR)/theriaq.o $(LOBJECTS) $(LFLAGS)
 
 therieq3.o : therieq3.$(SEX) theriak.cmn files.cmn SETUPDIRS
 	$(COMP90) -c therieq3.$(SEX) -o $(ODIR)/therieq3.o
 
-therieq3 : therieq3.o $(OBJECTS)
+therieq3 : $(OBJECTS) therieq3.o 
 	$(COMP90) -o $(BDIR)/therieq3 $(ODIR)/therieq3.o $(LOBJECTS) $(LFLAGS)
 
 makemap.o : makemap.$(SEX) files.cmn map.cmn SETUPDIRS
 	$(COMP90) -c makemap.$(SEX) -o $(ODIR)/makemap.o
 
-makemap : makemap.o hprogs.o help.o $(PLAT).o
-	$(COMP90) -o $(BDIR)/makemap $(ODIR)/makemap.o $(ODIR)/hprogs.o $(ODIR)/help.o $(ODIR)/$(PLAT).o $(LFLAGS)
+makemap : makemap.o flags.$(MOD_EXT) hprogs.o help.o $(PLAT).o
+	$(COMP90) -o $(BDIR)/makemap $(ODIR)/makemap.o $(ODIR)/flags.$(MOD_EXT) $(ODIR)/hprogs.o $(ODIR)/help.o $(ODIR)/$(PLAT).o $(LFLAGS)
 
 theriag.o : theriag.$(SEX) theriak.cmn files.cmn SETUPDIRS
 	$(COMP90) -c theriag.$(SEX) -o $(ODIR)/theriag.o
 
-theriag : theriag.o $(OBJECTS)
+theriag : $(OBJECTS) theriag.o 
 	$(COMP90) -o $(BDIR)/theriag $(ODIR)/theriag.o $(LOBJECTS) $(LFLAGS)
 
 reafit.o : reafit.$(SEX) theriak.cmn files.cmn fitpar.cmn thfit.cmn SETUPDIRS
 	$(COMP90) -c reafit.$(SEX) -o $(ODIR)/reafit.o
 
-reafit : reafit.o $(OBJECTS)
+reafit : $(OBJECTS) reafit.o 
 	$(COMP90) -o $(BDIR)/reafit $(ODIR)/reafit.o $(LOBJECTS) $(LFLAGS)
 
 vercheck : vercheck.$(SEX)
@@ -211,14 +215,14 @@ lincount : lincount.$(SEX)
 plotxy.o : plotxy.$(SEX) files.cmn SETUPDIRS
 	$(COMP90) -c plotxy.$(SEX) -o $(ODIR)/plotxy.o
 
-plotxy : plotxy.o hprogs.o help.o $(PLAT).o
-	$(COMP90) -o $(BDIR)/plotxy $(ODIR)/plotxy.o $(ODIR)/hprogs.o $(ODIR)/help.o $(ODIR)/$(PLAT).o $(LFLAGS)
+plotxy : plotxy.o flags.$(MOD_EXT) hprogs.o help.o $(PLAT).o
+	$(COMP90) -o $(BDIR)/plotxy $(ODIR)/plotxy.o $(ODIR)/flags.$(MOD_EXT) $(ODIR)/hprogs.o $(ODIR)/help.o $(ODIR)/$(PLAT).o $(LFLAGS)
 
 plotg.o : plotg.$(SEX) files.cmn SETUPDIRS
 	$(COMP90) -c plotg.$(SEX) -o $(ODIR)/plotg.o
 
-plotg : plotg.o hprogs.o help.o $(PLAT).o
-	$(COMP90) -o $(BDIR)/plotg $(ODIR)/plotg.o $(ODIR)/hprogs.o $(ODIR)/help.o $(ODIR)/$(PLAT).o $(LFLAGS)
+plotg : plotg.o flags.$(MOD_EXT) hprogs.o help.o $(PLAT).o
+	$(COMP90) -o $(BDIR)/plotg $(ODIR)/plotg.o $(ODIR)/flags.$(MOD_EXT) $(ODIR)/hprogs.o $(ODIR)/help.o $(ODIR)/$(PLAT).o $(LFLAGS)
 
 intri : intri.$(SEX)
 	$(COMP90) -o $(BDIR)/intri intri.$(SEX) $(LFLAGS)
@@ -229,25 +233,25 @@ therisub.o : therisub.$(SEX) theriak.cmn files.cmn SETUPDIRS
 subtest.o : subtest.$(SEX) theriak.cmn files.cmn SETUPDIRS
 	$(COMP90) -c subtest.$(SEX) -o $(ODIR)/subtest.o
 
-subtest : subtest.o therisub.o $(OBJECTS)
+subtest : $(OBJECTS) subtest.o therisub.o 
 	$(COMP90) -o $(BDIR)/subtest $(ODIR)/subtest.o $(ODIR)/therisub.o $(LOBJECTS) $(LFLAGS)
 
 therion.o : therion.$(SEX) theriak.cmn files.cmn checkdb.cmn SETUPDIRS
 	$(COMP90) -c therion.$(SEX) -o $(ODIR)/therion.o
 
-therion : therion.o $(OBJECTS)
+therion : $(OBJECTS) therion.o 
 	$(COMP90) -o $(BDIR)/therion $(ODIR)/therion.o $(LOBJECTS) $(LFLAGS)
 
 jphases.o : jphases.$(SEX) theriak.cmn files.cmn SETUPDIRS
 	$(COMP90) -c jphases.$(SEX) -o $(ODIR)/jphases.o
 
-jphases : jphases.o $(OBJECTS)
+jphases : $(OBJECTS) jphases.o 
 	$(COMP90) -o $(BDIR)/jphases $(ODIR)/jphases.o $(LOBJECTS) $(LFLAGS)
 
 jfiles.o : jfiles.$(SEX) theriak.cmn files.cmn SETUPDIRS
 	$(COMP90) -c jfiles.$(SEX) -o $(ODIR)/jfiles.o
 
-jfiles : jfiles.o $(OBJECTS)
+jfiles : $(OBJECTS) jfiles.o 
 	$(COMP90) -o $(BDIR)/jfiles $(ODIR)/jfiles.o $(LOBJECTS) $(LFLAGS)
 
 cat2.o : cat2.$(SEX) SETUPDIRS
@@ -263,8 +267,8 @@ pretherion : pretherion.o $(PLAT).o
 	$(COMP90) -o $(BDIR)/pretherion $(ODIR)/pretherion.o $(ODIR)/$(PLAT).o $(LFLAGS)
 
 #nag produces both .mod and .o during comp stage, but links the .o thus, changed
-flags.$(MOD_EXT) : flags.$(SEX) files.cmn SETUPDIRS
-	$(COMP90) -c flags.$(SEX) -o $(ODIR)/flags.$(MOD_EXT)
+#flags.$(MOD_EXT) : flags.$(SEX) files.cmn SETUPDIRS
+#	$(COMP90) -c flags.$(SEX) -o $(ODIR)/flags.$(MOD_EXT)
 
 all : theriak domino guzzler explot therbin therter thermo thalia makemap theriag plotxy plotg jfiles jphases\
  cat2 theriakd therion pretherion
