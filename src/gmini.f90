@@ -3060,15 +3060,15 @@
       IF(DOBINGVA.EQV..TRUE.) THEN
         DO I=1,NEM
             IF(ABS(ARA(I)).LE.PMINXXX) THEN
-              VEKTOR(I) = 0.0D0 ! test agains ABS so not all neg ppns get set; 
-              BING=BING+1       ! if don't use ABS, only doing BING for non negem phases
+              VEKTOR(I) = 0.0D0 ! test agains ABS so not all neg ppns get set;
+              BING=BING+1       ! if don't use ABS, removing all negem contributions
             END IF
         END DO
         IF(BING > 0) print*,'SOL ',SOLNAM(IS),' has BING > 0: ',BING
       END IF
-      !sqrt of sum of square of diffs; always pos
+      !sqrt of sum of square (of diffs from ave); always pos
       SUMME = DSQRT( SUM( VEKTOR(1:NEM)*VEKTOR(1:NEM) ))
-      !normalize VEKTOR so SUM(VEKTOR)=1.0
+      !scale VEKTOR
       VEKTOR(1:NEM) = VEKTOR(1:NEM) / SUMME
       RETURN
       END SUBROUTINE STEEP
