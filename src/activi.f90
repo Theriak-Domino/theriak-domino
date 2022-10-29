@@ -15,6 +15,10 @@
 !
 !
       SUBROUTINE ACTIVI(IS,XXX,AAA)
+      USE flags, only: PMINAAA, PMINXELSI
+      !ieee module only needed for testing purposes
+      !USE, INTRINSIC :: ieee_exceptions, only: ieee_get_flag, ieee_set_flag, &
+      !                                          ieee_underflow  
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -36,6 +40,10 @@
           IE=EMQQ(IS,IX1,IK)
           XELSI(IS,IX1)=XELSI(IS,IX1)+EMXX(IS,IX1,IE)*XXX(IE)
         END DO
+        !dkt test xelsi here (efficiency) instead of in inner loop below
+        IF(XELSI(IS,IX1).GT.0.0D0 .AND. XELSI(IS,IX1).LT.PMINXELSI) THEN
+          XELSI(IS,IX1)=PMINXELSI
+        END IF
       END DO
 !-----
 !      WRITE (6,1010) (XELSI(IS,IX1),IX1=1,NSIEL(IS))
@@ -45,7 +53,7 @@
 !      WRITE (out,1011) ((EMXX(IS,IX1,IE),IX1=1,NSIEL(IS)),IE=1,NEND(IS))
 ! 1011 FORMAT ('EMXX  ',10F10.5)
 !-----
-      DO IE=1,NEND(IS)
+      IELOOP: DO IE=1,NEND(IS)
         IX0=0
         AAA(IE)=1.0D0
         DO II=1,NSITE(IS)
@@ -53,12 +61,27 @@
           DO IM=1,IDINT(SITMUL(IS,II))
             IX1=IX0+ELSI(IS,IE,II,IM)
 !dC versuch: seems important close to structural endmembers
-            IF (XELSI(IS,IX1).LT.1D-50) XELSI(IS,IX1)=1D-50
-            IF (AAA(IE).LT.1D-50) AAA(IE)=1D-50
+            !IF (XELSI(IS,IX1).LT.1D-50) XELSI(IS,IX1)=1D-50
+            !IF (AAA(IE).LT.1D-50) AAA(IE)=1D-50
             AAA(IE)=AAA(IE)*XELSI(IS,IX1)/EMXX(IS,IX1,IE)
+            IF(XELSI(IS,IX1).LE.0.0D0.OR.AAA(IE).LT.PMINAAA) THEN
+              AAA(IE)=PMINAAA
+              CYCLE ieloop
+            END IF
           END DO
         END DO
-      END DO
+        !dkt todo: implement manual UF check code w/o ieee
+        IF(ISNAN(AAA(IE)) .OR. AAA(IE).LT.PMINAAA) THEN
+          print*,'  AUF OR <PMINAAA:',SOLNAM(IS),' for PC ',NAME(EM(IS,IE))
+          AAA(IE)=PMINAAA
+          !below for testing; not needed if working well
+          !call ieee_get_flag(ieee_underflow,flag_value)
+          !if(flag_value .eqv. .true.) then
+          !  call ieee_set_flag(ieee_underflow, .false.)
+          !  print*,'  AUF:',SOLNAM(IS),' for PC ',NAME(EM(IS,IE))
+          !end if
+        END IF
+      END DO IELOOP
 !-----
 !      WRITE (6,1000) (XXX(I),I=1,NEND(IS))
 !      WRITE (out,1000) (XXX(I),I=1,NEND(IS))
@@ -90,6 +113,7 @@
 !-----
 !******************************
       SUBROUTINE MUECAL(IS,XXX,MUE)
+      USE flags, ONLY: PMINAAA, PMINXXX, PMINXELSI
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
 !-----END OF COMMON VARIABLES
@@ -148,7 +172,7 @@
        DO J=1,SMPOLY(IS,IP)
         FSIFEL=EMXX(IS,SINDX(IS,IP,J),IE)
         FXEL=XELSI(IS,SINDX(IS,IP,J))
-        IF (FSIFEL.GT.1D-5.AND.FXEL.GT.1D-10) THEN
+        IF (FSIFEL.GT.1D-5.AND.FXEL.GT.1D-10) THEN !dkt seems it should now be PMINXELSI instead of d-10
         SUMPIX(IP,IE)=SUMPIX(IP,IE)+FSIFEL/FXEL
         END IF
        END DO
@@ -157,7 +181,7 @@
       SUMSUM(IP)=0.0D0
       DO IE=1,NEND(IS)
        F001=XXX(IE)
-       IF (DABS(XXX(IE)).LT.1D-60) F001=1D-60
+       IF (DABS(XXX(IE)).LT.1D-60) F001=1D-60  !dkt is d-60 or PMINXXX better
        SUMSUM(IP)=SUMSUM(IP)+F001*SUMPIX(IP,IE)
       END DO
 !
@@ -181,13 +205,15 @@
 !!        MUE(IE)=-1D20
 !!      ELSE
 
-      IF (AAA(IE).LE.0.0D0) AAA(IE)=1D-20
+      IF (AAA(IE).LE.0.0D0) AAA(IE)=PMINAAA !=1D-20  !dkt use PMINAAA as elsewhere
 
 !
       F001=XXX(IE)
-      IF (DABS(XXX(IE)).LT.1D-60) F001=1D-60
+      !IF (DABS(XXX(IE)).LT.1D-60) F001=1D-60
+      IF (DABS(XXX(IE)).LT.PMINXXX) F001=PMINXXX  !dkt PMINXXX is D-55 to D-75 so should be similar
       MUE(IE)=GG(EM(IS,IE))+RTA*DLOG(AAA(IE))
       DO N=1,NMARG(IS)
+        !QQ and POLY are integer arrays. Surely compiler does auto conv to same type as MUE; consider cast
         MUE(IE)=MUE(IE)+FF(N)*(QQ(IS,N,IE)/F001+(1-POLY(IS,N)))
         IF (SJ(N).GT.0.0D0) THEN
           MUE(IE)=MUE(IE)-FF(N)*WK(IS,N)*(DSJDX(IS,N,IE)-SJ(N))/SJ(N)
@@ -221,6 +247,7 @@
 !-----
 !******************************
       SUBROUTINE MUELAAR(IS,XXX,MUE)
+      USE flags, ONLY: PMINAAA
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
 !-----END OF COMMON VARIABLES
@@ -258,11 +285,15 @@
 !!      MUE(IE)=-1D20
 !!      ELSE
 !      IF (AAA(IE).LE.1.0D-60) AAA(IE)=1D-60
-      IF (AAA(IE).LE.0.0D0) AAA(IE)=1D-50
-      F001=XXX(IE)
+      !IF (AAA(IE).LE.0.0D0) AAA(IE)=1D-50
+      IF (AAA(IE) .LE. 0.0D0) AAA(IE) = PMINAAA   !dkt D-50 changed to PMINAAA
+      !F001=XXX(IE)                               !dkt F001 not used
 !dC
 !      IF (XXX(IE).LT.1D-20) F001=1D-20
-      IF (DABS(XXX(IE)).LT.1D-50) F001=1D-50
+      !IF (DABS(XXX(IE)).LT.1D-50) F001=1D-50     !dkt F001 not used
+      if(AAA(IE).LT.PMINAAA) then
+        print*,'**** AAA(IE)<PMINAAA in MUELAAR'
+      end if
       MUE(IE)=GG(EM(IS,IE))+RTA*DLOG(AAA(IE))
 !L
       DO 503,N=1,NMARG(IS)
@@ -381,6 +412,7 @@
           IE=EMQQ(IS,IX1,IK)
           XELSI(IS,IX1)=XELSI(IS,IX1)+EMXX(IS,IX1,IE)*XXX(IE)
         END DO
+        !dkt Could add same test as in SR ACTIVI, but prob not needed
       END DO
 !-----
       DO IP=1,NSMARG(IS)
@@ -443,7 +475,7 @@
         XX2(I)=XX2(I)/(1.0D0+DXP)
       END DO
       FFX=XX2(IE)-XX1(IE)
-      IF (DABS(FFX).GT.1.0D-12) THEN
+      IF (DABS(FFX).GT.1.0D-12) THEN            !mc
       CALL GNONID(IS,XX1,GGD1)
       CALL GNONID(IS,XX2,GGD2)
       MUE(IE)=GGD0+(1.0D0-XX0(IE))*(GGD2-GGD1)/FFX
