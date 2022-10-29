@@ -65,6 +65,12 @@
       NAME(2)='high-albite'
       NAME(3)='anorthite-C1'
       END IF
+!-----** PLAGIOCLASE C1/I1 (Holland and Powell (2003) -- D.K. Tinkham, Aug. -08**
+      IF (SOLNAM.EQ.'PlHP') THEN
+      N=2
+      NAME(1)='an'
+      NAME(2)='abh'
+      END IF
 !-----** CORDIERITE, IDEAL RECIPROCAL -- David Dolejs, 13-March-05 **
       IF (SOLNAM.EQ.'CRD-HP') THEN
       N=4
@@ -268,6 +274,102 @@
       NAME(7)='Forsterite2_liq'
       NAME(8)='H2O_liq'
       NAME(9)='Anorthite2_liq'
+      END IF
+!-----**hopo liquid - White, et. al '14 Liq for metapelite melting**
+      !-----**uses LIQtc6 coding, just diff pc names for compat with tc-ax conversions
+      !-----**Coded by dkt**
+      IF (SOLNAM.EQ.'LIQW14') THEN
+      N=8
+      NAME(1)='q4L'
+      NAME(2)='abL'
+      NAME(3)='kspL'
+      NAME(4)='anL'
+      NAME(5)='slL'
+      NAME(6)='fo2L'
+      NAME(7)='fa2L'
+      NAME(8)='h2oL'
+      END IF
+  !-----**HPds6 Green et al. 2016 NCKFMASH melt model for metabasites**
+      !-----**Coded by dkt**
+      !     LIQMB16 and LIQG16 call same subroutine LiqG16. Left in for old files
+      IF (SOLNAM.EQ.'LIQMB16') THEN
+      N=9
+      NAME(1)='qL1'              
+      NAME(2)='abL1'
+      NAME(3)='kspL1'
+      NAME(4)='woL1'
+      NAME(5)='silL1'
+      NAME(6)='faL1'
+      NAME(7)='foL1'
+      NAME(8)='h2oL1'
+      NAME(9)='anL1'
+      END IF
+  !-----**HPds6 Green et al. 2016 NCKFMASH melt model for metabasites**
+      !-----**2022 Coding with name scheme LIQ[1stAbb+-2ndAbb][2DigitYear], by dkt**
+      !     LIQMB16 and LIQG16 call same subroutine LiqG16
+      IF (SOLNAM.EQ.'LIQG16') THEN
+      N=9
+      NAME(1)='q4L'              
+      NAME(2)='abL'
+      NAME(3)='kspL'
+      NAME(4)='wo1L'
+      NAME(5)='sl1L'
+      NAME(6)='fa2L'
+      NAME(7)='fo2L'
+      NAME(8)='h2oL'
+      NAME(9)='anoL' !not named an1L b/c it is not made from anL
+      END IF
+  !-----**HPds6 Holland et al. 2018 NCKFMASHTOCr melt model**
+      !-----**Coded by dkt**
+      !     Gives nearly identical results as TC in some cases, but prob not all.
+      IF (SOLNAM.EQ.'LIQH18') THEN
+      N=12
+      NAME(1)='q4L'    !NAME(1)='qL1'
+      NAME(2)='sl1L'   !NAME(2)='slL1'
+      NAME(3)='wo1L'   !NAME(3)='woL1'
+      NAME(4)='fo2L'   !NAME(4)='foL1'
+      NAME(5)='fa2L'   !NAME(5)='faL1'
+      NAME(6)='jdL'    !NAME(6)='jdL1'
+      NAME(7)='hmL'    !NAME(7)='hmL1'
+      NAME(8)='ekL'    !NAME(8)='ekL1'
+      NAME(9)='tiL'    !NAME(9)='tiL1'
+      NAME(10)='kjL'   !NAME(10)='kjL1'
+      NAME(11)='ctL'   !NAME(11)='ctL1'
+      NAME(12)='h2o1L' !NAME(12)='h2oL1'
+      END IF
+  !-----**hopo liquid - Jennings & Holland '15 Liq for peridotite melting**
+      !-----**Coded by dkt**
+      !     new coding not thoroughly tested
+      IF (SOLNAM.EQ.'LIQJH15') THEN
+      N=8
+      NAME(1)='jdL1'
+      NAME(2)='diL1'
+      NAME(3)='ctL1'
+      NAME(4)='foL1'
+      NAME(5)='faL1'
+      NAME(6)='qL1'
+      NAME(7)='ekL1'
+      NAME(8)='hmL1'
+      END IF
+!-----**hopo liquid - Tomlinson & Holland '21 Liq for peridotite melting**
+      !-----**Coded by dkt**
+      !     Known to not produce same results as TC due to size norm
+      IF (SOLNAM.EQ.'LIQTH21') THEN
+      N=14
+      NAME(1)='q3L'
+      NAME(2)='sl1L'
+      NAME(3)='wo1L'
+      NAME(4)='fo2L'
+      NAME(5)='fa2L'
+      NAME(6)='neL1'
+      NAME(7)='hmL'
+      NAME(8)='ekL'
+      NAME(9)='tiL'
+      NAME(10)='kjL'
+      NAME(11)='anL1'
+      NAME(12)='ab1L'
+      NAME(13)='enL1'
+      NAME(14)='kfL'
       END IF
 !-----**hopo spinel**
       IF (SOLNAM.EQ.'SPINtc') THEN
@@ -511,6 +613,10 @@
       SOLNAM.EQ.'FSP-HP3') THEN
       MODELL='Feldspars: Holland & Powell (2003)'
       END IF
+!-----** PLAGIOCLASE C1/I1 (Holland and Powell (2003)-D.K. Tinkham, Aug.08**
+      IF (SOLNAM.EQ.'PlHP') THEN
+      MODELL='Plagioclase: Auto C1-I1 Holland & Powell (2003)'
+      END IF
 !-----**CORDIERITE, IDEAL-RECIPROCAL -- DavDol 13-Mar-05
       IF (SOLNAM.EQ.'CRD-HP') THEN
       MODELL='Cordierite: ideal reciprocal'
@@ -603,6 +709,31 @@
       IF (SOLNAM.EQ.'LIQtc62') THEN
       MODELL='as usual'
       END IF
+!-----**hopo liquid - White et. al '14 metapelite melting**
+      !-----**Coded by dkt. Same as LIQtc6, different pc**
+      IF (SOLNAM.EQ.'LIQW14') THEN
+      MODELL='White et. al (2014). JMG, 261-286. Metapelite melting.'
+      END IF
+!-----**hopo liquid - Green Liq for metabasite melting**
+      !-----**Coded by dkt. Same as LIQtc62, diff pc names.**
+      IF (SOLNAM.EQ.'LIQMB16' .OR. SOLNAM.EQ.'LIQG16') THEN
+      MODELL='Green et. al (2016). JMG, 845-869. Metabasite melting.'
+      END IF
+!-----**hopo liquid - Jennings & Holland '15 Liq for peridotite melting**
+      !-----**Coded by dkt. Not thoroughly tested.**
+      IF (SOLNAM.EQ.'LIQJH15') THEN
+      MODELL='Jennings and Holland (2015). JPet, 869-892. NCFMASOCr peridotite melting.'
+      END IF
+!-----**hopo liquid - Holland et al '18 Liq**
+      !-----**Coded by dkt. OK but not perfect.**
+      IF (SOLNAM.EQ.'LIQH18') THEN
+      MODELL='Holland et al. 2018. JPet, 881-900. NCKFMASHTOCr peridotite melting.'
+      END IF
+!-----**hopo liquid - Tomlinson & Holland '21 Liq**
+      !-----**Coded by dkt. Known to not reproduce TC yet.**
+      IF (SOLNAM.EQ.'LIQTH21') THEN
+      MODELL='Tomlinson & Holland 2021. JPet, 1-23. NCKFMASTOCr peridotite melting.'
+      END IF
 !-----**hopo spinel**
       IF (SOLNAM.EQ.'SPINtc') THEN
       MODELL='as usual'
@@ -692,6 +823,8 @@
       CAM3,MGM3,FEM3,NAM3,SIM1,CAM1,NAM1,SIM2,VM1,KA,TIM2,OHV,OV, &
       MNM1,MNM2, &
       F1PHI,F2PHI,F1PHI2000,F2PHI2000,F1PLO2000,F2PLO2000
+      REAL(8) XANTR,XABTR,IDQF  !PlHP
+      !REAL(8) XH2O
       INTEGER(4) N
       DATA R/8.3143D0/
 !-----this is just a test
@@ -737,6 +870,31 @@
       A(2)=X(2)*DEXP(A2/(R*T))
       A(3)=X(3)*DEXP(A3/(R*T))
       RETURN
+      END IF
+!-----** PLAGIOCLASE C1/I1 (Holland and Powell (2003) -- D.K. Tinkham, Aug. -08**
+      IF (SOLNAM.EQ.'PlHP') THEN
+        V1=1.0D0
+        V2=0.643D0
+        XANTR=0.12D0+0.00038D0*T
+        XABTR=1.0D0-XANTR
+        IF (X(1).LT.XANTR) THEN
+          IDQF=(2.0D0 * V2**2 * V1 * (-3100.0D0 + 15000.0D0) * XABTR**2) &
+              /((V2+V1)*(V2*XABTR+V1*XANTR)**2)
+          A1=(2.0D0 * V2**2 * V1 * 3100.0D0 * X(2)**2) &
+              /((V2+V1)*(V2*X(2)+V1*X(1))**2)+IDQF
+          A2=(2.0D0 * V2 * V1**2 * 3100.0D0 * X(1)**2) &
+              /((V2+V1)*(V2*X(2)+V1*X(1))**2)
+        ELSE
+          IDQF=(2.0D0 * V2 * V1**2 * (3100.0D0 - 15000.0D0) * XANTR**2) &
+              /((V2+V1)*(V2*XABTR+V1*XANTR)**2)
+          A1=(2.0D0 * V2**2*V1*15000.0D0 * X(2)**2) &
+              /((V2+V1)*(V2*X(2)+V1*X(1))**2)
+          A2=(2.0D0 * V2 * V1**2 * 15000.0D0 * X(1)**2) &
+              /((V2+V1)*(V2*X(2)+V1*X(1))**2)+IDQF
+        END IF
+        A(1)=X(1)*DEXP(A1/(R*T))
+        A(2)=X(2)*DEXP(A2/(R*T))
+        RETURN
       END IF
 !-----**CORDIERITE, IDEAL/RECIPROCAL, David Dolejs 12-Mar-05 **
       IF (SOLNAM.EQ.'CRD-HP') THEN
@@ -1053,6 +1211,29 @@
       A(8)=X(8)**2
       A(9)=(1.0D0-X(8))*X(9)
       END IF
+!-----**HPds6 Green et al. 2016 NCKFMASH melt model for metabasites**
+      IF (SOLNAM.EQ.'LIQMB16' .OR. SOLNAM.EQ.'LIQG16') THEN
+      CALL LiqG16(X,A,N)
+      RETURN  
+      END IF
+!-----** Liquid, Jennings & Holland (2015) **
+      !Coded by D.K. Tinkham, 2017?
+      IF (SOLNAM.EQ.'LIQJH15') THEN
+      CALL LiqJH15(X,A,N)
+      RETURN
+      END IF
+!-----** Liquid, HGP (2018) **
+      !Coded by D.K. Tinkham, Aug? 2018
+      IF (SOLNAM.EQ.'LIQH18') THEN
+      CALL LiqHGP18(X,A,N)
+      RETURN
+      ENDIF
+!-----** Liquid, Tomlinson & Holland (2021) **
+      !Coded by D.K. Tinkham, 2021 & 2022
+      IF (SOLNAM.EQ.'LIQTH21') THEN
+      CALL LiqTH21(X,A,N)
+      RETURN
+      ENDIF
 !-----**hopo spinel** white et al 2007
       IF (SOLNAM.EQ.'SPINtc') THEN
       FE=(X(1)+X(3)+2.0D0*X(4))/(1.0D0+X(4))
@@ -1934,6 +2115,395 @@
       END IF
       RETURN
       END
+!-----
+!********************************
+      !Liquid Jennings & Holland (2015)
+      !coded by D.K. Tinkham. Needs tested again
+      SUBROUTINE LiqJH15(X,A,N)
+        USE flags, only : PMINXXX, PMINAAA
+        IMPLICIT NONE
+        INTEGER(kind=4),PARAMETER                   :: emax = 15  !ensure same as in theriak.cmn.
+        REAL(kind=8),INTENT(IN), DIMENSION(emax)    :: X(emax)
+        REAL(kind=8),INTENT(OUT),DIMENSION(emax)    :: A(emax)
+        INTEGER(kind=4),INTENT(IN)                  :: N
+        REAL(kind=8), DIMENSION(emax)               :: P(emax)
+        REAL(kind=8) :: rMg,rFe,rCa,sM,rAlSi2,rAl2Si,rSi2p,rSi,rSi2q,rCr,rF3,sF
+        INTEGER(kind=4) :: I
+        !
+        !  X(1)=jd: NaAlSi2O6
+        !  X(2)=di: CaMgSi2O6
+        !  X(3)=ct: CaAl2SiO6
+        !  X(4)=fo: Mg2SiO4
+        !  X(5)=fa: Fe2SiO4
+        !  X(6)=q:  Si2O4
+        !  X(7)=ek: CrO1.5
+        !  X(8)=hm: FeO1.5
+        !
+        P(1:emax) = X(1:emax)
+        DO I = 1, N
+          IF(P(I).LE.PMINXXX) P(I) = PMINXXX
+        END DO
+        !norm to 1. Not yet
+        !P(1:N) = P(1:N)/SUM(P(1:N))
+        rMg=2.0D0*P(4)+P(2)
+        rFe=2.0D0*P(5)
+        rCa=P(2)
+        sM=2.0D0*(P(4)+P(5)+P(2))
+        rAlSi2=P(1)
+        rAl2Si=P(3)
+        rSi2p=P(2)   !same as rCa??
+        rSi=P(4)+P(5)
+        rSi2q=P(6)
+        rCr=P(7)
+        rF3=P(8)
+        sF=SUM(P(1:8)) 
+        !
+        A(1)=rAlSi2/sF
+        A(2)=4.0D0 * (rCa/sM) * (rMg/sM) * (rSi2p/sF)
+        A(3)=rAl2Si/sF
+        A(4)=(rMg*rMg/(sM*sM)) * (rSi/sF)
+        A(5)=(rFe*rFe/(sM*sM)) * (rSi/sF)
+        A(6)=rSi2q/sF
+        A(7)=rCr/sF
+        A(8)=rF3/sF
+        !
+        !old code. Can remove P altogether when know never
+        !need to norm P to 1.0 and if don't require non-zero X's
+        !rMg=2.0D0*X(4)+X(2)
+        !rFe=2.0D0*X(5)
+        !rCa=X(2)
+        !sM=2.0D0*(X(4)+X(5)+X(2))
+        !rAlSi2=X(1)
+        !rAl2Si=X(3)
+        !rSi2p=X(2)
+        !rSi=X(4)+X(5)
+        !rSi2q=X(6)
+        !rCr=X(7)
+        !rF3=X(8)
+        !sF=X(1)+X(2)+X(3)+X(4)+X(5)+X(6)+X(7)+X(8)
+        !PUT A CHECK HERE TO MAKE SURE sF=1.0 within tight tolerance
+        !if(sF>1.0D-15) then
+        !  if(rAlSi2>1.0D-15) then
+        !    A(1)=rAlSi2/sF
+        !  endif
+        !  if(rMg>1.0D-15) then
+        !    A(2)=4.0D0 * (rCa/sM) * (rMg/sM) * (rSi2p/sF)
+        !  endif
+        !  if(rAl2Si>1.0D-15) then
+        !    A(3)=rAl2Si/sF
+        !  endif
+        !  if(rMg>1.0D-15) then
+        !    A(4)=(rMg*rMg/(sM*sM)) * (rSi/sF)
+        !  endif
+        !  if(rFe>1.0D-15) then
+        !    A(5)=(rFe*rFe/(sM*sM)) * (rSi/sF)
+        !  endif
+        !  if(rSi2q>1.0D-15) then
+        !    A(6)=rSi2q/sF
+        !  endif
+        !  if(rCr>1.0D-15) then
+        !    A(7)=rCr/sF
+        !  endif
+        !  if(rF3>1.0D-15) then
+        !    A(8)=rF3/sF
+        !  endif
+        !endif
+
+      END SUBROUTINE LiqJH15
+!********************************
+      !Liquid Green, Holland & Powell (2016)
+      !coded by D.K. Tinkham
+      SUBROUTINE LiqG16(X,A,N)
+        !USE flags, only : PMINXXX, PMINAAA
+        IMPLICIT NONE
+        INTEGER(kind=4),PARAMETER                   :: emax = 15  !ensure same as in theriak.cmn.
+        REAL(kind=8),INTENT(IN), DIMENSION(emax)    :: X(emax)
+        REAL(kind=8),INTENT(OUT),DIMENSION(emax)    :: A(emax)
+        INTEGER(kind=4),INTENT(IN)                  :: N
+        REAL(kind=8), DIMENSION(emax)               :: P(emax)
+        REAL(kind=8) :: OMPH2O,FF
+        !INTEGER(kind=4) :: I
+        !
+        ! X(1)='qL1'   pqL=X(1)
+        ! X(2)='abL1'  pabL=X(2)
+        ! X(3)='kspL1' pkspL=X(3)
+        ! X(4)='woL1'  pwoL=X(4)
+        ! X(5)='silL1' psilL=X(5)
+        ! X(6)='faL1'  pfaL=X(6)
+        ! X(7)='foL1'  pfoL=X(7)
+        ! X(8)='h2oL1' ph2oL=X(8)
+        ! X(9)='anL1'  panL=X(9)
+        !
+        !P array is not technically needed for this model,
+        !but setting zero P(i) to PMINXXX anyway. don't do now
+        P(1:emax) = X(1:emax)
+        !DO I = 1, N
+        !  IF(P(I).LE.PMINXXX) P(I) = PMINXXX
+        !END DO
+        OMPH2O=1-P(8)
+        A(1:5) = OMPH2O*P(1:5)
+        !A(1)=(1.0D0-P(8))*P(1)   !omph2oL*pqL
+        !A(2)=(1.0D0-P(8))*P(2)   !omph2oL*pabL
+        !A(3)=(1.0D0-P(8))*P(3)   !omph2oL*pkspL
+        !A(4)=(1.0D0-P(8))*P(4)   !omph2oL*pwoL
+        !A(5)=(1.0D0-P(8))*P(5)   !omph2oL*psilL
+        !
+        !fails at PMINXXX < 10^-77 (-inf)
+        !FF=(P(6)+P(7))**4         !(pfaL+pfoL)  
+        !IF (FF.GT.1.0D-15) THEN
+        !  A(6)=(OMPH2O*P(6)**5)/FF  !(omph2oL*pfaL**5)/(FF*FF*FF*FF)
+        !  A(7)=(OMPH2O*P(7)**5)/FF  !(omph2oL*pfoL**5)/(FF*FF*FF*FF)
+        !ELSE
+        !  !setting ideal act to PMINAAA just in case
+        !  A(6)=0.0D0 !PMINAAA
+        !  A(7)=0.0D0 !PMINAAA
+        !END IF
+
+        !Keep these A's at 0 if P's=0. Use P6/P67 ratio
+        IF(P(6).GT.0.0D0) THEN
+          FF=( P(6)/(P(6)+P(7)) )**4         !(pfaL+pfoL)
+          A(6)=OMPH2O*P(6)*FF
+        ELSE 
+          A(6)=0.0D0
+        END IF
+        IF(P(7).GT.0.0D0) THEN
+          FF=( P(7)/(P(6)+P(7)) )**4         !(pfaL+pfoL)
+          A(7)=OMPH2O*P(7)*FF
+        ELSE 
+          A(7)=0.0D0
+        END IF
+        !
+        A(8)=P(8)*P(8)           !ph2oL*ph2oL
+        A(9)=(1.0D0-P(8))*P(9)
+        !A(9)=(1.0D0-P(8))*(1.0D0-P(1)-P(2)-P(3)-P(4)-P(5)-P(6)-P(7)-P(8))
+        RETURN
+      END SUBROUTINE LiqG16      
+!-----
+!********************************
+      !Liquid Holland, Green & Powell (2018). It ignores all the external/microscipic/vars=f(ppn,X) etc.
+      !In this model, no site species is shared by more than one component except the hydrous/vac site.
+      !This allows to simply make most site species abundance proportional to pc ppn, with normalization.
+      !Then just straight mixing on sites approach
+      SUBROUTINE LiqHGP18(X,A,N)
+        USE flags, only : PMINXXX, PMINAAA
+        use, intrinsic :: ieee_exceptions, only: ieee_underflow, ieee_overflow, &
+                                                 ieee_invalid, ieee_divide_by_zero, &
+                                                 ieee_get_flag, ieee_set_flag
+        use, intrinsic :: ieee_arithmetic, only: ieee_is_normal                                 
+        IMPLICIT NONE
+        INTEGER(kind=4),PARAMETER                   :: emax = 15  !ensure same as in theriak.cmn
+        REAL(kind=8),INTENT(IN), DIMENSION(emax)    :: X(emax)
+        REAL(kind=8),INTENT(OUT),DIMENSION(emax)    :: A(emax)
+        INTEGER(kind=4),INTENT(IN)                  :: N
+        !
+        REAL(kind=8), DIMENSION(emax)               :: P(emax)
+        INTEGER(kind=4) :: I
+        REAL(kind=8) :: psl1L, pwo1L, pfo2L, pfa2L, ph2o1L
+        REAL(kind=8) :: den, sumM, sumF, omh2
+        ! ---------------------------
+        ! X(1)='q4L'    X(7)='hmL'  
+        ! X(2)='sl1L'   X(8)='ekL' 
+        ! X(3)='wo1L'   X(9)='tiL'  
+        ! X(4)='fo2L'   X(10)='kjL' 
+        ! X(5)='fa2L'   X(11)='ctL'    
+        ! X(6)='jdL'    X(12)='h2o1L'   
+        ! ---------------------------
+        ! N=12 for HGP18
+        ! Neg adj and P norm to 1.
+        P(1:12) = X(1:12)
+        !should not have to check if neg!
+        DO I = 1, N
+           IF(P(I).LE.0.0D0) P(I) = PMINXXX  !2022-10-10 trying to remove invalid_flag on pc's who are 0
+        END DO
+        !norm to 1
+        !norm not reqd if converges, which happens with increased GCMAX,
+        !but it did seem to help converge tiny bit with low GCMAX. 
+        ! If nothing, ensures ph2o1L<=1
+        den = sum(P(1:12))
+        P(1:12) = P(1:12)/den  
+          !IF(P(12)>1.0D0) P(12)=1.0D0          
+          !pq4L = P(1)  
+          !pjdL = P(6)
+          !phmL = P(7)
+          !pekL = P(8)
+          !ptiL = P(9)
+          !pkjL = P(10)
+          !pctL = P(11) !assoc species
+        psl1L= P(2)
+        pwo1L= P(3)
+        pfo2L= P(4)
+        pfa2L= P(5)
+        ph2o1L=P(12)
+        ! site sums; calc in terms of pc ppns
+        ! sumA = pjdL+pkjL !no Smix from this site so not needed
+        sumM = 4.0D0*pfo2L + 4.0D0*pfa2L + pwo1L + psl1L 
+        sumF = 1.0D0 - ph2o1L            
+        omh2 = (1.0D0-ph2o1L)   !if ph2o1L >eps<1, otherwise 1.0
+        IF(omh2 .GT. 0.0D0) THEN
+          omh2 = omh2**2
+        ELSE 
+          omh2 = 0.0D0
+        END IF 
+        IF(sumF .GT. 0.0D0) THEN   !always
+          IF(sumM .GT. 0.0D0) THEN !usually
+            !2022-10-10: those p's =0 now set to PMINXXX to avoid invalid flag. A(4) op signalling when pfo2L=0
+            A(2) = psl1L/sumM * psl1L/sumF * omh2  !asl1L
+            A(3) = pwo1L/sumM * pwo1L/sumF * omh2  !awo1L
+            A(4) = (4.0D0*pfo2L)**4 / (sumM**4) * (pfo2L+pfa2L)/sumF * omh2  !afo2L. todo den before pow
+            A(5) = (4.0D0*pfa2L)**4 / (sumM**4) * (pfo2L+pfa2L)/sumF * omh2  !afa2L. todo den before pow
+          ELSE 
+            !A(2:5) = 0.0D0
+            A(2:5) = PMINAAA
+          END IF
+          A(1)  = P(1)/sumF * omh2   !aq4L
+          A(6)  = P(6)/sumF * omh2   !ajdL
+          A(7)  = P(7)/sumF * omh2   !ahmL
+          A(8)  = P(8)/sumF * omh2   !aekL
+          A(9)  = P(9)/sumF * omh2   !atiL
+          A(10) = P(10)/sumF * omh2  !akjL
+          A(11) = P(11)/sumF * omh2  !actL
+        ElSE 
+            !todo: add a kill if here!
+            !A(1:11) = 0.0D0
+            A(1:11) = PMINAAA
+        END IF
+        IF(ph2o1L .GT. 0.0D0) THEN !now always
+          A(12) = ph2o1L**2  !ah2o1L
+        ELSE 
+          !A(12) = 0.0D0
+          A(12) = PMINAAA
+        END IF
+        RETURN
+      END SUBROUTINE LiqHGP18
+!********************************
+!********************************
+!Tomlinson & Holland (2021) Peridotite melting. 
+      !Coded by dkt, Feb. 2021 (in-progress; bit of a mess, stay tuned. Is in to test other code.)
+      SUBROUTINE LiqTH21(X,A,N)
+        USE flags, only : PMINXXX, PMINAAA 
+        IMPLICIT NONE
+        INTEGER(kind=4),PARAMETER                   :: emax = 15  !ensure same as in theriak.cmn
+        REAL(kind=8),INTENT(IN), DIMENSION(emax)    :: X(emax)
+        REAL(kind=8),INTENT(OUT),DIMENSION(emax)    :: A(emax)
+        INTEGER(kind=4),INTENT(IN)                  :: N
+        REAL(kind=8), DIMENSION(emax)               :: P(emax)
+        !
+        INTEGER(kind=4) :: I
+        !
+        REAL(kind=8) :: den, sumM
+        REAL(kind=8) :: pq3L, psl1L, pwo1L, pfo2L, pfa2L, pneL1, phmL
+        REAL(kind=8) :: pekL, ptiL, pkjL, panL1, pab1L, penL1, pkfL
+        REAL(kind=8) :: aq3L, asl1L, awo1L, afo2L, afa2L, aneL1, ahmL
+        REAL(kind=8) :: aekL, atiL, akjL, aanL1, aab1L, aenL1, akfL
+        logical :: isnorm = .true.
+        ! ---------------------------
+        !   N=14  
+        !   q4L->q3L  jdL->neL1  ctL->anL1  +ab1L  +enL1  +kfL
+        !   X(1)='q3L'    X(8)='ekL'
+        !   X(2)='sl1L'   X(9)='tiL'
+        !   X(3)='wo1L'   X(10)='kjL'
+        !   X(4)='fo2L'   X(11)='anL1'
+        !   X(5)='fa2L'   X(12)='ab1L'
+        !   X(6)='neL1'   X(13)='enL1'
+        !   X(7)='hmL'    X(14)='kfL'
+        ! ---------------------------
+        !
+        ! Neg adj and P norm to 1
+        P(1:14) = X(1:14)
+        !print*,1.0D0-sum(P(1:14))
+        !P(11) = 1.0D0-sum(P(1:10))-P(12)  !didn't work
+        !   den = sum(P(1:12))
+        !   IF(ABS(1.0D0-den)>1.0D-15) THEN
+        !      print*, '---'
+        !      print*, 'sump1 = ',den
+        !   END IF
+        !2022-05-06: No longer force to be positive to test if neg ppn's possible
+        !  but, check for cutoff if !=0
+        DO I = 1, N
+          !IF(P(I).LT.0.0D0 .AND. ABS(P(I)).LT.PMINXXX) THEN
+          !   P(I) = -PMINXXX
+          !   CYCLE
+          !END IF
+          IF(P(I).LT.0.0D0) THEN 
+            P(I) = 0.0D0
+            CYCLE 
+          END IF
+          !IF(ABS(P(I)).GT.0.0D0 .AND. ABS(P(I)).LT.PMINXXX) P(I) = PMINXXX
+          IF(P(I).GT.0.0D0 .AND. P(I).LT.PMINXXX) P(I)=PMINXXX  !+PMINXXX*N
+        END DO
+        !norm to 1; save den and new sump
+        den = sum(P(1:14))
+        P(1:14) = P(1:14)/den  ! norm is REQUIRED to keep from getting many co-existing liquids in liq-only field!!
+        DO I = 1, N
+          IF((ABS(P(I)).GT.0.0D0 .AND. ABS(P(I)).LT.PMINXXX) .OR. P(I).GT.1.0D0) THEN
+            print*,'Undesired P(I) in LiqTH21: pc ',I,P(I)
+          END IF 
+        END DO
+        pq3L = P(1)  !1-sum rest. Already norm above
+        psl1L= P(2)
+        pwo1L= P(3)
+        pfo2L= P(4)
+        pfa2L= P(5)
+        pneL1= P(6)
+        phmL = P(7)
+        pekL = P(8)
+        ptiL = P(9)
+        pkjL = P(10)
+        panL1= P(11) !assoc species
+        pab1L= P(12) !assoc species
+        penL1= P(13) !assoc species
+        pkfL = P(14) !assoc species
+        ! site sums; calc in terms of pc ppns
+        sumM = 4.0D0*pfo2L + 4.0D0*pfa2L + pwo1L + psl1L           
+        
+        IF(sumM .GT. 0.0D0) THEN
+          asl1L = psl1L/sumM * psl1L  !P(2)
+          awo1L = pwo1L/sumM * pwo1L  !P(3)
+          IF(pfo2L.GT.1.0D-75) THEN
+            !afo2L = (4.0D0*pfo2L)**4 / (sumM**4) * (pfo2L+pfa2L)  !P(5) P(6)
+            afo2L = ((4.0D0*pfo2L) / sumM)**4 * (pfo2L+pfa2L)  !P(5) P(6)
+          ELSE 
+            afo2L = PMINAAA
+          END IF
+          IF(pfa2L.GT.1.0D-75) THEN
+            !afa2L = (4.0D0*pfa2L)**4 / (sumM**4) * (pfo2L+pfa2L)  !P(6) P(5)
+            afa2L = ((4.0D0*pfa2L) / sumM)**4 * (pfo2L+pfa2L)  !P(6) P(5)
+          ELSE 
+            afa2L = PMINAAA
+          END IF
+
+          !isnorm = ieee_is_normal(asl1L)
+          !if(isnorm.eqv..false.) print*, 'asl1L is not normal.'
+          !isnorm = ieee_is_normal(awo1L)
+          !if(isnorm.eqv..false.) print*, 'awo1L is not normal.'
+          !isnorm = ieee_is_normal(afo2L)
+          !if(isnorm.eqv..false.) print*, 'afo2L is not normal.'
+          !isnorm = ieee_is_normal(afa2L)
+          !if(isnorm.eqv..false.) print*, 'afa2L is not normal.'
+
+        ELSE 
+          asl1L=0.0D0
+          awo1L=0.0D0
+          afo2L=0.0D0
+          afa2L=0.0D0
+        END IF
+        A(1)=P(1)   !aq3L
+        A(2)=asl1L
+        A(3)=awo1L
+        A(4)=afo2L
+        A(5)=afa2L
+        A(6)=P(6)   !aneL1
+        A(7)=P(7)   !ahmL
+        A(8)=P(8)   !aekL
+        A(9)=P(9)   !atiL
+        A(10)=P(10) !akjL
+        A(11)=P(11) !aanL1
+        A(12)=P(12) !aab1L
+        A(13)=P(13) !aenL1
+        A(14)=P(14) !akfL
+        RETURN
+      END SUBROUTINE LiqTH21
+!********************************
 !-----
 !-----*************** end of solution definitions ****************
 !-----
@@ -5963,7 +6533,7 @@
 !      to process an entire tabulated function in arrays xi and yi. 
 !      Once this has been done, values of the interpolated function for any value of x
 !      are obtained by calls (as many as desired) to a separate routine splint 
-!      (for Òspline interpolationÓ)
+!      (for ï¿½spline interpolationï¿½)
 !
       SUBROUTINE spline(x,y,n,yp1,ypn,y2) 
       INTEGER n,NMAX 
@@ -5982,7 +6552,7 @@
 !      Parameter: NMAX is the largest anticipated value of n. 
       INTEGER i,k
       REAL p,qn,sig,un,u(NMAX) 
-!      The lower boundary condition is set either to be ÒnaturalÓ
+!      The lower boundary condition is set either to be ï¿½naturalï¿½
 !      or else to have a specified first derivative.
       if (yp1.gt..99e30) then
          y2(1)=0.
@@ -5999,7 +6569,7 @@
               /(x(i)-x(i-1)))/(x(i+1)-x(i-1))-sig*u(i-1))/p
       end do
       if (ypn.gt..99e30) then
-!      The upper boundary condition is set either to be ÒnaturalÓ
+!      The upper boundary condition is set either to be ï¿½naturalï¿½
 !      or else to have a specified first derivative.
         qn=0.
         un=0. 
@@ -6016,13 +6586,13 @@
 !
 !      Values of the interpolated function for any value of x are 
 !      obtained by calls (as many as desired) to a separate routine 
-!      splint (for Òspline interpolationÓ)
+!      splint (for ï¿½spline interpolationï¿½)
 !
       SUBROUTINE splint(xa,ya,y2a,n,x,y) 
       INTEGER n 
       REAL x,y,xa(n),y2a(n),ya(n)
 !      Given the arrays xa(1:n) and ya(1:n) of length n, which tabulate a 
-!      function (with the xaiÕs in order), and given the array y2a(1:n), 
+!      function (with the xaiï¿½s in order), and given the array y2a(1:n), 
 !      which is the output from spline above, and given a value of x, 
 !      this routine returns a cubic-spline interpolated value y.
       INTEGER k,khi,klo 
@@ -6045,7 +6615,7 @@
       endif 
       h=xa(khi)-xa(klo)
  !      The Xa's must be distinct:'
- !!!!!!     if (h.eq.0.) pause Õbad xa input in splintÕ
+ !!!!!!     if (h.eq.0.) pause ï¿½bad xa input in splintï¿½
  !      Cubic spline polynomial is now evaluated:
       a=(xa(khi)-x)/h
       b=(x-xa(klo))/h 
@@ -6059,7 +6629,7 @@
 !--------------------------------
       SUBROUTINE PS94H2O(P,T,GRE,VRE)
       IMPLICIT NONE
-!-- Subroutines by CdC and Erik DŸsterhoeft
+!-- Subroutines by CdC and Erik Dï¿½sterhoeft
 !-- K.S. Pitzer and S.M. Sterner, 1994
 !-- J. Chem. Phys. 101(4),1994,3111-3116
 !-- critical point H2O: 373.946 C, 220.64 Bar
@@ -6220,7 +6790,7 @@
 !--------------------------------
       SUBROUTINE PS94CO2(P,T,GRE,VRE)
       IMPLICIT NONE
-!-- Subroutines by CdC and Erik DŸsterhoeft
+!-- Subroutines by CdC and Erik Dï¿½sterhoeft
 !-- K.S. Pitzer and S.M. Sterner, 1994
 !-- J. Chem. Phys. 101(4),1994,3111-3116
 !-- critical point CO2: 31.04 C, 73.8 Bar
