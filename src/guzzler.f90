@@ -26,6 +26,7 @@
 !     a certain creativity.
 !
 !23456789.123456789.123456789.123456789.123456789.123456789.123456789.12
+      PROGRAM GUZZLER
       IMPLICIT NONE
 !
       INTEGER(4) MAXPT,MAXGRD,MAXLIN,MATE
@@ -1138,7 +1139,7 @@
 !-----
       WRITE (scr,150)
   150 FORMAT (/,'exit GUZZLER')
-      END
+      END PROGRAM GUZZLER
 !
 !***********************************************************
       SUBROUTINE ADDPT(X,Y,IP,DIST)

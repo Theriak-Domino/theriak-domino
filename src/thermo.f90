@@ -24,6 +24,7 @@
 !          CH-4056 BASEL
 !
 !
+      PROGRAM THERMOAPP
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       INCLUDE 'files.cmn'
@@ -288,7 +289,7 @@
         CALL PUST(log,CHIN(I))
       END DO
       CLOSE (UNIT=log)
-      END
+      END PROGRAM THERMOAPP
 !-----
 !******************************
       SUBROUTINE GRECAL(II)

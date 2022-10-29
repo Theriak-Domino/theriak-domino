@@ -3,13 +3,14 @@
 !               * MAKEMAP *
 !               ***********
 !
+      PROGRAM MAKEMAPAPP
       IMPLICIT NONE
       INCLUDE 'files.cmn'
       INCLUDE 'map.cmn'
 !----
       INTEGER(4) dirnr
       PARAMETER (dirnr=100)
-!====
+!==== 
       LOGICAL(4) VERGL
       EXTERNAL VERGL
       REAL(8) F001,NULL,XZAHL,YZAHL,SIDE,GRS,GRZ,X1,KUR,LAN,XPOS,DXX, &
@@ -703,7 +704,7 @@
       WRITE (scr,150) ZEITSTRING(1:I001)
   150 FORMAT (/,' exit MAKEMAP',/,1X,A)
 !----
-      END
+      END PROGRAM MAKEMAPAPP
 !-----
 !******************************
       SUBROUTINE INCALC(I1,I2)

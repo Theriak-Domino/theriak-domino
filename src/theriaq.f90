@@ -27,6 +27,7 @@
 !          CH-4056 BASEL
 !
 !
+      PROGRAM THERIAQAPP
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -598,7 +599,7 @@
       WRITE (scr,150) ZEITSTRING(1:I001)
       WRITE (out,150) ZEITSTRING(1:I001)
   150 FORMAT (/,'exit THERIAK',/,A)
-      END
+      END PROGRAM THERIAQAPP
 !-----
 !********************************
       SUBROUTINE SEAQUIL(TCBK,PBK,FLUBK,SOLBK,USEBK,KGWBK,PHBK,PEBK)

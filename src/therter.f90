@@ -27,6 +27,7 @@
 !          CH-4056 BASEL
 !
 !
+      PROGRAM THERTERAPP
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       INCLUDE 'files.cmn'
@@ -1061,7 +1062,7 @@
       WRITE (out,3040) DATI(1:I001)
  3040 FORMAT (/,'exit THERTER',/,A)
 !-----
-      END
+      END PROGRAM THERTERAPP
 !-----
 !******************************
       SUBROUTINE NEWTRI(NNT)

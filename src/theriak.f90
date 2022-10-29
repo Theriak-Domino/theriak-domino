@@ -28,6 +28,7 @@
 !          CH-4056 BASEL
 !
 !
+      PROGRAM THERIAKAPP
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -578,7 +579,7 @@
       WRITE (scr,150) ZEITSTRING(1:I001)
       WRITE (out,150) ZEITSTRING(1:I001)
   150 FORMAT (/,' exit THERIAK',/,1X,A)
-      END
+      END PROGRAM THERIAKAPP
 !-----
 !********************************
       SUBROUTINE MANLOOP

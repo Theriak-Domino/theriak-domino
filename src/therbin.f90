@@ -27,6 +27,7 @@
 !          CH-4056 BASEL
 !
 !
+      PROGRAM THERBINAPP
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       INCLUDE 'files.cmn'
@@ -1053,7 +1054,7 @@
       WRITE (out,3030) DATI(1:I001)
  3030 FORMAT (/,'exit THERBIN',/,A)
 !-----
-      END
+      END PROGRAM THERBINAPP
 !-----
 !******************************
       SUBROUTINE NEWTIE

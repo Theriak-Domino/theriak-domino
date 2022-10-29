@@ -33,6 +33,7 @@
 !          CH-4056 BASEL
 !
 !23456789.123456789.123456789.123456789.123456789.123456789.123456789.12
+      PROGRAM EXPLOT
       IMPLICIT NONE
       INCLUDE 'expl.cmn'
 !----- end of common variables
@@ -589,7 +590,7 @@
 !-----
       WRITE (scr,150)
   150 FORMAT (/,'exit EXPLOT')
-      END
+      END PROGRAM EXPLOT
 !
 !***************
       SUBROUTINE XAXIS(TEXT,X1,SIDE,TIK,GRS,GRZ,I1,I2,I3,KUR,LAN,C1,C2)

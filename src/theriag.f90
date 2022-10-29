@@ -15,6 +15,7 @@
 !     Contrib. Mineral. Petrol. (under review)
 !
 !
+      PROGRAM THERIAGAPP
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -365,7 +366,7 @@
       WRITE (scr,150) ZEITSTRING(1:I001)
       WRITE (out,150) ZEITSTRING(1:I001)
   150 FORMAT (/,' exit THERIAK',/,1X,A)
-      END
+      END PROGRAM THERIAGAPP
 !-----
 !********************************
       SUBROUTINE MANLOOP

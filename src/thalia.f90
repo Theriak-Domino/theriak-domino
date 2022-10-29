@@ -26,6 +26,7 @@
 !          Bernoullistrasse 30
 !          CH-4056 BASEL
 !
+      PROGRAM THALIAAPP
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       INCLUDE 'files.cmn'
@@ -196,7 +197,7 @@
       END DO
       CLOSE (UNIT=log)
 !*****
-      END
+      END PROGRAM THALIAAPP
 !-----
 !****************************** 
 

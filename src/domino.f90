@@ -29,6 +29,7 @@
 !          christian.decapitani@unibas.ch
 !
 !
+      PROGRAM DOMINOAPP
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       INCLUDE 'files.cmn'
@@ -1551,7 +1552,7 @@
       WRITE (out,4020) ZEITSTRING(1:I001)
  4020 FORMAT (' exit DOMINO',/,1X,A)
 !-----
-      END
+      END PROGRAM DOMINOAPP
 !-----
 !******************************
       SUBROUTINE COOL(LEV,ICASE)

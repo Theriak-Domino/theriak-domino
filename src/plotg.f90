@@ -4,6 +4,7 @@
 !               *********
 !     = PLOTXY
 !
+      PROGRAM PLOTGAPP
       IMPLICIT NONE
       include 'files.cmn'
       !
@@ -312,7 +313,7 @@
 !
       CALL MACHLIN(CH001,CH002,IFNR,GENER,GTIME)
 !=====
-      END
+      END PROGRAM PLOTGAPP
 !-----
 !******************************
       SUBROUTINE MACHLIN(CH001,CH002,IFNR,GENER,GTIME)

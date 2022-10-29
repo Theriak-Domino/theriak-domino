@@ -3,6 +3,7 @@
 !               * PLOTXY * 
 !               **********
 !
+      PROGRAM PLOTXYAPP
       IMPLICIT NONE
       include 'files.cmn'
       !
@@ -261,7 +262,7 @@
 !
       CALL MACHLIN(CH001,CH002,IFNR)
 !=====
-      END
+      END PROGRAM PLOTXYAPP
 !-----
 !******************************
       SUBROUTINE MACHLIN(CH001,CH002,IFNR)
