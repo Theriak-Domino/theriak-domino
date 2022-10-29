@@ -9,6 +9,9 @@ COMPILER=gfortran
 INITSRCDATE=28.09.2022
 CFLAGSTR=
 LFLAGSTR=
+#NAG links to .o, not .mod; gfortran & ifort? seems can use both
+MOD_EXT=o
+
 
 #gfortran compile and link flags (works on mac for static builds)
 #in general, don't use O3
@@ -52,11 +55,12 @@ COMP90 = gfortran $(GCFLAGS)
 SEX = f90
 PLAT = platf-osx
 OBJECTS = activi.o dasave.o dbread.o fsol.o gcalc.o            \
-          gmini.o hprogs.o prinin.o prtcal.o help.o $(PLAT).o
+          gmini.o hprogs.o prinin.o prtcal.o help.o $(PLAT).o  \
+					flags.$(MOD_EXT)
 LOBJECTS= $(ODIR)/activi.o $(ODIR)/dasave.o $(ODIR)/dbread.o   \
           $(ODIR)/fsol.o $(ODIR)/gcalc.o $(ODIR)/gmini.o       \
 					$(ODIR)/hprogs.o $(ODIR)/prinin.o $(ODIR)/prtcal.o   \
-          $(ODIR)/help.o $(ODIR)/$(PLAT).o
+          $(ODIR)/help.o $(ODIR)/$(PLAT).o $(ODIR)/flags.$(MOD_EXT)
           
 
 
@@ -257,6 +261,10 @@ pretherion.o : pretherion.$(SEX) SETUPDIRS
 
 pretherion : pretherion.o $(PLAT).o
 	$(COMP90) -o $(BDIR)/pretherion $(ODIR)/pretherion.o $(ODIR)/$(PLAT).o $(LFLAGS)
+
+#nag produces both .mod and .o during comp stage, but links the .o thus, changed
+flags.$(MOD_EXT) : flags.$(SEX) files.cmn SETUPDIRS
+	$(COMP90) -c flags.$(SEX) -o $(ODIR)/flags.$(MOD_EXT)
 
 all : theriak domino guzzler explot therbin therter thermo thalia makemap theriag plotxy plotg jfiles jphases\
  cat2 theriakd therion pretherion
