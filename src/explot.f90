@@ -39,7 +39,7 @@
 !----- end of common variables
       CHARACTER(6) IDENT
       CHARACTER(200) TEXT,XTEXT,YTEXT
-      CHARACTER(200) CH001,CH002,CHIN(2)
+      CHARACTER(500) CH001,CH002,CHIN(2)
       REAL(8) XX,YY,LANG,KURZ,XMIN,XMAX,YMIN,YMAX, &
       SIDE,F1,F2,F3,F4,GRS,GRZ,X,Y,Z,X1,TIK,ZERO, &
       X99,Y99,SYM99,GR99
@@ -584,13 +584,37 @@
       CALL NPLOIG(NID,LONGCOD,NPEND)
       END IF
 !-----
-      GOTO 10
+      GOTO 10   !go back up and read next set of data
   999 CLOSE (UNIT=cln)
       CALL VPENDPLOT
 !-----
       WRITE (scr,150)
   150 FORMAT (/,'exit EXPLOT')
       END PROGRAM EXPLOT
+!
+!***************
+      !dkt helper functions for string formatting for svg output
+      FUNCTION SVGREAL2STRING(XNUM,STR,FMTSTR) RESULT(res)
+        IMPLICIT NONE
+        REAL(8), INTENT(IN)  :: XNUM
+        CHARACTER(*),INTENT(IN) :: STR
+        CHARACTER(*),INTENT(IN) :: FMTSTR
+        CHARACTER(LEN=LEN(STR)) :: res
+        !
+        WRITE(UNIT=res,FMT=FMTSTR) XNUM 
+        res=adjustl(res)
+      END FUNCTION SVGREAL2STRING
+   
+      FUNCTION SVGINT2STRING(XNUM,STR,FMTSTR) RESULT(res)
+        IMPLICIT NONE
+        INTEGER(4), INTENT(IN) :: XNUM
+        CHARACTER,INTENT(IN)   :: STR(:)
+        CHARACTER,INTENT(IN)   :: FMTSTR(:)
+        CHARACTER(LEN=LEN(STR))   :: res 
+        !
+        WRITE(UNIT=res,FMT=FMTSTR) XNUM 
+        res=adjustl(res)
+      END FUNCTION SVGINT2STRING
 !
 !***************
       SUBROUTINE XAXIS(TEXT,X1,SIDE,TIK,GRS,GRZ,I1,I2,I3,KUR,LAN,C1,C2)
@@ -2050,7 +2074,7 @@
 !====
       IF (MAKEPS) THEN
       WRITE (pst,1000)
- 1000 FORMAT('%!'/'%%BoundingBox: 0 0 842 595' &
+ 1000 FORMAT('%!PS-Adobe-3.0 EPSF-3.0'/'%%BoundingBox: 0 0 842 595' &
       /'/slw    { stroke setlinewidth } def' &
       /'/dash   { stroke setdash } def' &
       /'/ff     { /s exch def lefont findfont s ', &
@@ -2398,6 +2422,8 @@
       INCLUDE 'expl.cmn'
 !----- end of common variables
       REAL(8) X,Y,GRS,RX,RY,FSIZ,DELX,DELY
+      CHARACTER(LEN=10) :: STR1
+      CHARACTER(LEN=150):: STR2
       IF (MAKESVG) THEN
       FSIZ=GRS*0.25D0
       DELX=GRS*0.442D0
@@ -2416,12 +2442,12 @@
       ' <path id="kreis" d="M ',F10.4,',',F10.4,' A', &
       F10.4,',',F10.4,' 0 1 1 ', &
       F10.4,',',F10.4,'"/> </defs>')
-      WRITE (svg,1010) FSIZ*CMPX
- 1010 FORMAT ('<text font-size="',F10.4,'" ', &
-      ' font-family="Arial" ', &
-      'stroke="none">',/,'<textPath xlink:href="#kreis" >', &
-      'T h e r i a k  -  D o m i n o', &
-      '</textPath> </text>')
+      WRITE(STR1,FMT='(F10.4)') FSIZ*CMPX
+      STR2='<text font-size="'//trim(adjustl(STR1))//'" ' &
+         //' font-family="Arial" stroke="none">'
+      WRITE(svg,FMT='(A)') trim(STR2)
+      STR2='<textPath xlink:href="#kreis" >T h e r i a k  -  D o m i n o</textPath> </text>'
+      WRITE(svg,FMT='(A)') trim(STR2)
 !      WRITE (svg,1020)
 ! 1020 FORMAT ('<use xlink:href="#kreis" stroke ="gray" fill="none"/>')
       END IF
@@ -2436,6 +2462,8 @@
       REAL(8) GRS,X,Y,XC,YC,XMUL,YMUL,FF,XCOR,RX,RY
       INTEGER(4) NX,NY,J,IX,IY
       CHARACTER(2) HXCOL
+      CHARACTER(LEN=10) :: STR1, STR2, STR3, STR4
+      CHARACTER(LEN=300):: RESSTR 
       CHARACTER(60) CDCH(31)
       DATA CDCH / &
       'FFFFFFFFFFFFFFFFFFFFFFFFFFFFCEBDB59C8CEFFFFFFFFFFFFFFFFFFFFF', &
@@ -2500,10 +2528,14 @@
 !!          XC=(X+X0+DBLE(IX-1)*GRS/DBLE(NX))*CMPX
 !!          XC=(X+X0-GRS*FF/2.0D0+XCOR*1.0D0+DBLE(IX-1)*GRS/DBLE(NX))*CMPX
           XC=(X+X0-GRS*FF/2.0D0+XCOR*0.0D0+DBLE(IX-1)*GRS/DBLE(NX))*CMPX
-          WRITE (svg,2000) XC,YC,RY,RY,HXCOL,HXCOL,HXCOL
- 2000     FORMAT ('<rect x="',F10.4,'" y="',F10.4, &
-          '" height="',F10.4,'" width="',F10.4, &
-          '" fill="#',A2,A2,A2,'"/>')
+          WRITE(STR1,FMT='(F10.4)') XC
+          WRITE(STR2,FMT='(F10.4)') YC
+          WRITE(STR3,FMT='(F10.4)') RY
+          WRITE(STR4,FMT='(F10.4)') RY
+          RESSTR = '<rect x="'//trim(adjustl(STR1))//'" y="'//trim(adjustl(STR2))//'" height="' &
+            //trim(adjustl(STR3))//'" width="'//trim(adjustl(STR4)) &
+            //'" fill="#'//HXCOL//HXCOL//HXCOL//'"/>'
+          WRITE(svg,FMT='(A)') trim(RESSTR)
           END IF
         END DO
       END DO
@@ -2635,6 +2667,8 @@
       CHARACTER(1) A1
       REAL(8) X1,Y1,GRS,THETA,XI
       INTEGER(4) I,I1,CODE,I001,I002,LL,J1,J2,J3
+      CHARACTER(LEN=10)  :: STR1, STR2, STR3, STR4, STR5, STR6
+      CHARACTER(LEN=300) :: FULLSTR
 !====
 !!--- for ps
       IF (MAKEPS) THEN
@@ -2712,13 +2746,20 @@
       END DO
 
       CALL LABLA(SVGFONT,J3)
-      WRITE (svg,2000) (X1+X0)*CMPX,595.0D0-(Y1+Y0)*CMPX, &
-      -THETA,(X1+X0)*CMPX,595.0D0-(Y1+Y0)*CMPX, &
-      SVGFONT(1:J3),GRS*CMPX*1.3715D0,SVGSTRO(1:J1),TEXT(1:J2)
- 2000 FORMAT ('<text x="',F10.4,'" y="',F10.4,'"', &
-      /,' transform="rotate(',F10.4,',',F10.4,',',F10.4,')"', &
-      /,' font-family="''',A,'''" font-size="',F10.4,'"', &
-      /,' style="fill: ',A,'; stroke: none">',A,'</text>')
+      WRITE(STR1,FMT='(F10.4)') (X1+X0)*CMPX
+      WRITE(STR2,FMT='(F10.4)') 595.0D0-(Y1+Y0)*CMPX
+      WRITE(STR3,FMT='(F10.4)') -THETA
+      WRITE(STR4,FMT='(F10.4)') (X1+X0)*CMPX
+      WRITE(STR5,FMT='(F10.4)') 595.0D0-(Y1+Y0)*CMPX
+      WRITE(STR6,FMT='(F10.4)') GRS*CMPX*1.3715D0
+      FULLSTR = '<text x="'//trim(adjustl(STR1))//'" y="'// &
+         trim(adjustl(STR2))//'" transform="rotate('//    &
+         trim(adjustl(STR3))//','//trim(adjustl(STR4))//  &
+         ','//trim(adjustl(STR5))//')"  font-family="'''// &
+         SVGFONT(1:J3)//'''" font-size="'//trim(adjustl(STR6))// &
+         '" style="fill: '//SVGSTRO(1:J1)//'; stroke: none">'// &
+         TEXT(1:J2)//'</text>'
+      WRITE(svg,FMT='(A)') trim(FULLSTR)
       END IF
 !!--- end for svg
 !
@@ -2764,6 +2805,9 @@
       INTEGER(4) I1,I2,J1,J2
       REAL(8) DICKE
       CHARACTER(7) VOLL,STRO
+      CHARACTER(len=10) :: str1 = '          '
+      CHARACTER(len=150) :: str2
+      INTEGER(4) :: slen = 0
 !
       IF (MAKESVG) THEN
       IF (I1.EQ.0) THEN
@@ -2794,9 +2838,11 @@
       '" stroke-dasharray="',4F10.4, &
       '" d=" ')
       ELSE
-      WRITE (svg,1010) DICKE,STRO(1:J1),VOLL(1:J2)
- 1010 FORMAT ('<path stroke-width="',F10.4,'"', &
-      ' stroke="',A,'" fill="',A,'" d=" ')
+      !dkt rewriting to remove blanks in quoted floats
+      WRITE(str1,FMT='(F10.4)') DICKE
+      str2='<path stroke-width="'//trim(adjustl(str1))//'" stroke="'//STRO(1:J1)//'"'
+      str2=trim(adjustl(str2))//' fill="'//VOLL(1:J2)//'" d=" '
+      WRITE (svg,FMT='(A)') trim(adjustl(str2))
       END IF
 
       END IF
