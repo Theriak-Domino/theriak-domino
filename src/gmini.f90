@@ -3035,7 +3035,46 @@
       END
 !-----
 !******************************
+      !This is an alternate steep that cuts out near all tests
+      !of neg or very small phase proportions. For comparison
+      !to existing steep (now STEEP_ORIGINAL below). To decide.
       SUBROUTINE STEEP(IS,ARA,MUE)
+      !-----find direction of steepest descent.
+      USE flags, only: PMINXXX, DOBINGVA
+      IMPLICIT NONE
+      INCLUDE 'theriak.cmn'
+      !-----END OF COMMON VARIABLES
+      INTEGER(4) IS, I, NEM, BING
+      REAL(8) DELMUE, SUMME, ARA(EMAX), MUE(EMAX)
+      !-----
+      NEM=NEND(IS)
+      DELMUE = 0.0D0
+      SUMME = 0.0D0
+      BING = 0
+      !=====
+      !Calculate ave MUE
+      DELMUE = SUM(MUE(1:NEM)) / real(NEM,8)
+      !Make vec of diff of mue from ave. 
+      VEKTOR(1:NEM) = DELMUE - MUE(1:NEM)
+      !If want to do the BING test, do it here before SUMME calc
+      IF(DOBINGVA.EQV..TRUE.) THEN
+        DO I=1,NEM
+            IF(ABS(ARA(I)).LE.PMINXXX) THEN
+              VEKTOR(I) = 0.0D0 ! test agains ABS so not all neg ppns get set; 
+              BING=BING+1       ! if don't use ABS, only doing BING for non negem phases
+            END IF
+        END DO
+        IF(BING > 0) print*,'SOL ',SOLNAM(IS),' has BING > 0: ',BING
+      END IF
+      !sqrt of sum of square of diffs; always pos
+      SUMME = DSQRT( SUM( VEKTOR(1:NEM)*VEKTOR(1:NEM) ))
+      !normalize VEKTOR so SUM(VEKTOR)=1.0
+      VEKTOR(1:NEM) = VEKTOR(1:NEM) / SUMME
+      RETURN
+      END SUBROUTINE STEEP
+!-----
+!******************************
+      SUBROUTINE STEEP_ORIGINAL(IS,ARA,MUE)
 !-----find direction of steepest descent.
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -3102,7 +3141,7 @@
       END DO
       END IF
       RETURN
-      END
+      END SUBROUTINE STEEP_ORIGINAL
 !-----
 !******************************
       SUBROUTINE DISTAN(IS,X1,X2)
