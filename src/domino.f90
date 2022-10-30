@@ -1215,7 +1215,7 @@
       CALL LABLA(CHIN(1),I002)
       NCOMIN=3
       COMINS(1)=KOMMENTAR
-      COMINS(2)='domino version: '//vers(1:10)
+      COMINS(2)='domino version: '//vers(1:30)
 !      COMINS(3)='database: '//CHIN(1)(1:I002)
       CALL LABLA(DBNAME,I002)
       COMINS(3)='database: '//DBNAME(1:I002)
@@ -1552,6 +1552,7 @@
       WRITE (out,4020) ZEITSTRING(1:I001)
  4020 FORMAT (' exit DOMINO',/,1X,A)
 !-----
+      STOP
       END PROGRAM DOMINOAPP
 !-----
 !******************************
@@ -2597,6 +2598,7 @@
 !-----
 !******************************
       SUBROUTINE PPLOIG
+        USE flags, ONLY: OUTFLAGS,ZEROEM,PMINAAA,PMINXXX,PMINXELSI
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -2604,7 +2606,7 @@
 !----
       CHARACTER(80) CCH,DATI
       CHARACTER(250) CH98
-!      CHARACTER(50) FORMA
+      CHARACTER(50) FORMA
       REAL(8) F1,F2,F3,F4,FF
       INTEGER(4) II,I1,I2,IL,I001,I002,ICH,NL1,NL2,IX1,IY1, &
       IX2,IY2,ITH,j,I0
@@ -2631,7 +2633,14 @@
       WRITE (plt,2000) XMIN,XMAX,YMIN,YMAX,BREITE,HOEHE
  2000 FORMAT(4(1PE20.12),0P,2F10.2)
 !-----
-      WRITE (plt,3001) NBUL+NCOMIN+3+NSOL
+      IF(OUTFLAGS .EQV. .TRUE.) THEN
+        !dt one for each calc-flag; 12 for now; 3 = 1 time line + 97 line + 98 line
+        !   find a way to make var; may change based on prtlog
+        WRITE(plt, 3001) NBUL + NCOMIN + 3 + NSOL +12         
+      ELSE                                           
+        WRITE(plt, 3001) NBUL + NCOMIN + 3 + NSOL    !dt not outputting calc flags
+      END IF
+      !WRITE (plt,3001) NBUL+NCOMIN+3+NSOL
  3001 FORMAT (I5,'    0    0    0    0    0')
 !      FORMA='('//FORXY//',F10.7,F10.4,I5,''Bulk('',I1,'')= '',A)'
       F1=XMIN
@@ -2639,6 +2648,7 @@
       F4=0.0D0
       ICH=0
 !      CALL LABLA(FORMA,ILF)
+      !1st text data line of domplt, write sys comp; may be more than 1 line (NBUL>1) if BIN axes or TER
       DO II=1,NBUL
         F2=YPOSA+(DBLE(II-1)*YHIGH/HOEHE)*0.35D0
         CALL LABLA(BULINE(II),I0)
@@ -2652,6 +2662,7 @@
 !      WRITE (plt,FMT=FORMA(1:ILF)) XPOSC,YPOSC,F3,F4,ICH,DATI(1:I0)
       WRITE (plt,2025) XPOSC,YPOSC,F3,F4,ICH,DATI(1:I0)
  2025 FORMAT (2(1PE20.12),0PF10.7,F10.4,I5,A)
+      !3rd line, write comment after bulk comp lines in therin.txt; may be >1 line if BIN or TER
       F1=XPOSB
       DO II=1,NCOMIN
         F2=YMAX-(DBLE(II-1)*YHIGH/HOEHE)*0.35D0
@@ -2660,6 +2671,7 @@
         WRITE (plt,2026) F1,F2,F3,F4,ICH,COMINS(II)(1:I0)
       END DO
  2026 FORMAT (2(1PE20.12),0PF10.7,F10.4,I5,A)
+      !Next lines, write SOLNAM and SOLINFO for each solution
       DO II=1,NSOL
        CALL LABLA(SOLNAM(II),I001)
        CCH=SOLNAM(II)(1:I001)//': '//SOLINFO(II)
@@ -2669,6 +2681,57 @@
        WRITE (plt,2027) F1,F2,F3,F4,ICH,CCH(1:I0)
  2027  FORMAT (2(1PE20.12),0PF10.7,F10.4,I5,A)
       END DO
+      !bdkt This is where we would write calc-flags numbers, before 97
+      IF(OUTFLAGS .EQV. .TRUE.) THEN
+        F2 = F2 - (YHIGH/HOEHE)*0.35D0
+        FORMA='(2(1PE20.12), 0PF10.7, F10.4, I5, A10, A10)'
+        WRITE(plt,fmt=FORMA) F1, F2, F3, F4, ICH, '     ', '     '
+        !
+        F2 = F2 - (YHIGH/HOEHE)*0.35D0
+        FORMA='(2(1PE20.12), 0PF10.7, F10.4, I5, A10, 1E11.4E3)'
+        WRITE(plt,fmt=FORMA) F1, F2, F3, F4, ICH, 'TEST=     ', TEST
+        !
+        F2 = F2 - (YHIGH/HOEHE)*0.35D0
+        FORMA='(2(1PE20.12), 0PF10.7, F10.4, I5, A10, I5)'
+        WRITE(plt,fmt=FORMA) F1, F2, F3, F4, ICH, 'LO1MAX=   ', LO1MAX
+        !
+        F2 = F2 - (YHIGH/HOEHE)*0.35D0
+        FORMA='(2(1PE20.12), 0PF10.7, F10.4, I5, A10, I5)'
+        WRITE(plt,fmt=FORMA) F1, F2, F3, F4, ICH, 'GCMAX=    ', GCMAX
+        !
+        F2 = F2 - (YHIGH/HOEHE)*0.35D0
+        FORMA='(2(1PE20.12), 0PF10.7, F10.4, I5, A10, 1E11.4E3)'
+        WRITE(plt,fmt=FORMA) F1, F2, F3, F4, ICH, 'DELXSTAR= ', DXSTAR
+        !
+        F2 = F2 - (YHIGH/HOEHE)*0.35D0
+        FORMA='(2(1PE20.12), 0PF10.7, F10.4, I5, A10, I5)'
+        WRITE(plt,fmt=FORMA) F1, F2, F3, F4, ICH, 'STEPSTAR= ', STPSTA
+        !
+        F2 = F2 - (YHIGH/HOEHE)*0.35D0
+        FORMA='(2(1PE20.12), 0PF10.7, F10.4, I5, A10, I5)'
+        WRITE(plt,fmt=FORMA) F1, F2, F3, F4, ICH, 'STEPMAX=  ', STPMAX
+        !
+        F2 = F2 - (YHIGH/HOEHE)*0.35D0
+        FORMA='(2(1PE20.12), 0PF10.7, F10.4, I5, A10, 1E11.4E3)'
+        WRITE(plt,fmt=FORMA) F1, F2, F3, F4, ICH, 'DELXMIN=  ', DXMIN
+        !
+        F2 = F2 - (YHIGH/HOEHE)*0.35D0
+        FORMA='(2(1PE20.12), 0PF10.7, F10.4, I5, A10, 1E11.4E3)'
+        WRITE(plt,fmt=FORMA) F1, F2, F3, F4, ICH, 'ZEROEM=   ', ZEROEM
+        !
+        F2 = F2 - (YHIGH/HOEHE)*0.35D0
+        FORMA='(2(1PE20.12), 0PF10.7, F10.4, I5, A10, 1E11.4E3)'
+        WRITE(plt,fmt=FORMA) F1, F2, F3, F4, ICH, 'PMINAAA=  ', PMINAAA
+        !
+        F2 = F2 - (YHIGH/HOEHE)*0.35D0
+        FORMA='(2(1PE20.12), 0PF10.7, F10.4, I5, A10, 1E11.4E3)'
+        WRITE(plt,fmt=FORMA) F1, F2, F3, F4, ICH, 'PMINXXX=  ', PMINXXX
+        !
+        F2 = F2 - (YHIGH/HOEHE)*0.35D0
+        FORMA='(2(1PE20.12), 0PF10.7, F10.4, I5, A10, 1E11.4E3)'
+        WRITE(plt,fmt=FORMA) F1, F2, F3, F4, ICH, 'PMINXELSI=', PMINXELSI
+      END IF  
+      !edkt
       CH98='97'
       I0=2
 !      WRITE (plt,FMT=FORMA(1:ILF)) 0.0,0.0,0.2,0.0,0,CH98(1:I0)

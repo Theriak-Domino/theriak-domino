@@ -378,7 +378,7 @@
       CALL LABLA(CHIN(1),I002)
       NCOMIN=3
       COMINS(1)=KOMMENTAR
-      COMINS(2)='theriak version: '//vers(1:10)
+      COMINS(2)='theriak version: '//vers(1:30) !inc 1:10->1:30
 !      COMINS(3)='database: '//CHIN(1)(1:I002)
       COMINS(3)='database: '//DBNAME
 !+++++
@@ -579,6 +579,7 @@
       WRITE (scr,150) ZEITSTRING(1:I001)
       WRITE (out,150) ZEITSTRING(1:I001)
   150 FORMAT (/,' exit THERIAK',/,1X,A)
+      STOP
       END PROGRAM THERIAKAPP
 !-----
 !********************************
