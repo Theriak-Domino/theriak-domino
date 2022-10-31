@@ -17,8 +17,8 @@
       SUBROUTINE ACTIVI(IS,XXX,AAA)
       USE flags, only: PMINAAA, PMINXELSI
       !ieee module only needed for testing purposes
-      !USE, INTRINSIC :: ieee_exceptions, only: ieee_get_flag, ieee_set_flag, &
-      !                                          ieee_underflow  
+      USE, INTRINSIC :: ieee_exceptions, only: ieee_get_flag, ieee_set_flag, &
+                                               ieee_underflow  
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -72,8 +72,10 @@
         END DO
         !dkt todo: implement manual UF check code w/o ieee
         IF(ISNAN(AAA(IE)) .OR. AAA(IE).LT.PMINAAA) THEN
-          print*,'  AUF OR <PMINAAA:',SOLNAM(IS),' for PC ',NAME(EM(IS,IE))
+          !if here, assume underflow and clear
+          call ieee_set_flag(ieee_underflow, .false.)
           AAA(IE)=PMINAAA
+          !print*,'  AUF OR <PMINAAA:',SOLNAM(IS),' for PC ',NAME(EM(IS,IE))
           !below for testing; not needed if working well
           !call ieee_get_flag(ieee_underflow,flag_value)
           !if(flag_value .eqv. .true.) then
