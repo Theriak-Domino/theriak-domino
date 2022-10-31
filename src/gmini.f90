@@ -1869,6 +1869,7 @@
 !-----START = 222:Initial gess from ideal solution
 !-----START = 777:reserved for test !!!
 !-----
+      USE flags, ONLY: ZEROEM
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -1884,6 +1885,7 @@
       CHARACTER(500) CH001
       CHARACTER(36) STARTEXT
       CHARACTER(6) MINKOM
+      LOGICAL :: NEGOK
 !==
       NSTEP=10
       BESTG=1D30
@@ -2021,7 +2023,8 @@
 !
 !-----half scan for weird solutions
       GSOL=1D30
-      IF (START.EQ.0.AND.NNEGEM(IS).GT.0.AND.WSCAN.GT.0) THEN
+      IF (START.EQ.0.AND.NNEGEM(IS).GT.0.AND.WSCAN.GT.0 &
+         .AND.MODELL(IS).NE.'F') THEN
 !
        FRAC=WSCAN
        DO I=1,FRAC-1
@@ -2045,6 +2048,22 @@
        DO I1=1,FRAC
         DO I=1,NEND(IS)
          XXSC(I)=XXSC(I)+ALLEM(IS,COMBO(I1),I)/DBLE(FRAC)
+         !dkt introduce check to exclude em's going neg that are 
+         !not in NEGEM
+         IF(XXSC(I).LT.0.0D0) THEN
+          NEGOK=.FALSE.
+          negcheckdo: DO II=1,NNEGEM(IS)
+           IF(NEGEM(IS,II).EQ.I) THEN
+            NEGOK=.TRUE.
+            EXIT negcheckdo
+           END IF
+          END DO negcheckdo
+          IF(NEGOK.EQV..FALSE.) THEN
+            !print*,'NEGOK.EQV..FALSE.', SOLNAM(IS)
+            GOTO 90
+          END IF
+         END IF
+         !
         END DO
        END DO
        SUMME=1.0D0+DBLE(NEND(IS))*1D-3
@@ -2235,7 +2254,11 @@
 !!!       IF (XXEM(I001).GT.0.0D0.AND.DABS(AR001(I001)).LT.1D-9) THEN
 !!!        ZEND(IS,I001)=ZEND(IS,I001)+1
 
-          IF (XXEM(I001).LT.1D-9.AND.AR001(I001).LT.1D-9 &
+
+!          IF (XXEM(I001).LT.1D-9.AND.AR001(I001).LT.1D-9 &
+!          .AND.DABS(MINEM(IS,I001)).LT.1D-20) THEN
+!          ZEND(IS,I001)=ZEND(IS,I001)+1
+          IF (XXEM(I001).LT.ZEROEM.AND.AR001(I001).LT.ZEROEM &
           .AND.DABS(MINEM(IS,I001)).LT.1D-20) THEN
           ZEND(IS,I001)=ZEND(IS,I001)+1
 
@@ -2249,7 +2272,9 @@
        END IF
 
        IF (ZEND(IS,I001).GT.0) THEN
-       IF (XXEM(I001).GT.0.0D0.AND.DABS(AR001(I001)).GT.1D-9) THEN
+!       IF (XXEM(I001).GT.0.0D0.AND.DABS(AR001(I001)).GT.1D-9) THEN
+!        ZEND(IS,I001)=0
+       IF (XXEM(I001).GT.0.0D0.AND.DABS(AR001(I001)).GT.ZEROEM) THEN
         ZEND(IS,I001)=0
 !
         IF (TEST.LT.0.0D0) THEN
@@ -3035,43 +3060,125 @@
       END
 !-----
 !******************************
-      !This is an alternate steep that cuts out near all tests
-      !of neg or very small phase proportions. For comparison
-      !to existing steep (now STEEP_ORIGINAL below). To decide.
+      !This is another steep that is essentially the same as original steep
+      !but uses the following user set flags:
+      !  STPZAL: sets pc mues to 0 if pc ARA < STPZAL on entry (1st loop).
+      !          - should be tied to values controlling zend in marmin. Try ZEROEM,
+      !          - defaults CdC is 1D-09. Current ZEROEM down to D-54.
+      !  STPNN:  sets pc vektor to 0 if pc ARA < STPNN AND NNEGEM=0.
+      !          This only applies to NNEGEM=0 soln models. Currently setting to
+      !          PMINXXX value of D-55.
+      !  STPVMIN:Cutoff for mue's nearly same as average mue; if within cutoff
+      !          from 0, don't calc new diff in bing case.
+      !For some reason this is more stable than steep_original even though
+      !they are essentially the same (with hard-coded values in original). Must
+      !be array syntax operations or compiler optimizations with hard-coded values.
       SUBROUTINE STEEP(IS,ARA,MUE)
-      !-----find direction of steepest descent.
-      USE flags, only: PMINXXX, DOBINGVA
-      IMPLICIT NONE
-      INCLUDE 'theriak.cmn'
-      !-----END OF COMMON VARIABLES
-      INTEGER(4) IS, I, NEM, BING
-      REAL(8) DELMUE, SUMME, ARA(EMAX), MUE(EMAX)
-      !-----
-      NEM=NEND(IS)
-      DELMUE = 0.0D0
-      SUMME = 0.0D0
-      BING = 0
-      !=====
-      !Calculate ave MUE
-      DELMUE = SUM(MUE(1:NEM)) / real(NEM,8)
-      !Make vec of diff of mue from ave. 
-      VEKTOR(1:NEM) = DELMUE - MUE(1:NEM)
-      !If want to do the BING test, do it here before SUMME calc
-      IF(DOBINGVA.EQV..TRUE.) THEN
-        DO I=1,NEM
-            IF(ABS(ARA(I)).LE.PMINXXX) THEN
-              VEKTOR(I) = 0.0D0 ! test agains ABS so not all neg ppns get set;
-              BING=BING+1       ! if don't use ABS, removing all negem contributions
-            END IF
+        !-----find direction of steepest descent.
+        USE flags, ONLY: STPZAL, STPZNN, STPVMIN, DOSTP
+        IMPLICIT NONE
+        INCLUDE 'theriak.cmn'
+        !-----END OF COMMON VARIABLES
+        INTEGER(4) IS, I, NEM, BING
+        REAL(8) DELMUE, SUMME, ARA(EMAX), MUE(EMAX)
+        !-----
+        IF(DOSTP.EQ.0) THEN
+          CALL STEEP_ORIGINAL(IS,ARA,MUE)
+          RETURN 
+        ELSE IF(DOSTP.EQ.2) THEN
+          CALL STEEP2(IS,ARA,MUE)
+          RETURN 
+        END IF
+        !-----
+        NEM=NEND(IS)
+        DELMUE = 0.0D0
+        SUMME = 0.0D0
+        BING = 0
+        !=====
+        !most pc's with very very low (non-neg) ppn will have very low mue's, 
+        !so when several are present, delmue (ave) much lower than otherwise,
+        !and that will drive vecktor towards them (unless otherwise checked).
+        !
+        !set mue's low when ara(i) very low or neg. Why set neg ppn mues to 0
+        !Keep STPZAL=ZEROEM, and very low is fine (D-54)
+        DO I=1,NEND(IS)
+          IF (ARA(I).LE.STPZAL) MUE(I)=0.0D0
         END DO
-        IF(BING > 0) print*,'SOL ',SOLNAM(IS),' has BING > 0: ',BING
-      END IF
-      !sqrt of sum of square (of diffs from ave); always pos
-      SUMME = DSQRT( SUM( VEKTOR(1:NEM)*VEKTOR(1:NEM) ))
-      !scale VEKTOR
-      VEKTOR(1:NEM) = VEKTOR(1:NEM) / SUMME
-      RETURN
+        !Calculate ave MUE
+        DELMUE = SUM(MUE(1:NEM)) / DBLE(NEM)
+        !Make vec of diff of mue from ave. 
+        VEKTOR(1:NEM) = DELMUE - MUE(1:NEM)
+        !if very low ppn, is uphill, and nnegem=0, then pin by setting vektor=0
+        !cdc uses 1.0D-50. Set STPZNN=PMINXXX (D-55)
+        DO I=1,NEND(IS)
+          IF (ARA(I).LE.STPZNN.AND.VEKTOR(I).LT.0.0D0.AND.NNEGEM(IS).EQ.0) THEN
+            VEKTOR(I)=0.0D0
+            BING=BING+1
+          END IF
+        END DO
+        SUMME=SUM( VEKTOR(1:NEM)*VEKTOR(1:NEM) )
+        !if pinned a pc vector to 0, normalize on bing fewer pc's
+        !and recalc whole thing
+        IF (BING.GT.0.AND.BING.LT.NEND(IS)) THEN
+          SUMME=0.0D0
+          DELMUE=0.0D0
+          DO I=1,NEND(IS)
+            DELMUE=DELMUE+VEKTOR(I)
+          END DO
+          DELMUE=DELMUE/DBLE(NEND(IS)-BING)
+          DO I=1,NEND(IS)
+            !IF (DABS(VEKTOR(I)).GT.1D-20) VEKTOR(I)=DELMUE-VEKTOR(I)
+            !Check helps a bit. STPVMIN currently same as def 1D-20
+            !If VEKTOR(I) is zero or very close on first calc of VEK above, then
+            !leave it as-is, otherwise (most cases), recalc it.
+            IF (DABS(VEKTOR(I)).GT.STPVMIN) VEKTOR(I)=DELMUE-VEKTOR(I)
+            SUMME=SUMME+VEKTOR(I)*VEKTOR(I)
+          END DO
+        END IF
+        !sqrt of sum of square (of diffs from ave); always pos; assume>0
+        SUMME = DSQRT(SUMME)
+        IF(SUMME>0.0D0) THEN
+          !scale VEKTOR
+          VEKTOR(1:NEM) = VEKTOR(1:NEM) / SUMME
+        END IF
+        RETURN
       END SUBROUTINE STEEP
+!-----
+!******************************
+      !This is an alternate steep that cuts out all tests
+      !of neg or very small phase proportions. For comparison
+      !to existing steep (now STEEP_ORIGINAL below).
+      !Not always good, e.g. 340/16kbar, 3x slower than original
+      SUBROUTINE STEEP2(IS,ARA,MUE)
+        !-----find direction of steepest descent.
+        IMPLICIT NONE
+        INCLUDE 'theriak.cmn'
+        !-----END OF COMMON VARIABLES
+        INTEGER(4) IS, I, NEM, BING
+        REAL(8) DELMUE, SUMME, ARA(EMAX), MUE(EMAX)
+        !-----
+        NEM=NEND(IS)
+        DELMUE = 0.0D0
+        SUMME = 0.0D0
+        BING = 0
+        !=====
+        !Calculate ave MUE
+        DELMUE = SUM(MUE(1:NEM)) / DBLE(NEM)
+        !Make vec of diff of mue from ave. 
+        VEKTOR(1:NEM) = DELMUE - MUE(1:NEM)
+        !sqrt of sum of square (of diffs from ave); always pos
+        SUMME = DSQRT( SUM( VEKTOR(1:NEM)*VEKTOR(1:NEM) ))
+        !scale VEKTOR
+        VEKTOR(1:NEM) = VEKTOR(1:NEM) / SUMME
+        !print*,'---'
+        !print*,SOLNAM(IS)
+        !print*,'MUE: ARA = ',MINVAL(ARA(1:NEM)),'MAX = ',MAXVAL(ARA(1:NEM))
+        !print*,'MUE: MIN = ',MINVAL(MUE(1:NEM)),'MAX = ',MAXVAL(MUE(1:NEM))
+        !print*,'VEK: MIN = ',MINVAL(VEKTOR(1:NEM)),'MAX = ',MAXVAL(VEKTOR(1:NEM))
+        !print*,'DELMUE   = ',DELMUE
+        !print*,'SUMME    = ',SUMME
+        RETURN
+        END SUBROUTINE STEEP2      
 !-----
 !******************************
       SUBROUTINE STEEP_ORIGINAL(IS,ARA,MUE)
@@ -3390,12 +3497,31 @@
 !-----END OF COMMON VARIABLES
       INTEGER(4) IS,ILX,IE,IK,I001,CODE
       REAL(8) X1(EMAX),XTEST,TOLER
+      LOGICAL CANBENEG
 !-----
 !----- if test OK, CODE remains unchanged, else CODE=0
 !      TOLER=1.0D-8
       TOLER=0.0D0
       I001=0
 !-
+      !-2022-05-09: Test for -EXT soln, because site check won't work.
+      ! For -EXT and NNEGEM>0, assume min ppn=-1, maxppn=1 or 2.
+      IF(MODELL(IS).EQ.'F'.AND.NNEGEM(IS).GT.0) THEN
+        DO IE=1, NEND(IS) 
+           !can this one be neg
+           CANBENEG=.FALSE.
+           DO IK=1, NNEGEM(IS)
+              IF(NEGEM(IS,IK).EQ.IE) CANBENEG=.TRUE.
+           END DO
+           IF(CANBENEG.EQV..FALSE.) THEN
+              IF(X1(IE).GT.1.0D0+TOLER .OR. X1(IE).LT.0.0D0) CODE = 0
+           ELSE
+              IF(X1(IE).LT.-1.0D0 .OR. X1(IE).GT.1.0D0) CODE = 0
+           END IF
+           IF(CODE==0) RETURN
+        END DO
+        RETURN
+      END IF
       IF (NNEGEM(IS).NE.0) THEN
       DO ILX=1,NSIEL(IS)
         XTEST=0.0D0
@@ -3403,7 +3529,12 @@
           IE=EMQQ(IS,ILX,IK)
           XTEST=XTEST+EMXX(IS,ILX,IE)*X1(IE)
         END DO
-        IF (XTEST.LT.(0.0D0-TOLER).OR.XTEST.GT.(1.0D0+TOLER)) I001=1
+        IF (XTEST.LT.(0.0D0-TOLER).OR.XTEST.GT.(1.0D0+TOLER)) THEN
+          I001=1
+          CODE=0
+          RETURN  !dkt might as well just return if set CODE, as here
+        END IF
+        !dkt todo: add DOMINMAXSIELST from src20x
       END DO
 !-
       ELSE

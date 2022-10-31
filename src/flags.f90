@@ -13,30 +13,38 @@ module flags
     !
     logical(4), save :: OUTFLAGS = .false.
     !
-    real(8), save :: ZEROEM    = 1.0D-13
-    real(8), save :: PMINXXX   = 2.5D-55
-    real(8), save :: PMINAAA   = 2.2D-307
-    real(8), save :: PMINXELSI = 2.5D-15
+    integer(4)    :: DOSTP = 1    !steep version:
+                                  !0 = original. hard-coded vals
+                                  !1 = original with STPZAL, STPZNN, STPVMIN, array math. def
+                                  !2 = Straight downhill. fast, slow at lowT/highP, 
+                                  !    less stable when several neg ppns.
+    !
+    real(8), save :: STPZAL    = 2.22D-24      !for DOSTP=2,3  link to ZEROEM
+    real(8), save :: STPZNN    = 3.333333D-55  !for DOSTP=2,3  link to PMINXXX
+    real(8), save :: STPVMIN   = 1.0D-20       !def 1.0D-20, DOSTP=2,3
+    !
+    real(8), save :: ZEROEM    = 2.22D-24
+    real(8), save :: PMINXXX   = 3.333333D-55
+    real(8), save :: PMINAAA   = 2.22D-307
+    real(8), save :: PMINXELSI = 2.22D-16 
     !
     real(8), save :: VAFFSCALE  = 3.33D-02
     real(8), save :: RLOWEXP    = -706.0D0
     integer(4), save :: ILOWEXP = -706
     !
-    !below variables are not implemented in src22x, but are in src20x
+    !not all implemented yet
     logical, save :: DOMINMAXSIELST = .false.
     logical, save :: DOEXTRAPPNSVA  = .false.
     logical, save :: DOBINGVA       = .false.
     !
-    !2021-12-19
+    !2021-12-19 - below flags not implemented
     logical, save    :: SWITCHGCMAX = .FALSE.
     integer(4), save :: LOO1GCMAX  = 7
     integer(4), save :: GCMAXBIG   = 250
     integer(4), save :: GCMAXSMALL = 15 !3
     real(8), save    :: ETCSCALE   = 0.5D0
-    !
     !2022-01-07 for SR CLEAN to remove exceeding CALMAX error when keeping too many soln comps in memory
     integer(4), save :: LOO1ISTABCUT = 20  !cdc default is 20.
-    !
     ! These are not flags, but counters..
     integer(4), save :: nbadstinvecadd = 0 !# of bad spacetests in sr vecadd
     !
@@ -112,6 +120,22 @@ module flags
           tdatstr = tdatstr(dpos+1:)
           !keep CALL LOWUP for boolean flags tRuE/FalSE 
           SELECT case(tstr1)
+            case("DOSTP")
+              if(tstr2 /= '') then
+                READ(tstr2,*) DOSTP
+            endif
+            case("STPZAL")
+              if(tstr2 /= '') then
+                READ(tstr2,*) STPZAL
+              endif
+            case("STPZNN")
+              if(tstr2 /= '') then
+                READ(tstr2,*) STPZNN
+              endif
+            case("STPVMIN")
+              if(tstr2 /= '') then
+                READ(tstr2,*) STPVMIN
+              endif
             case("ZEROEM")
               if(tstr2 /= '') then
                 READ(tstr2,*) ZEROEM
