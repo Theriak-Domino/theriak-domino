@@ -88,20 +88,11 @@
       CALL getdate(cdateandtime)
       compver = COMPILER_VERSION()
       !compopt=compiler_options()
-      !PRINT *, ''
-      PRINT *, 'Compile date: '//cdateandtime
-      !print *, 'Compiled by:  Doug Tinkham'
-      !print *, 'Source:       Minor modifications of Theriak-Domino source release '//_INITIALSRCDATE_
-      !print *, ''
-      PRINT *, 'Compiler version:'
-      PRINT *, compver
-      !print *, ''
-      !PRINT *, 'Script compiler options:'
-      !PRINT *, _CURRCFLAGSTR_
-      !print *, ''
-      !PRINT *, 'Script linker options:'
-      !PRINT *, _CURRLFLAGSTR_
-      PRINT *, ''
+      PRINT *, 'Compile date:     '//__DATE__//'  '//__TIME__
+      PRINT *, 'Compiler version: '//trim(adjustl(compver))
+!      PRINT *, 'Compiler options: '
+!      PRINT *, 'Compiler flags:   '//_CURRCFLAGSTR_
+!      PRINT *, 'Linker flags:     '//_CURRLFLAGSTR_
       DEALLOCATE(compver)
       !deallocate(compopt)
       !edkt
