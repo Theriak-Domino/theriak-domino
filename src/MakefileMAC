@@ -1,9 +1,10 @@
 # developer set values based on setup
 VERSIONSTR=28.09.2022-00x
 LQUADMATH=/opt/homebrew/Cellar/gcc/12.2.0/lib/gcc/12/libquadmath.a
-MINMACOS=12.0
+#LQUADMATH=/usr/local/Cellar/gcc/12.2.0/lib/gcc/12/libquadmath.a
+MINMACOS=11.1
 BUILDDIR=../build
-COMPILER=gfortran
+COMPILER=ifort
 
 # developer set values
 INITSRCDATE=28.09.2022
@@ -15,16 +16,16 @@ MOD_EXT=o
 
 #gfortran compile and link flags (works on mac for static builds)
 #in general, don't use O3
-GCFLAGS = -g -fbacktrace -ffpe-trap=invalid,zero,underflow,overflow -O2  -cpp  -mtune=generic -mmacosx-version-min=$(MINMACOS)    \
+GCFLAGS = -O2  -cpp  -mtune=generic -mmacosx-version-min=$(MINMACOS)    \
           -static-libgfortran -static-libgcc -nodefaultlibs             \
           -D_INITIALSRCDATE_="'$(INITSRCDATE)'"                 \
-					-D_CURRCMPLR_="'$(COMPILER)'"                         \
+			 -D_CURRCMPLR_="'$(COMPILER)'"                         \
           -D_CURRCFLAGSTR_="'$(CFLAGSTR)'"                      \
-					-D_CURRLFLAGSTR_="'$(LFLAGSTR)'"                      \
+			 -D_CURRLFLAGSTR_="'$(LFLAGSTR)'"                      \
           -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
 
 ##-fbounds-check -Wunused
-##-g -fbacktrace -ffpe-trap=underflow
+##-g -fbacktrace -ffpe-trap=invalid,zero,underflow,overflow
 
 GLFLAGS = -nodefaultlibs -lSystem -lgcc -lgcc_eh -lgfortran $(LQUADMATH)
 
@@ -33,34 +34,39 @@ NCFLAGS =
 NLFLAGS =
 
 #ifort compile and link flags
-ICFLAGS = 
+ICFLAGS = -fpp -fp-model strict -mp1 -module $(ODIR) -I$(ODIR) -I$(SRCDIR)         \
+          -qsimd-honor-fp-model -qsimd-serialize-fp-reduction                      \
+          -mmacosx-version-min=$(MINMACOS) -D_INITIALSRCDATE_="'$(INITSRCDATE)'"   \
+			 -D_CURRCMPLR_="'$(COMPILER)'"    -D_CURRCFLAGSTR_="'$(CFLAGSTR)'"        \
+			 -D_CURRLFLAGSTR_="'$(LFLAGSTR)'" -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
 ILFLAGS =
 
 #####################################################
 
 # Set link flags to compiler currently in use
-LFLAGS = $(GLFLAGS)
+#LFLAGS = $(GLFLAGS)
 #LFLAGS = $(NLFLAGS)
-#LFLAGS = $(ILFLAGS)
+LFLAGS = $(ILFLAGS)
 
 # Set compiler
-COMP90 = gfortran $(GCFLAGS)
+#COMP90 = gfortran $(GCFLAGS)
 
 #COMP90 = nagfor $(NCFLAGS)
 
-#COMP90 = ifort $(ICFLAGS)
+COMP90 = ifort $(ICFLAGS)
 
 #####################################################
 
 SEX = f90
 PLAT = platf-osx
-OBJECTS = activi.o dasave.o dbread.o fsol.o gcalc.o            \
-          gmini.o hprogs.o prinin.o prtcal.o help.o $(PLAT).o  \
-					flags.$(MOD_EXT)
-LOBJECTS= $(ODIR)/activi.o $(ODIR)/dasave.o $(ODIR)/dbread.o   \
-          $(ODIR)/fsol.o $(ODIR)/gcalc.o $(ODIR)/gmini.o       \
-					$(ODIR)/hprogs.o $(ODIR)/prinin.o $(ODIR)/prtcal.o   \
-          $(ODIR)/help.o $(ODIR)/$(PLAT).o $(ODIR)/flags.$(MOD_EXT)
+#put modules first (flags)
+OBJECTS = flags.$(MOD_EXT) activi.o dasave.o dbread.o fsol.o gcalc.o  \
+          gmini.o hprogs.o prinin.o prtcal.o help.o $(PLAT).o
+					
+LOBJECTS= $(ODIR)/flags.$(MOD_EXT) $(ODIR)/activi.o $(ODIR)/dasave.o       \
+          $(ODIR)/dbread.o $(ODIR)/fsol.o $(ODIR)/gcalc.o $(ODIR)/gmini.o  \
+			 $(ODIR)/hprogs.o $(ODIR)/prinin.o $(ODIR)/prtcal.o               \
+          $(ODIR)/help.o $(ODIR)/$(PLAT).o 
           
 
 
