@@ -13,15 +13,15 @@ module flags
     !
     logical(4), save :: OUTFLAGS = .false.
     !
-    integer(4)    :: DOSTP = 1    !steep version:
+    integer(4)    :: DOSTP = 2    !steep version:
                                   !0 = original. hard-coded vals
-                                  !1 = original with STPZAL, STPZNN, STPVMIN, array math. def
-                                  !2 = Straight downhill. fast, slow at lowT/highP, 
-                                  !    less stable when several neg ppns.
+                                  !1 = original+ STPZAL,STPZNN,STPVMIN, array syntax
+                                  !2 = no neg/zero checks. fast, 
+                                  !    perhaps less stable when several neg ppns
     !
-    real(8), save :: STPZAL    = 2.22D-24      !for DOSTP=2,3  link to ZEROEM
-    real(8), save :: STPZNN    = 3.333333D-55  !for DOSTP=2,3  link to PMINXXX
-    real(8), save :: STPVMIN   = 1.0D-20       !def 1.0D-20, DOSTP=2,3
+    real(8), save :: STPZAL    = 2.22D-24      !for DOSTP=1  link to ZEROEM
+    real(8), save :: STPZNN    = 3.333333D-55  !for DOSTP=1  link to PMINXXX
+    real(8), save :: STPVMIN   = 1.0D-20       !for DOSTP=1; def 1.0D-20
     !
     real(8), save :: ZEROEM    = 2.22D-24
     real(8), save :: PMINXXX   = 3.333333D-55
@@ -39,14 +39,15 @@ module flags
     !
     !2021-12-19 - below flags not implemented
     logical, save    :: SWITCHGCMAX = .FALSE.
-    integer(4), save :: LOO1GCMAX  = 7
-    integer(4), save :: GCMAXBIG   = 250
-    integer(4), save :: GCMAXSMALL = 15 !3
-    real(8), save    :: ETCSCALE   = 0.5D0
-    !2022-01-07 for SR CLEAN to remove exceeding CALMAX error when keeping too many soln comps in memory
+    integer(4), save :: LOO1GCMAX   = 7
+    integer(4), save :: GCMAXBIG    = 250
+    integer(4), save :: GCMAXSMALL  = 15 !3
+    real(8), save    :: ETCSCALE    = 0.5D0
+    !2022-01-07 for SR CLEAN to remove exceeding CALMAX error when 
+    !keeping too many soln comps in memory
     integer(4), save :: LOO1ISTABCUT = 20  !cdc default is 20.
     ! These are not flags, but counters..
-    integer(4), save :: nbadstinvecadd = 0 !# of bad spacetests in sr vecadd
+    integer(4), save :: nbadstinvecadd = 0 !# bad st in sr vecadd
     !
   CONTAINS
     !
@@ -65,7 +66,7 @@ module flags
         !
         datstr = ''
         !
-        !Load all lines of params and concatenate into formatted datstr. To simplify.
+        !Load all lines of params and concatenate into formatted datstr.
         do
           READ(UNIT=ini,FMT='(A500)',IOSTAT=istat) linestr
           if(istat /= 0) print *, 'CALCFLAGS read gave IOSTAT = ',istat
@@ -136,6 +137,10 @@ module flags
               if(tstr2 /= '') then
                 READ(tstr2,*) STPVMIN
               endif
+            !case("STPNMUECUT")
+            !  if(tstr2 /= '') then
+            !    READ(tstr2,*) STPNMUECUT
+            !  endif
             case("ZEROEM")
               if(tstr2 /= '') then
                 READ(tstr2,*) ZEROEM

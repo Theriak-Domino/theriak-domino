@@ -1,5 +1,5 @@
 # developer set values based on setup
-VERSIONSTR=28.09.2022-test
+VERSIONSTR=28.09.2022-00x
 LQUADMATH=/opt/homebrew/Cellar/gcc/12.2.0/lib/gcc/12/libquadmath.a
 MINMACOS=12.0
 BUILDDIR=../build
@@ -15,7 +15,7 @@ MOD_EXT=o
 
 #gfortran compile and link flags (works on mac for static builds)
 #in general, don't use O3
-GCFLAGS = -O2  -cpp  -mtune=generic -mmacosx-version-min=$(MINMACOS)    \
+GCFLAGS = -g -fbacktrace -ffpe-trap=invalid,zero,underflow,overflow -O2  -cpp  -mtune=generic -mmacosx-version-min=$(MINMACOS)    \
           -static-libgfortran -static-libgcc -nodefaultlibs             \
           -D_INITIALSRCDATE_="'$(INITSRCDATE)'"                 \
 					-D_CURRCMPLR_="'$(COMPILER)'"                         \

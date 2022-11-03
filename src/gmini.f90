@@ -3082,11 +3082,11 @@
         INTEGER(4) IS, I, NEM, BING
         REAL(8) DELMUE, SUMME, ARA(EMAX), MUE(EMAX)
         !-----
-        IF(DOSTP.EQ.0) THEN
-          CALL STEEP_ORIGINAL(IS,ARA,MUE)
-          RETURN 
-        ELSE IF(DOSTP.EQ.2) THEN
+        IF(DOSTP.EQ.2) THEN
           CALL STEEP2(IS,ARA,MUE)
+          RETURN 
+        ELSE IF(DOSTP.EQ.0) THEN
+          CALL STEEP_ORIGINAL(IS,ARA,MUE)
           RETURN 
         END IF
         !-----
@@ -3148,35 +3148,31 @@
       !This is an alternate steep that cuts out all tests
       !of neg or very small phase proportions. For comparison
       !to existing steep (now STEEP_ORIGINAL below).
-      !Not always good, e.g. 340/16kbar, 3x slower than original
       SUBROUTINE STEEP2(IS,ARA,MUE)
         !-----find direction of steepest descent.
         IMPLICIT NONE
         INCLUDE 'theriak.cmn'
         !-----END OF COMMON VARIABLES
-        INTEGER(4) IS, I, NEM, BING
-        REAL(8) DELMUE, SUMME, ARA(EMAX), MUE(EMAX)
+        INTEGER(4), INTENT(IN) :: IS
+        INTEGER(4)             :: NEM
+        REAL(8), INTENT(IN)    :: ARA(EMAX)
+        REAL(8), INTENT(IN)    :: MUE(EMAX)
+        REAL(8) :: DELMUE = 0.0D0
+        REAL(8) :: SUMME  = 0.0D0
+        !VEKTOR is global
         !-----
         NEM=NEND(IS)
-        DELMUE = 0.0D0
-        SUMME = 0.0D0
-        BING = 0
         !=====
         !Calculate ave MUE
-        DELMUE = SUM(MUE(1:NEM)) / DBLE(NEM)
+        DELMUE = (SUM(MUE(1:NEM))) / DBLE(NEM)
         !Make vec of diff of mue from ave. 
         VEKTOR(1:NEM) = DELMUE - MUE(1:NEM)
         !sqrt of sum of square (of diffs from ave); always pos
-        SUMME = DSQRT( SUM( VEKTOR(1:NEM)*VEKTOR(1:NEM) ))
+        SUMME = SUM( VEKTOR(1:NEM) * VEKTOR(1:NEM) )
+        !add check for summe=0
+        SUMME = DSQRT(SUMME)
         !scale VEKTOR
         VEKTOR(1:NEM) = VEKTOR(1:NEM) / SUMME
-        !print*,'---'
-        !print*,SOLNAM(IS)
-        !print*,'MUE: ARA = ',MINVAL(ARA(1:NEM)),'MAX = ',MAXVAL(ARA(1:NEM))
-        !print*,'MUE: MIN = ',MINVAL(MUE(1:NEM)),'MAX = ',MAXVAL(MUE(1:NEM))
-        !print*,'VEK: MIN = ',MINVAL(VEKTOR(1:NEM)),'MAX = ',MAXVAL(VEKTOR(1:NEM))
-        !print*,'DELMUE   = ',DELMUE
-        !print*,'SUMME    = ',SUMME
         RETURN
         END SUBROUTINE STEEP2      
 !-----

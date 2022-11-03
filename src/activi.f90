@@ -22,10 +22,10 @@
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
-!
 !-----END OF COMMON VARIABLES
       INTEGER(4) IS,IE,I,II,IK,IM,IX1,IX0
       REAL(8) XXX(EMAX),AAA(EMAX),XBAS(EMAX),ABAS(EMAX),SPARC(15)
+      LOGICAL flag_value
 !=====
 !     REAL* SUMM
       DO I=1,15
@@ -60,9 +60,7 @@
           IF (II.GT.1) IX0=IX0+NELPS(IS,II-1)
           DO IM=1,IDINT(SITMUL(IS,II))
             IX1=IX0+ELSI(IS,IE,II,IM)
-!dC versuch: seems important close to structural endmembers
-            !IF (XELSI(IS,IX1).LT.1D-50) XELSI(IS,IX1)=1D-50
-            !IF (AAA(IE).LT.1D-50) AAA(IE)=1D-50
+            !keep calc of AAA before branch.
             AAA(IE)=AAA(IE)*XELSI(IS,IX1)/EMXX(IS,IX1,IE)
             IF(XELSI(IS,IX1).LE.0.0D0.OR.AAA(IE).LT.PMINAAA) THEN
               AAA(IE)=PMINAAA
@@ -73,9 +71,8 @@
         !dkt todo: implement manual UF check code w/o ieee
         IF(ISNAN(AAA(IE)) .OR. AAA(IE).LT.PMINAAA) THEN
           !if here, assume underflow and clear
-          call ieee_set_flag(ieee_underflow, .false.)
+          !call ieee_set_flag(ieee_underflow, .false.)
           AAA(IE)=PMINAAA
-          !print*,'  AUF OR <PMINAAA:',SOLNAM(IS),' for PC ',NAME(EM(IS,IE))
           !below for testing; not needed if working well
           !call ieee_get_flag(ieee_underflow,flag_value)
           !if(flag_value .eqv. .true.) then
@@ -280,22 +277,9 @@
       END IF
 !=====
       DO 504,IE=1,NEND(IS)
-!dC
-!      IF (AAA(IE).LE.0.0D0.OR.XXX(IE).LE.0.0D0) THEN
-!      IF (AAA(IE).LE.0.0D0) THEN
-!!      IF (AAA(IE).LE.1.0D-60) THEN
-!!      MUE(IE)=-1D20
-!!      ELSE
-!      IF (AAA(IE).LE.1.0D-60) AAA(IE)=1D-60
-      !IF (AAA(IE).LE.0.0D0) AAA(IE)=1D-50
+
       IF (AAA(IE) .LE. 0.0D0) AAA(IE) = PMINAAA   !dkt D-50 changed to PMINAAA
-      !F001=XXX(IE)                               !dkt F001 not used
-!dC
-!      IF (XXX(IE).LT.1D-20) F001=1D-20
-      !IF (DABS(XXX(IE)).LT.1D-50) F001=1D-50     !dkt F001 not used
-      if(AAA(IE).LT.PMINAAA) then
-        print*,'**** AAA(IE)<PMINAAA in MUELAAR'
-      end if
+      
       MUE(IE)=GG(EM(IS,IE))+RTA*DLOG(AAA(IE))
 !L
       DO 503,N=1,NMARG(IS)
