@@ -1892,6 +1892,7 @@
       BESTN=0
       BESTS=0
       VERSUCH=1
+      PLUMI=1.0D0
 
       IF (TEST.LT.0.0D0) THEN
 

@@ -1297,6 +1297,7 @@
       QUN=0.0D0
       QOB=1.0D0
       DIF=1.0D0
+      Q2=0.5D0
 !      XX0=1.0D0
 !---- 1D-15 is smallest possible in REAL(8)
 !---- e.g. for anorthite: (P=1Bar) 1D-13 is necessary
@@ -1759,6 +1760,7 @@
       THET0=298.15D0
       J2CAL=4.184D0
       DELTS=0.0D0
+      IOFE=0
       DO I=1,NUN
        IF (DABS(XX(IP,I)).GT.1D-20) THEN
        IOFE=0

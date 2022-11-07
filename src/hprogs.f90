@@ -182,7 +182,7 @@
       REAL(8) XX,FL1
       INTEGER(4) L,I,I1,I2,IST,IFF,IEE,IX
 !-----
-      IF (XX.GT.0.0D0) FL1=DLOG10(XX)
+      IF (XX.GE.0.0D0) FL1=DLOG10(XX)  !log10 so GE ok
       IF (XX.LT.0.0D0) FL1=DLOG10(-XX)
       IF (FL1.GT.0.0D0) THEN
         L=IDINT(FL1+1)
