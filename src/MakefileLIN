@@ -1,75 +1,89 @@
+# command line to use: make -fMakefileLIN all
+# essentially identical to MAC, minus mac-specific flags
 
-# developer set values based on setup
+
+### developer set values based on preference
+
+## Set some unique value to print at top of program headers to identify build
 VERSIONSTR=28.09.2022-00x
+
+## Select compiler: gfortran, or ifort/ifx for intel
+#COMPILER=gfortran
+#COMPILER=ifort
+COMPILER=ifx
+
+## Select debug or release build 
+BUILDTYPE=release
+#BUILDTYPE=debug
+
+##Select where to place build products, relative to src directory
+BUILDDIR=../build
+
+## Static gfortran build requires specifying path to libquadmath.a; not working on LIN
 #LQUADMATH=/usr/lib/gcc/x86_64-linux-gnu/11/libquadmath.a
 LQUADMATH=
-BUILDDIR=../build
-COMPILER=ifort
-
-# developer set values
-INITSRCDATE=28.09.2022
-CFLAGSTR=
-LFLAGSTR=
-#NAG links to .o, not .mod; gfortran & ifort? seems can use both
-MOD_EXT=o
 
 
-#gfortran compile flags 
-GCFLAGS = -O2  -cpp  -mtune=generic                   \
-          -D_INITIALSRCDATE_="'$(INITSRCDATE)'"       \
-		  -D_CURRCMPLR_="'$(COMPILER)'"               \
-          -D_CURRCFLAGSTR_="'$(CFLAGSTR)'"            \
-		  -D_CURRLFLAGSTR_="'$(LFLAGSTR)'"            \
-          -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
-#-static-libgfortran -static-libgcc -nodefaultlibs 
-##-fbounds-check -Wunused
-##-g -fbacktrace -ffpe-trap=invalid,zero,underflow,overflow
+############################################################################
+############################################################################
+#CHANGE FLAGS BELOW, ONLY IF DESIRED
 
-#gfortran link flags
-GLFLAGS =
-#GLFLAGS = -nodefaultlibs -lgcc -lgcc_eh -lgfortran $(LQUADMATH)
+ifeq ($(COMPILER),gfortran)
+  MOD_EXT=o
+  PLAT = platf-osx
+  BFLAGS= -cpp -J$(ODIR) -D_CURRCMPLR_="'$(COMPILER)'"  -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
 
-#nag compile and link flags
-NCFLAGS = 
-NLFLAGS =
-
-#ifort compile and link flags. Not tested on linux
-ICFLAGS = -fpp -fp-model strict -mp1 -module $(ODIR) -I$(ODIR) -I$(SRCDIR)         \
-          -qsimd-honor-fp-model -qsimd-serialize-fp-reduction                      \
-          -D_INITIALSRCDATE_="'$(INITSRCDATE)'"                                    \
-		  -D_CURRCMPLR_="'$(COMPILER)'"    -D_CURRCFLAGSTR_="'$(CFLAGSTR)'"        \
-		  -D_CURRLFLAGSTR_="'$(LFLAGSTR)'" -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
-ILFLAGS =
-
-#####################################################
-
-# Set link flags to compiler currently in use
-#LFLAGS = $(GLFLAGS)
-#LFLAGS = $(NLFLAGS)
-LFLAGS = $(ILFLAGS)
-
-# Set compiler
-#COMP90 = gfortran $(GCFLAGS)
-
-#COMP90 = nagfor $(NCFLAGS)
-
-COMP90 = ifort $(ICFLAGS)
-
-#####################################################
-
-SEX = f90
-PLAT = platf-osx
-#put modules first (flags)
-OBJECTS = flags.$(MOD_EXT) activi.o dasave.o dbread.o fsol.o gcalc.o  \
-          gmini.o hprogs.o prinin.o prtcal.o help.o $(PLAT).o
-					
-LOBJECTS= $(ODIR)/flags.$(MOD_EXT) $(ODIR)/activi.o $(ODIR)/dasave.o       \
-          $(ODIR)/dbread.o $(ODIR)/fsol.o $(ODIR)/gcalc.o $(ODIR)/gmini.o  \
-		  $(ODIR)/hprogs.o $(ODIR)/prinin.o $(ODIR)/prtcal.o               \
-          $(ODIR)/help.o $(ODIR)/$(PLAT).o 
+          #-static-libgfortran -static-libgcc -nodefaultlibs \
           
+  ifeq ($(BUILDTYPE),release)
+    CFLAGS = -O2  -mtune=generic  $(BFLAGS)
+  else
+    CFLAGS = -g -Og -fbounds-check -fbacktrace -ffpe-trap=invalid,zero,underflow,overflow $(BFLAGS)
+  endif
+  LFLAGS=
+  #LFLAGS = -nodefaultlibs -lSystem -lgcc -lgcc_eh -lgfortran $(LQUADMATH)
+else ifeq ($(COMPILER),ifort)
+  MOD_EXT=o
+  PLAT = platf-osx
+  BFLAGS= -fpp -fp-model strict -mp1 -module $(ODIR) -I$(ODIR) -I$(SRCDIR) \
+          -qsimd-honor-fp-model -qsimd-serialize-fp-reduction \
+          -D_CURRCMPLR_="'$(COMPILER)'"  -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
+  ifeq ($(BUILDTYPE),release)
+    CFLAGS = -O3 $(BFLAGS) 
+  else
+    CFLAGS = $(BFLAGS)
+  endif
+  LFLAGS =
+else ifeq ($(COMPILER),ifx)
+  MOD_EXT=o
+  PLAT = platf-osx
+  BFLAGS= -fpp -fp-model strict -module $(ODIR) -I$(ODIR) -I$(SRCDIR) \
+          -qsimd-honor-fp-model -qsimd-serialize-fp-reduction \
+          -D_CURRCMPLR_="'$(COMPILER)'"  -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
+  ifeq ($(BUILDTYPE),release)
+    CFLAGS = -O3 $(BFLAGS) 
+  else
+    CFLAGS = $(BFLAGS)
+  endif
+  LFLAGS =
+endif
+
+COMP90 = $(COMPILER) $(CFLAGS)
 
 
+#####################################################
+#####################################################
+SEX = f90
+
+#put modules first (flags)
+OBJECTS = flags.$(MOD_EXT) activi.o dasave.o dbread.o fsol.o gcalc.o \
+  gmini.o hprogs.o prinin.o prtcal.o help.o $(PLAT).o
+					
+LOBJECTS= $(ODIR)/flags.$(MOD_EXT) $(ODIR)/activi.o $(ODIR)/dasave.o \
+  $(ODIR)/dbread.o $(ODIR)/fsol.o $(ODIR)/gcalc.o $(ODIR)/gmini.o \
+  $(ODIR)/hprogs.o $(ODIR)/prinin.o $(ODIR)/prtcal.o \
+  $(ODIR)/help.o $(ODIR)/$(PLAT).o 
+          
 #################################
 ##   SETUPDIRS for obj & bin   ##
 #################################
@@ -83,7 +97,7 @@ SETUPDIRS:
 #################################
 
 activi.o : activi.$(SEX) theriak.cmn files.cmn SETUPDIRS
-	 $(COMP90) -c activi.$(SEX) -o $(ODIR)/activi.o
+	$(COMP90) -c activi.$(SEX) -o $(ODIR)/activi.o
     
 dasave.o : dasave.$(SEX) theriak.cmn SETUPDIRS
 	$(COMP90) -c dasave.$(SEX) -o $(ODIR)/dasave.o
@@ -115,7 +129,6 @@ help.o : help.$(SEX) files.cmn thblock.cmn SETUPDIRS
 $(PLAT).o : $(PLAT).$(SEX) SETUPDIRS
 	$(COMP90) -c $(PLAT).$(SEX) -o $(ODIR)/$(PLAT).o
 
-#nag produces both .mod and .o during comp stage, but links the .o thus, changed
 flags.$(MOD_EXT) : flags.$(SEX) files.cmn SETUPDIRS
 	$(COMP90) -c flags.$(SEX) -o $(ODIR)/flags.$(MOD_EXT)
 
@@ -272,10 +285,17 @@ pretherion.o : pretherion.$(SEX) SETUPDIRS
 pretherion : pretherion.o $(PLAT).o
 	$(COMP90) -o $(BDIR)/pretherion $(ODIR)/pretherion.o $(ODIR)/$(PLAT).o $(LFLAGS)
 
-#nag produces both .mod and .o during comp stage, but links the .o thus, changed
-#flags.$(MOD_EXT) : flags.$(SEX) files.cmn SETUPDIRS
-#	$(COMP90) -c flags.$(SEX) -o $(ODIR)/flags.$(MOD_EXT)
+
 
 all : theriak domino guzzler explot therbin therter thermo thalia makemap theriag plotxy plotg jfiles jphases\
  cat2 theriakd therion pretherion
 
+
+
+.PHONY : clean
+clean :
+	-rm  -f  $(ODIR)/*.o  flags.mod  $(ODIR)/flags.mod $(BDIR)/theriak $(BDIR)/domino \
+ $(BDIR)/guzzler $(BDIR)/explot $(BDIR)/therbin $(BDIR)/therter $(BDIR)/thermo $(BDIR)/thalia \
+ $(BDIR)/makemap $(BDIR)/theriag $(BDIR)/plotxy $(BDIR)/plotg $(BDIR)/jfiles $(BDIR)/jphases \
+ $(BDIR)/cat2 $(BDIR)/theriakd $(BDIR)/therion $(BDIR)/pretherion
+  
