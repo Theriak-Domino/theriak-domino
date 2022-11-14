@@ -1284,7 +1284,7 @@
 !!        DO II=1,10
 !!         WRITE (UNIT=6,FMT='(''EMXX(IS,I,II)(II=1,10)'',20F20.10)') EMXX(IS,I,II)
 !!        END DO
-!!
+
 !      END DO
 !=====
 !-----find effective NSITE,NELPS and ELONS etc.
@@ -1427,6 +1427,33 @@
       WRITE (UNIT=out,FMT='('' '')')
       END IF
 !-----
+      !dkt pre-compute iemxxal = 1/(emxxal^alpha) for sr active perf
+      !IEMXXAL=0.0D0
+      DO JX=1,NSIEL(K)
+        DO IE=1,NEND(K)
+          IF(EMXX(K,JX,IE).NE.0.0D0) THEN
+            IEMXXAL(K,JX,IE)= 1.0D0 / (EMXX(K,JX,IE)**(ALPHA(K)))
+          END IF
+        END DO
+      END DO
+      !! updated test out
+!      WRITE (UNIT=6,FMT='(''TEST IN SOLFIN'')')
+!      WRITE (UNIT=6,FMT='(/,''CURR SOLNMAM(IS): '',A16)') adjustr(SOLNAM(k))
+!      WRITE (UNIT=6,FMT='(/,''ALPHA(IS):        '',F20.10)') ALPHA(k)
+!      WRITE (UNIT=6,FMT='(/,''NSIEL='',I3)') NSIEL(k)
+!      DO I=1,NSIEL(IS)
+!        WRITE (UNIT=6,FMT='('' Curr NSIEL I, SIEL(IS,I) '',I5,2X,A16)') I, SIEL(K,I)
+!        WRITE (UNIT=6,FMT='('' Curr NSIEL I, NEMQQ(IS,I)'',I5,2X,I5)') I, NEMQQ(K,I)
+!        WRITE (UNIT=6,FMT='('' SITMUL(IS,Curr NSIEL I) = '',F20.4)') SITMUL(K,I)
+!        DO II=1,NEMQQ(IS,I)
+!         WRITE (UNIT=6,FMT='('' EMQQ(IS,I,II)(II=1,NEMQQ(IS,I))'',20I3)') EMQQ(K,I,II)
+!        END DO
+!        DO II=1,NEND(IS)
+!         WRITE (UNIT=6,FMT='('' EMXX(IS,I,II)(II=1,NEND(IS))   '',F20.10)') EMXX(K,I,II)
+!         WRITE (UNIT=6,FMT='('' IEMXXAL(IS,I,II)(II=1,NEND(IS))'',F20.10)') IEMXXAL(K,I,II)
+!        END DO
+!      END DO
+
       RETURN
       END
 !-----

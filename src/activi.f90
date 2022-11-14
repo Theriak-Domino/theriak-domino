@@ -25,9 +25,11 @@
 !-----END OF COMMON VARIABLES
       INTEGER(4) IS,IE,I,II,IK,IM,IX1,IX0
       REAL(8) XXX(EMAX),AAA(EMAX),XBAS(EMAX),ABAS(EMAX),SPARC(15)
+      REAL(8) XELSIATERM(SIELMAX), MINAAACUT
       LOGICAL flag_value
 !=====
-!     REAL* SUMM
+      XELSIATERM=0.0D0
+      MINAAACUT=PMINAAA**ALPHA(IS)
       DO I=1,15
       SPARC(I)=0.0D0
       END DO
@@ -45,6 +47,22 @@
           XELSI(IS,IX1)=PMINXELSI
         END IF
       END DO
+      !To reduce chance of underflow pre-compute and use XELSIATERM
+      IF(ALPHA(IS).LT.1.0D0) THEN
+        DO I=1,NSIEL(IS)
+          !can use MINAAACUT for test val as PMINAAA close to tiny
+          IF(XELSI(IS,I).GT.MINAAACUT) THEN
+            XELSIATERM(I) = XELSI(IS,I)**ALPHA(IS)
+          ELSE
+            !if xelsi>0 && <MINAACUT set to minaaacut
+            IF(XELSI(IS,I).NE.0.0D0) XELSIATERM(I) = MINAAACUT 
+            !XELSIATERM(I) = MINAAACUT 
+          END IF
+        END DO
+      ELSE
+        XELSIATERM(1:NSIEL(IS))=XELSI(IS,1:NSIEL(IS))
+      END IF
+
 !-----
 !      WRITE (6,1010) (XELSI(IS,IX1),IX1=1,NSIEL(IS))
 !      WRITE (out,1010) (XELSI(IS,IX1),IX1=1,NSIEL(IS))
@@ -56,29 +74,60 @@
       IELOOP: DO IE=1,NEND(IS)
         IX0=0
         AAA(IE)=1.0D0
-        DO II=1,NSITE(IS)
-          IF (II.GT.1) IX0=IX0+NELPS(IS,II-1)
-          DO IM=1,IDINT(SITMUL(IS,II))
-            IX1=IX0+ELSI(IS,IE,II,IM)
-            !keep calc of AAA before branch.
-            AAA(IE)=AAA(IE)*XELSI(IS,IX1)/EMXX(IS,IX1,IE)
-            IF(XELSI(IS,IX1).LE.0.0D0.OR.AAA(IE).LT.PMINAAA) THEN
-              AAA(IE)=PMINAAA
-              CYCLE ieloop
-            END IF
+        IF(ALPHA(IS).LT.1.0D0) THEN
+          NSITELOOP: DO II=1,NSITE(IS)
+            IF (II.GT.1) IX0=IX0+NELPS(IS,II-1)
+            IMLOOP: DO IM=1,IDINT(SITMUL(IS,II))
+              IX1=IX0+ELSI(IS,IE,II,IM)
+              !keep calc of AAA before branch.
+              AAA(IE) = AAA(IE) * (XELSIATERM(IX1)*IEMXXAL(IS,IX1,IE))
+              !NaN will test false
+              IF(AAA(IE).LE.MINAAACUT) THEN
+                AAA(IE)=PMINAAA
+                CYCLE ieloop
+              ENDIF
+              !will catch NaN
+              IF(AAA(IE)/=AAA(IE)) THEN
+                !print*,'-- ALPHA<1: ',ALPHA(IS)
+                !WRITE (UNIT=6,FMT='(''SOL:'',A16,'' IE:'',I5,'' AAA(IE):'',E14.4)') &
+                !    adjustl(SOLNAM(IS)), IE, AAA(IE)
+                !WRITE (UNIT=6,FMT='(''XELSIATERM:'',E14.4,'' IEMXXAL:'',E14.4)') &
+                !    XELSIATERM(IX1), IEMXXAL(IS,IX1,IE)
+                call ieee_set_flag(ieee_underflow, .false.)
+                AAA(IE)=PMINAAA
+                CYCLE ieloop
+              END IF
+            END DO IMLOOP
+          END DO NSITELOOP
+          !reverse until RTA changed throughout
+          IF(AAA(IE).GT.MINAAACUT) THEN
+            AAA(IE)=AAA(IE)**(1.0D0/ALPHA(IS))
+          ELSE
+            !print*,SOLNAM(IS),'  IE = ',IE,'  ',ALPHA(IS),'  ',AAA(IE)
+            AAA(IE)=PMINAAA
+          END IF
+
+        ELSE
+          !ALPHA=1, process normally
+          DO II=1,NSITE(IS)
+            IF (II.GT.1) IX0=IX0+NELPS(IS,II-1)
+            DO IM=1,IDINT(SITMUL(IS,II))
+              IX1=IX0+ELSI(IS,IE,II,IM)
+              IF(XELSI(IS,IX1).EQ.0.0D0) THEN
+                AAA(IE)=PMINAAA
+                CYCLE ieloop
+              END IF
+              AAA(IE)=AAA(IE)*XELSI(IS,IX1)/EMXX(IS,IX1,IE)
+              IF(AAA(IE)/=AAA(IE).OR.AAA(IE).LT.PMINAAA) THEN
+                !print*,'-- ALPHA.GE.1: ',ALPHA(IS)
+                !WRITE (UNIT=6,FMT='(''SOL:'',A16,'' IE:'',I5,'' AAA(IE):'',E14.4)') adjustl(SOLNAM(IS)), IE, AAA(IE)
+                !WRITE (UNIT=6,FMT='(''XELSI:'',E14.4,'' EMXX:'',E14.4)') XELSI(IS,IX1), &
+                !  EMXX(IS,IX1,IE)
+                AAA(IE)=PMINAAA
+                CYCLE ieloop
+              END IF
+            END DO
           END DO
-        END DO
-        !dkt todo: implement manual UF check code w/o ieee
-        IF(ISNAN(AAA(IE)) .OR. AAA(IE).LT.PMINAAA) THEN
-          !if here, assume underflow and clear
-          !call ieee_set_flag(ieee_underflow, .false.)
-          AAA(IE)=PMINAAA
-          !below for testing; not needed if working well
-          !call ieee_get_flag(ieee_underflow,flag_value)
-          !if(flag_value .eqv. .true.) then
-          !  call ieee_set_flag(ieee_underflow, .false.)
-          !  print*,'  AUF:',SOLNAM(IS),' for PC ',NAME(EM(IS,IE))
-          !end if
         END IF
       END DO IELOOP
 !-----
