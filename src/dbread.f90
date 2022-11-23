@@ -50,97 +50,99 @@
       END IF
 !=====
       DO DURCH=1,DUTOT
-      IF (DURCH.EQ.1.AND.DUTOT.EQ.2) THEN
-        NPICKR=0
-      END IF
+        IF (DURCH.EQ.1.AND.DUTOT.EQ.2) THEN
+          NPICKR=0
+        END IF
 !+++
 !      WRITE (UNIT=scr,FMT=502) (PICK(I),I=1,NPICK)
 !  502 FORMAT (' origi: ',50(A16,1X))
 !+++
 !----
-      IF (DURCH.EQ.2) THEN
-
-      DO I1=1,SOMAX+1
-       NSIEL(I1)=0
-       DO I2=1,SIELMAX
-         XELSI(I1,I2)=0.0D0
-         NEMQQ(I1,I2)=0
-         DO I3=1,SIELMAX
-           EMQQ(I1,I2,I3)=0
-         END DO
-         DO I3=1,EMAX
-           EMXX(I1,I2,I3)=0.0D0 
-         END DO
-       END DO
-       DO I2=1,EMAX+1
-         DO I3=1,SITMAX
-           DO I4=1,MULMAX
-             ELSI(I1,I2,I3,I4)=0
-           END DO
-         END DO
-       END DO
-      END DO
+        IF (DURCH.EQ.2) THEN
+          !rezero NSIEL,XELSI,MINXELSI,NEMQQ,EMQQ,EMXX,IEMXXAL,ELSI arrays
+          DO I1=1,SOMAX+1
+            NSIEL(I1)=0
+            DO I2=1,SIELMAX
+              XELSI(I1,I2)=0.0D0
+              MINXELSI(I1,I2)=0.0D0
+              NEMQQ(I1,I2)=0
+              DO I3=1,SIELMAX
+                EMQQ(I1,I2,I3)=0
+              END DO
+              DO I3=1,EMAX
+                EMXX(I1,I2,I3)=0.0D0 
+                IEMXXAL(I1,I2,I3)=0.0D0
+              END DO
+            END DO
+            DO I2=1,EMAX+1
+              DO I3=1,SITMAX
+                DO I4=1,MULMAX
+                  ELSI(I1,I2,I3,I4)=0
+                END DO
+              END DO
+            END DO
+          END DO
 !----
-      NPICKR=NNPICK
+          NPICKR=NNPICK
 !+++ check for endmembers of solutions to choose
-      DO IS=1,NSOL
-       IQ=0
-       DO I=1,NPICKR
-        IF (VERGL(SOLNAM(IS),PICKR(I))) IQ=I
-       END DO
-       IF (IQ.NE.0) THEN
-        DO J=IQ,NPICKR-1
-         PICKR(J)=PICKR(J+1)
-        END DO
-        NPICKR=NPICKR-1
-        DO J=1,NEND(IS)
+          DO IS=1,NSOL
+            IQ=0
+            DO I=1,NPICKR
+              IF (VERGL(SOLNAM(IS),PICKR(I))) IQ=I
+            END DO
+            IF (IQ.NE.0) THEN
+              DO J=IQ,NPICKR-1
+                PICKR(J)=PICKR(J+1)
+              END DO
+              NPICKR=NPICKR-1
+              DO J=1,NEND(IS)
 ! check that phase is not already picked
-      IAA=0
-      DO II=1,NPICKR
-       IF (VERGL(NAME(EM(IS,J)),PICKR(II))) IAA=II
-      END DO
-      IF (IAA.EQ.0) THEN
+                IAA=0
+                DO II=1,NPICKR
+                  IF (VERGL(NAME(EM(IS,J)),PICKR(II))) IAA=II
+                END DO
+                IF (IAA.EQ.0) THEN
 !
-         NPICKR=NPICKR+1
-         PICKR(NPICKR)=NAME(EM(IS,J))
+                  NPICKR=NPICKR+1
+                  PICKR(NPICKR)=NAME(EM(IS,J))
 !
-      END IF
+                END IF
 !
-        END DO
-       END IF
-      END DO
+              END DO
+            END IF
+          END DO
 !+++
 !+++ check for phases in COM LINES to choose
-      DO IP=NUN+1,NPHA
-       CALL DAREST(IP)
-       IF (COM) THEN
-        IQ=0
-        DO I=1,NPICKR
-         IF (VERGL(NAME(IP),PICKR(I))) IQ=1
-        END DO
-        IF (IQ.EQ.1) THEN
-         DO J=1,NCOM
+          DO IP=NUN+1,NPHA
+            CALL DAREST(IP)
+            IF (COM) THEN
+              IQ=0
+              DO I=1,NPICKR
+                IF (VERGL(NAME(IP),PICKR(I))) IQ=1
+              END DO
+              IF (IQ.EQ.1) THEN
+                DO J=1,NCOM
 ! check that phase is not already picked
-      IAA=0
-      DO II=1,NPICKR
-       IF (VERGL(NAME(ICOM(J)),PICKR(II))) IAA=II
-      END DO
-      IF (IAA.EQ.0) THEN
+                  IAA=0
+                  DO II=1,NPICKR
+                    IF (VERGL(NAME(ICOM(J)),PICKR(II))) IAA=II
+                  END DO
+                  IF (IAA.EQ.0) THEN
 !
-          NPICKR=NPICKR+1
-          PICKR(NPICKR)=NAME(ICOM(J))
+                    NPICKR=NPICKR+1
+                    PICKR(NPICKR)=NAME(ICOM(J))
 !
-      END IF
+                  END IF
 !
-         END DO
-        END IF
-       END IF
-      END DO
+                END DO
+              END IF
+            END IF
+          END DO
 !+++
 !      WRITE (UNIT=scr,FMT=501) (PICKR(I),I=1,NPICKR)
 !  501 FORMAT (' picked: ',50(A16,1X))
 !+++
-      END IF
+        END IF  !end of IF (DURCH.EQ.2) THEN
 !+++
 !=====
       REWIND (UNIT=dbs)
@@ -1189,6 +1191,7 @@
 !-----
 !******************************
       SUBROUTINE SOLFIN
+      USE flags, only : PMINXXX,PMINAAA
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -1288,6 +1291,10 @@
 !      END DO
 !=====
 !-----find effective NSITE,NELPS and ELONS etc.
+       !1290-1341 effectively removes els that don't mix on a site
+       !if all active pc's do not have that el on that site, and
+       !effectively removes entire sites if active pc set do not mix
+       !on that mixing site.
       II=1
    10 IF (II.GT.NSITE(K)) GOTO 22
       IP=1
@@ -1388,6 +1395,10 @@
       ' in external subroutine')
       STOP
       END IF
+      !add MINXXXCUT, set to PMINXXX since no way to get model-specific bounds,
+      !but MINXXXCUT not currently used for EXT models
+      MINXXXCUT(K) = PMINXXX
+      MINAAACUT(K) = PMINAAA
       END IF
 !-----
       ALPHA0(K)=ALPHA(K)
@@ -1395,7 +1406,10 @@
       ALPDIV(K).NE.' ') THEN
       CALL GELI(ALPDIV(K)(2:),FF)
       IF (DABS(FF).LT.1D-20) FF=1.0D0
+      print*,'ALPHA(K) prev = ',ALPHA(K)
+      print*,'           FF = ',FF
       ALPHA(K)=ALPHA(K)/FF
+      print*,'ALPHA(K) new = ',ALPHA(K)
       END IF
       SOLNAM(NSOL)=SONAM
       SOSKIP(NSOL)=0
@@ -1428,7 +1442,7 @@
       END IF
 !-----
       !dkt pre-compute iemxxal = 1/(emxxal^alpha) for sr active perf
-      !IEMXXAL=0.0D0
+      IEMXXAL(K,:,:)=0.0D0
       DO JX=1,NSIEL(K)
         DO IE=1,NEND(K)
           IF(EMXX(K,JX,IE).NE.0.0D0) THEN
@@ -1441,14 +1455,14 @@
 !      WRITE (UNIT=6,FMT='(/,''CURR SOLNMAM(IS): '',A16)') adjustr(SOLNAM(k))
 !      WRITE (UNIT=6,FMT='(/,''ALPHA(IS):        '',F20.10)') ALPHA(k)
 !      WRITE (UNIT=6,FMT='(/,''NSIEL='',I3)') NSIEL(k)
-!      DO I=1,NSIEL(IS)
+!      DO I=1,NSIEL(K)
 !        WRITE (UNIT=6,FMT='('' Curr NSIEL I, SIEL(IS,I) '',I5,2X,A16)') I, SIEL(K,I)
 !        WRITE (UNIT=6,FMT='('' Curr NSIEL I, NEMQQ(IS,I)'',I5,2X,I5)') I, NEMQQ(K,I)
 !        WRITE (UNIT=6,FMT='('' SITMUL(IS,Curr NSIEL I) = '',F20.4)') SITMUL(K,I)
-!        DO II=1,NEMQQ(IS,I)
+!        DO II=1,NEMQQ(K,I)
 !         WRITE (UNIT=6,FMT='('' EMQQ(IS,I,II)(II=1,NEMQQ(IS,I))'',20I3)') EMQQ(K,I,II)
 !        END DO
-!        DO II=1,NEND(IS)
+!        DO II=1,NEND(K)
 !         WRITE (UNIT=6,FMT='('' EMXX(IS,I,II)(II=1,NEND(IS))   '',F20.10)') EMXX(K,I,II)
 !         WRITE (UNIT=6,FMT='('' IEMXXAL(IS,I,II)(II=1,NEND(IS))'',F20.10)') IEMXXAL(K,I,II)
 !        END DO
@@ -2378,6 +2392,9 @@
 !******************************
       SUBROUTINE ANALSOL(IS)
 !-----analyze Solution model
+      USE flags, only : PMINXXX,PMINAAA,CALCMINAX
+      USE, INTRINSIC :: ieee_exceptions, only: ieee_get_flag, ieee_set_flag, &
+                                               ieee_underflow  
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -2385,9 +2402,33 @@
       INTEGER(4) I,IS,II,IE,NSTSIT,IR,IP,I001,I0,I1, &
       IC,NROW,NCOL,RANG,COLNR(500),ROWNR(500),PERMU(SITMAX), &
       I001A
+      INTEGER(4) :: NIT,J
+      INTEGER(4), PARAMETER :: MAXITER=320
       REAL(8) MAT(500,500),MINSO(SIELMAX), &
       MAXSO(SIELMAX),XXPERM(500,SIELMAX),SUM
+      REAL(8)    :: MINEXP,CMINAAA,CMINEXP,LASTMINAAA
+      REAL(8), ALLOCATABLE :: LOCXELSI(:,:), LASTXELSI(:,:)
+      REAL(8), ALLOCATABLE :: LOCXXX(:,:),    LOCEMXX(:,:)
+      REAL(8), ALLOCATABLE :: ACT2(:), LASTACT2(:)
+      REAL(8), ALLOCATABLE :: MTX(:,:)
       CHARACTER(32) NAMPERM(500),CH16,COLNAME(500)
+      LOGICAL :: ISUFSET = .FALSE.
+      !
+      if (allocated(LOCXELSI)) deallocate(LOCXELSI)
+      allocate( LOCXELSI(NSIEL(IS),1) )
+      if (allocated(LASTXELSI)) deallocate(LASTXELSI)
+      allocate( LASTXELSI(NSIEL(IS),1) )
+      if (allocated(LOCXXX)) deallocate(LOCXXX)
+      allocate( LOCXXX(NEND(IS),1) )
+      if (allocated(LOCEMXX)) deallocate(LOCEMXX)
+      allocate( LOCEMXX(1:NSIEL(IS),1:NEND(IS)) )
+      if (allocated(ACT2)) deallocate(ACT2)
+      allocate( ACT2(NEND(IS)) )
+      if (allocated(LASTACT2)) deallocate(LASTACT2)
+      allocate( LASTACT2(NEND(IS)) )
+      if (allocated(MTX)) deallocate(MTX)
+      allocate( MTX(1:NSIEL(IS),1:NEND(IS)) )
+      !
 !=========================================================
 !      WRITE (UNIT=6,FMT='('' analyze solution'')')
 !      WRITE (6,1000) NSITE(IS),NSIEL(IS)
@@ -2708,6 +2749,108 @@
 !      END DO
 !      END IF
 !-
+
+      !PMINAAA is meant to be minimum of ideal activity without the alpha, AAA,
+      !whereas MINAAACUT is the smallest the ideal activity with alpha should get,
+      !so that when the alpha is removed to give TD AAA, AAA is >= PMINAAA. Thus, 
+      !PMINAAA is close to tiny(0.0d0), and MINAAACUT is generally bigger than
+      !tiny(0.0d0) when alpha /= 1.0
+      MINAAACUT(IS)=PMINAAA
+      IF (ALPHA(IS).LT.1.0D0) THEN
+        MINAAACUT(IS)=PMINAAA**ALPHA(IS)
+      ELSE IF (ALPHA(IS).GT.1.0D0) THEN
+        MINAAACUT(IS)=PMINAAA**(1.0D0/ALPHA(IS))
+      END IF
+      !Calc MINXXXCUT, MINXELSI when calcminmax==true, and in else when
+      !calcminmax==false (where MINXXXCUT is given by PMINXXX flag, and
+      !MINXELSI is calculatated at that PMINXXX val).
+      IF (CALCMINAX .EQV. .TRUE.) THEN
+        WRITE (scr,4001) REPEAT('-',35), SOLNAM(IS)
+        WRITE (out,4001) REPEAT('-',35), SOLNAM(IS)
+        4001 FORMAT (A35,/,'MINXXX/XELSI DETECTION FOR SOL',1x,A16)
+        ISUFSET=.FALSE.  !always set to start
+        MINEXP=0.0D0
+        MTX=0.0D0
+        LOCXELSI=0.0D0
+        LASTXELSI=0.0D0
+        ACT2=1.0D0
+        LASTACT2=1.0D0
+        WRITE(scr,4002) PMINAAA, MINAAACUT(IS)
+        WRITE(out,4002) PMINAAA, MINAAACUT(IS)
+        4002 FORMAT (2x,'PMINAAA = ',1x,ES12.5E3,2x,'MINAAACUT = ',1x,ES12.5E3)
+        LOCEMXX=EMXX(IS,1:NSIEL(IS),1:NEND(IS))
+        CMINAAA=1.0D0;
+        LASTMINAAA=1.0D0;
+        CMINEXP=-2.0D0;
+        NIT=0
+        DO WHILE (CMINAAA.GE.MINAAACUT(IS).AND.NIT.LE.MAXITER)
+          NIT=NIT+1
+          LOCXXX=10.0D0**(CMINEXP)        ! NEND,1
+          LOCXELSI=MATMUL(LOCEMXX,LOCXXX) ! (NSIEL,NEND).(NEND,1) => (NSIEL,1)
+          DO I=1,NEND(IS)
+            DO J=1,NSIEL(IS)
+              MTX(J,I)=(LOCXELSI(J,1)**ALPHA(IS)) * IEMXXAL(IS,J,I)
+            END DO
+          END DO
+          ACT2=1.0D0
+          DO I=1,NEND(IS)
+            DO J=1,NSIEL(IS)
+              !IF (MTX(J,I).GT.PMINAAA) THEN
+              IF (MTX(J,I).GT.0.0D0) THEN
+                ACT2(I)=ACT2(I)*MTX(J,I)
+              END IF
+            END DO
+          END DO
+          
+          DO I=1,NEND(IS)
+            IF(ACT2(I)/=ACT2(I)) THEN
+              ISUFSET=.TRUE.
+              print*,'At I = ',I,'  ACT2(I)/=ACT2(I). ACT2(I)=',ACT2(I)
+            END IF
+          END DO
+          CMINAAA=MINVAL(ACT2)
+          !WRITE (UNIT=6,FMT='(''  CMINEXP='',1x,F8.1,3x,''CMINAAA= '',ES14.5E3,6x,L2)') &
+          !  CMINEXP,CMINAAA,ISUFSET
+          !MINVAL gives approx 1.0D0 if lowest val is < TINY(0.0D0) !!!
+          IF (CMINAAA.LT.MINAAACUT(IS) .OR. ISUFSET.EQV..TRUE. .OR. CMINAAA.GE.LASTMINAAA) THEN
+            CMINEXP=CMINEXP+1
+            CALL IEEE_GET_FLAG(ieee_underflow, ISUFSET)
+            IF (ISUFSET.EQV..TRUE.) THEN
+              call IEEE_SET_FLAG(ieee_underflow, .false.)
+            END IF
+            EXIT
+          END IF
+          IF (CMINAAA.LT.LASTMINAAA) LASTMINAAA=CMINAAA
+          LASTACT2=ACT2
+          LASTXELSI=LOCXELSI
+          CMINEXP=CMINEXP-1
+          IF (NIT>MAXITER) EXIT
+        END DO
+        MINXELSI(IS,1:NSIEL(IS))=LASTXELSI(1:NSIEL(IS),1)
+        MINXXXCUT(IS)=10.0D0**CMINEXP
+        WRITE (UNIT=6,FMT='(''  MINXXXCUT for SOL '',A,1x,''='',1x,ES12.5E3)') &
+          trim(SOLNAM(IS)), MINXXXCUT(IS)
+        WRITE (UNIT=6,FMT='(''  LASTXELSI:'',6ES11.2E3)') LASTXELSI
+      ELSE
+        MINXXXCUT(IS)=PMINXXX
+        LOCEMXX=EMXX(IS,1:NSIEL(IS),1:NEND(IS))
+        LOCXXX=PMINXXX                  ! NEND,1
+        LOCXELSI=MATMUL(LOCEMXX,LOCXXX) ! (NSIEL,NEND).(NEND,1) => (NSIEL,1)
+        MINXELSI(IS,1:NSIEL(IS))=LOCXELSI(1:NSIEL(IS),1)
+        WRITE (UNIT=6,FMT='(''  MINXXXCUT for SOL '',A,1x,''='',1x,ES12.5E3)') &
+          trim(SOLNAM(IS)), MINXXXCUT(IS)
+        WRITE (UNIT=6,FMT='(''  MINXELSI(IS):'',6ES11.2E3)') LOCXELSI
+      END IF
+
+      !not needed as will be auto deallocated on sr exit
+      if (allocated(LOCXELSI)) deallocate(LOCXELSI)
+      if (allocated(LASTXELSI)) deallocate(LASTXELSI)
+      if (allocated(LOCXXX)) deallocate(LOCXXX)
+      if (allocated(LOCEMXX)) deallocate(LOCEMXX)
+      if (allocated(ACT2)) deallocate(ACT2)
+      if (allocated(LASTACT2)) deallocate(LASTACT2)
+      if (allocated(MTX)) deallocate(MTX)
+     
       RETURN
       END
 !-----

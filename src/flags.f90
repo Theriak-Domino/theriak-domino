@@ -11,7 +11,8 @@ module flags
     !
     !declare and set default values
     !
-    logical(4), save :: OUTFLAGS = .false.
+    logical(4), save :: OUTFLAGS  = .false.
+    logical(4), save :: CALCMINAX = .false.
     !
     integer(4)    :: DOSTP = 2    !steep version:
                                   !0 = original. hard-coded vals
@@ -25,7 +26,7 @@ module flags
     !
     real(8), save :: ZEROEM    = 2.22D-24
     real(8), save :: PMINXXX   = 3.333333D-55
-    real(8), save :: PMINAAA   = 2.22D-307
+    real(8), save :: PMINAAA   = TINY(0.0D0)  !2.22D-307
     real(8), save :: PMINXELSI = 2.22D-16 
     !
     real(8), save :: VAFFSCALE  = 3.33D-02
@@ -172,6 +173,9 @@ module flags
             case("OUTFLAGS")
               CALL LOWUP(tstr2)
               if(tstr2 == 'TRUE') OUTFLAGS = .TRUE.
+            case("CALCMINAX")
+              CALL LOWUP(tstr2)
+              if(tstr2 == 'TRUE') CALCMINAX = .TRUE.
             case("DOBINGVA")
               CALL LOWUP(tstr2)
               if(tstr2 == 'TRUE') DOBINGVA = .TRUE.
