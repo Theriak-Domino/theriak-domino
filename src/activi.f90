@@ -25,11 +25,16 @@
 !-----END OF COMMON VARIABLES
       INTEGER(4) IS,IE,I,II,IK,IM,IX1,IX0
       REAL(8) XXX(EMAX),AAA(EMAX),XBAS(EMAX),ABAS(EMAX),SPARC(15)
-      REAL(8) XELSIATERM(SIELMAX), MINAAACUT
-      LOGICAL flag_value
+      REAL(8) XELSIATERM(SIELMAX)
 !=====
       XELSIATERM=0.0D0
-      MINAAACUT=PMINAAA**ALPHA(IS)
+      !MINAAACUT=PMINAAA
+      !IF(ALPHA(IS).LT.1.0D0) THEN
+      !  MINAAACUT=PMINAAA**ALPHA(IS)
+      !ELSE IF(ALPHA(IS).GT.1.0D0) THEN
+      !  MINAAACUT=PMINAAA**(1.0D0/ALPHA(IS))
+      !END IF
+      
       DO I=1,15
       SPARC(I)=0.0D0
       END DO
@@ -43,24 +48,27 @@
           XELSI(IS,IX1)=XELSI(IS,IX1)+EMXX(IS,IX1,IE)*XXX(IE)
         END DO
         !dkt test xelsi here (efficiency) instead of in inner loop below
-        IF(XELSI(IS,IX1).GT.0.0D0 .AND. XELSI(IS,IX1).LT.PMINXELSI) THEN
-          XELSI(IS,IX1)=PMINXELSI
+        !IF(XELSI(IS,IX1).GT.0.0D0 .AND. XELSI(IS,IX1).LT.PMINXELSI) THEN
+        IF(XELSI(IS,IX1).GT.0.0D0 .AND. XELSI(IS,IX1).LT.MINXELSI(IS,IX1)) THEN
+          !XELSI(IS,IX1)=PMINXELSI
+          XELSI(IS,IX1)=MINXELSI(IS,IX1)
         END IF
       END DO
       !To reduce chance of underflow pre-compute and use XELSIATERM
+      XELSIATERM(1:NSIEL(IS))=XELSI(IS,1:NSIEL(IS))
       IF(ALPHA(IS).LT.1.0D0) THEN
         DO I=1,NSIEL(IS)
-          !can use MINAAACUT for test val as PMINAAA close to tiny
-          IF(XELSI(IS,I).GT.MINAAACUT) THEN
+          !can use MINXXXCUT(IS) for now as close to min xelsi
+!          IF(XELSI(IS,I).GT.MINXXXCUT(IS)) THEN
             XELSIATERM(I) = XELSI(IS,I)**ALPHA(IS)
-          ELSE
+!          ELSE
             !if xelsi>0 && <MINAACUT set to minaaacut
-            IF(XELSI(IS,I).NE.0.0D0) XELSIATERM(I) = MINAAACUT 
+!            IF(XELSI(IS,I).NE.0.0D0) XELSIATERM(I) = MINXXXCUT(IS) 
             !XELSIATERM(I) = MINAAACUT 
-          END IF
+!          END IF
         END DO
-      ELSE
-        XELSIATERM(1:NSIEL(IS))=XELSI(IS,1:NSIEL(IS))
+      ELSE IF(ALPHA(IS).GT.1.0D0) THEN
+        XELSIATERM(I) = XELSI(IS,I)**ALPHA(IS)
       END IF
 
 !-----
@@ -82,8 +90,9 @@
               !keep calc of AAA before branch.
               AAA(IE) = AAA(IE) * (XELSIATERM(IX1)*IEMXXAL(IS,IX1,IE))
               !NaN will test false
-              IF(AAA(IE).LE.MINAAACUT) THEN
-                AAA(IE)=PMINAAA
+              IF(AAA(IE).LE.MINAAACUT(IS)) THEN
+                !AAA(IE)=PMINAAA
+                AAA(IE)=MINAAACUT(IS)
                 CYCLE ieloop
               ENDIF
               !will catch NaN
@@ -94,17 +103,19 @@
                 !WRITE (UNIT=6,FMT='(''XELSIATERM:'',E14.4,'' IEMXXAL:'',E14.4)') &
                 !    XELSIATERM(IX1), IEMXXAL(IS,IX1,IE)
                 call ieee_set_flag(ieee_underflow, .false.)
-                AAA(IE)=PMINAAA
+                !AAA(IE)=PMINAAA
+                AAA(IE)=MINAAACUT(IS)
                 CYCLE ieloop
               END IF
             END DO IMLOOP
           END DO NSITELOOP
           !reverse until RTA changed throughout
-          IF(AAA(IE).GT.MINAAACUT) THEN
+          IF(AAA(IE).GE.MINAAACUT(IS)) THEN
             AAA(IE)=AAA(IE)**(1.0D0/ALPHA(IS))
           ELSE
             !print*,SOLNAM(IS),'  IE = ',IE,'  ',ALPHA(IS),'  ',AAA(IE)
             AAA(IE)=PMINAAA
+            !AAA(IE)=MINAAACUT(IS)
           END IF
 
         ELSE
@@ -118,7 +129,8 @@
                 CYCLE ieloop
               END IF
               AAA(IE)=AAA(IE)*XELSI(IS,IX1)/EMXX(IS,IX1,IE)
-              IF(AAA(IE)/=AAA(IE).OR.AAA(IE).LT.PMINAAA) THEN
+              !IF(AAA(IE)/=AAA(IE).OR.AAA(IE).LT.PMINAAA) THEN
+              IF(AAA(IE)/=AAA(IE).OR.AAA(IE).LT.MINAAACUT(IS)) THEN
                 !print*,'-- ALPHA.GE.1: ',ALPHA(IS)
                 !WRITE (UNIT=6,FMT='(''SOL:'',A16,'' IE:'',I5,'' AAA(IE):'',E14.4)') adjustl(SOLNAM(IS)), IE, AAA(IE)
                 !WRITE (UNIT=6,FMT='(''XELSI:'',E14.4,'' EMXX:'',E14.4)') XELSI(IS,IX1), &
