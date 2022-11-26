@@ -18,7 +18,7 @@
       USE flags, only: PMINAAA, PMINXELSI
       !ieee module only needed for testing purposes
       USE, INTRINSIC :: ieee_exceptions, only: ieee_get_flag, ieee_set_flag, &
-                                               ieee_underflow  
+                                               ieee_underflow, ieee_invalid 
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -72,13 +72,20 @@
         IF(ISNAN(AAA(IE)) .OR. AAA(IE).LT.PMINAAA) THEN
           !if here, assume underflow and clear
           !call ieee_set_flag(ieee_underflow, .false.)
-          AAA(IE)=PMINAAA
           !below for testing; not needed if working well
-          !call ieee_get_flag(ieee_underflow,flag_value)
-          !if(flag_value .eqv. .true.) then
-          !  call ieee_set_flag(ieee_underflow, .false.)
-          !  print*,'  AUF:',SOLNAM(IS),' for PC ',NAME(EM(IS,IE))
-          !end if
+          call ieee_get_flag(ieee_underflow,flag_value)
+          if(flag_value .eqv. .true.) then
+            call ieee_set_flag(ieee_underflow, .false.)
+            WRITE(UNIT=6,FMT='("  ACTIVI UNDERFLOW: ",A,3x,A,3x,ES25.16E3)') &
+              trim(SOLNAM(IS)),', ',trim(NAME(EM(IS,IE))),', ',AAA(IE)
+          end if
+          call ieee_get_flag(ieee_invalid,flag_value)
+          if(flag_value .eqv. .true.) then
+            call ieee_set_flag(ieee_invalid, .false.)
+            WRITE(UNIT=6,FMT='("  ACTIVI INVALID:   ",A,3x,A,3x,ES25.16E3)') &
+              trim(SOLNAM(IS)),', ',trim(NAME(EM(IS,IE))),', ',AAA(IE)
+          end if
+          AAA(IE)=PMINAAA
         END IF
       END DO IELOOP
 !-----
