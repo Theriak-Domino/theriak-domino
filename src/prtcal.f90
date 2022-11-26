@@ -626,8 +626,14 @@
       LL=0
       END IF
       IF (LL.EQ.0) LL=24
-      WRITE (UNIT=CH001(LL+6:),FMT='(A12,''='',F9.6)') &
-       CH12,XELSI(IS,ILX)
+       IF (MINVAL(XELSI(IS,1:NSIEL(IS))).GT.1.0D-5) THEN
+        WRITE (UNIT=CH001(LL+6:),FMT='(A12,''='',F9.6)') &
+         CH12,XELSI(IS,ILX)
+       ELSE
+        !es format
+        WRITE (UNIT=CH001(LL+6:),FMT='(A12,''='',ES9.2E2)') &
+         CH12,XELSI(IS,ILX)
+       END IF
 !*****
 !---- PRTLOG(9): print table
       IF (PRTLOG(9)) THEN
