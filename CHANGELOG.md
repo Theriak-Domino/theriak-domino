@@ -1,32 +1,48 @@
 CHANGES IN THERIAK-DOMINO version xx.xx.20xx
 --------------------------------------------
-- fixed svg output in guzzler/explot to display correctly in 
-  web browser.
+- Theriak-Domino source repository moved to Git Hub; added 
+GPLv3 license
 - implemented changes to allow significantly lower phase component
-  proportions and site element fractions in complex ax models,
-  that otherwise leads to minimization failures at times.
+proportions and site element fractions in complex ax models,
+that otherwise leads to minimization failures for some models at
+certain conditions.
 - updates to identify and correct underflow and invalid exceptions
-  in certain places.
+in certain places (a few places still to clean up); updated 
+parameters in theriak.ini for use with this version
+- added a CALC-FLAGS section to theriak.ini that can take
+additional parameters;  OUTFLAGS can be set to true to output
+active CALC-PARAMETERS used during calculation of dominograms;
+(other flags that can be set in the .ini file are found in the 
+flags source file but generally should not be changed)
+- fixed svg output in guzzler/explot to display correctly in 
+web browser.
+- update makefiles
+    - updated makefiles to allow selection of compilers with preset
+flags; 
+    - makefile for osx now allows static linking with gfortran
+to remove binary dependency on dynamic gcc/gfort libs; 
+    - added a makefile for linux that works with gfortran/ifort/ifx 
+(only tested on ubuntu 22); 
+    - versioning string added to top of makefile to allow specifying 
+versioning during building; this allows outputting the build version 
+during program execution that is useful when you have multiple builds
+installed on your system;
+    - osx makefile allows use of gfortran or ifort on intel macs, 
+gfortran only on apple silicon;
+    - on Windows, added an NMake formatted makefile so windows builds
+don't require gcc/gfort to be installed to build from a provided
+makefile (for e.g., can use nmake (visual studio) with ifort/ifx)
+    - a CMake based build system is being worked on for the next 
+release
+- added additional dataset files (converted from THERMOCALC format to 
+Theriak-Domino format).
 - renamed and added new liquid models to fsol.f90, (attempting
-  for consistent naming). The Tomlinson & Holland (2021) liquid
-  model is not working 100% correctly yet so don't use it.
-- added some newly converted files from THERMOCALC format to 
-  Theriak-Domino format.
-- added ability to output some of the calc-param values used
-  in calculation to dominograms (on right hand side below ax
-  models used; mostly used to aid debugging/tweaking); this
-  can be contrulled through use of the new CALC-FLAGS parameter
-  OUTFLAGS that can be set in theriak.ini.
-- updated makefiles to allow selection of compilers with preset
-  flags; makefile for osx now allows static linking with gfortran
-  to remove binary dependency on dynamic gcc/gfort libs; added a
-  makefile for linux that works with gfortran/ifort/ifx (only
-  tested on ubuntu 22); versioning string added to top of makefile
-  to allow specifying versioning during building that can be
-  observed during program execution; osx makefile allows use of 
-  gfortran or ifort on intel macs, gfortran only on apple silicon.
-  
+for consistent naming). The Tomlinson & Holland (2021) liquid
+model is not working 100% correctly yet so don't use it (can generally
+give a good idea of relative equilibrium assemblage sequence, but it 
+does not exactly match THERMOCALC results like the other models do)
 
+***
 CHANGES IN THERIAK-DOMINO version 28.05.2022
 --------------------------------------------
 Only some minor changes in the main programs.
@@ -37,6 +53,7 @@ Theria_g: https://www.teamgar.net/fred-gaidies and https://www.teamgar.net/theri
 Theriakd: https://www.rocks.uni-kiel.de/theriakd/ 
           and https://www.rocks.uni-kiel.de/theriakd/html/down_en.html
 
+***
 CHANGES IN THERIAK-DOMINO version 11.03.2020
 --------------------------------------------
 Some improvement in minimizations. Still problems with zero concentrations.
@@ -56,6 +73,7 @@ Updated the Theriak-Domio Guide Moved information depending on operating systems
 
 Corrected some logical inconsistencies(***) in Theriak output.
 
+***
 Changes in THERIAK-DOMINO version 09.03.2019
 --------------------------------------------
 Even more confusion is added. Because of my input files the '-' in the variable CODE is
@@ -67,7 +85,7 @@ the end of theriak-runs.
 There is some improvement in the minimization. The third parameter in the top line of the
 database can be 0 (=no scan), 1 (scan with x=1/2) or 2 (scan with x=1/4)
 
-
+***
 Changes in THERIAK-DOMINO version 04.02.2017
 --------------------------------------------
 Some confusion added to the database. Due to a misunderstanding the meaning of the
@@ -75,19 +93,19 @@ Some confusion added to the database. Due to a misunderstanding the meaning of t
 of Landau Phases. So: using '+' will exclude the phase from becoming stable.
 If the phase should not be excluded, use '-'
 
-
+***
 Changes in THERIAK-DOMINO version 09.03.2016
 --------------------------------------------
 Some minor changes.
 Equation of state for melts is now working properly. (Thanks to Doug Tinkham)
 
-
+***
 Changes in THERIAK-DOMINO version 11.02.2015
 --------------------------------------------
 Solution models White et al. 2014 included in database.
 Warning: Equation of state for melts is not working properly. Is OK up to medium pressures. {??)
 
-
+***
 Changes in THERIAK-DOMINO version 03.01.2012
 --------------------------------------------
 Coefficients for the asymmetric van Laar model, according to Holland and Powell (2002): If a0 is negative, the asymmetry size parameter used is the relative volume of the end-members at P & T. (For fluids)
@@ -123,7 +141,7 @@ ClAMP   tremolite     tschermakite2   pargasite2    glaucophane2   cummingtonite
 
 In domino: smaller step along grid (ptdist) may be defined (not recommended)
 
-
+***
 Changes in THERIAK-DOMINO version 010809
 ----------------------------------------
 Simplified input for isolines
@@ -133,7 +151,7 @@ Excluding phases and monitoring their chemical potential with EXCL and $
 Definition of thermal gradient in input.
 Models including site-margules, new section in database.
 
-
+***
 Changes in THERIAK-DOMINO version 150508
 ----------------------------------------
 possibility to distinguish solution phases by the dominant endmember.
@@ -141,14 +159,14 @@ possibility to distinguish solution phases by the dominant endmember.
 minor changes, e.g. "elements in stable phases" in output of Theriak.
 Distribution contains Theriag (see special documentation).
 
-
+***
 Changes in THERIAK-DOMINO version 111207
 ----------------------------------------
 Made compilable with fortran90. (gfortran):
 Comments with "!", continuation lines with "&" at end of line.
 Changed loops with real DO indices to "DO WHILE" loops.
 
-
+***
 Changes in THERIAK-DOMINO version 200307
 ----------------------------------------
 Several changes were made in the algorithm, to improve robustness in complex solutions. As a 
@@ -169,7 +187,7 @@ The "pix" function in domino has now be implemented. This allows to calculate ph
 on a fixed grid (e.g. 100x100) and then to plot graymap images of any desired variable.
 The program to produce the grey-scale images, "makemap" is included.
 
-
+***
 Changes in THERIAK-DOMINO version ....06
 ----------------------------------------
 
@@ -218,7 +236,7 @@ Further changes in code include:
   The site definition in "IDEAL" solutions is ignored for the calculation. If present, it 
   will be used to print site occupancies in the output.
 
-
+***
 Changes in THERIAK-DOMINO version 140205
 ----------------------------------------
 
@@ -230,7 +248,7 @@ to handle solution models with "proportions" (as defined by R. Powell and T. Hol
 for THERMOCALC) as normal endmember solutions. Warning: This feature is not extensively 
 tested. Users are advised to think. 
 
-
+***
 Changes in THERIAK-DOMINO version 200704
 ----------------------------------------
 Increased robustness of code. Added a Newton-Raphson to the gradient search.
