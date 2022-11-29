@@ -3168,7 +3168,7 @@
         DELMUE = (SUM(MUE(1:NEM))) / DBLE(NEM)
         !Make vec of diff of mue from ave. 
         VEKTOR(1:NEM) = DELMUE - MUE(1:NEM)
-        !sqrt of sum of square (of diffs from ave); always pos
+        !L2
         SUMME = SUM( VEKTOR(1:NEM) * VEKTOR(1:NEM) )
         !add check for summe=0
         SUMME = DSQRT(SUMME)
@@ -3402,7 +3402,8 @@
             SUMME = SUMME + X2(I)
           END DO
           !print*,' summe in vecadd normppns = ',SUMME
-          IF (DABS(1.0D0-SUMME) .GT. 1.0D-20) THEN  !dt huh? Shouldn't this be Abs(1.0D0-SUMME) since SUMME close to 1.0?  !dt magcon
+          IF (DABS(1.0D0-SUMME) .GT. 1.0D-20) THEN
+          !IF (SUMME.LT.1.0D0 .OR. SUMME.GT.1.0D0) THEN
             DO I = 1, NEND(IS)
                 X2(I) = X2(I)/(SUMME)
             END DO

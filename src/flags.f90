@@ -1,65 +1,65 @@
-!dkt Module with various run-time specified values to be read in theriak.ini
-!    in a $CALC-FLAGS section. Can contain numeric, boolean or string values
-!    Some values below are not implemented yet in 2022 version of source, but
-!    are in 2000 version of src. They are not parameters/constants, but as of
-!    now, none are adjusted after they are read from theriak.ini. Default values
-!    below seem to work very well. PMINXXX, PMINAAA and PMINXELSI are the 
-!    important keys. OUTFLAGS controls whether or not some of these are printed 
-!    along the right side of graphics diagrams produced by domino.
+! Module with various run-time specified values to be read in theriak.ini
+! in a $CALC-FLAGS section. Can contain numeric, boolean or string values
+! Some values below are not implemented yet in 2022 version of source, but
+! are in 2000 version of src. They are not parameters/constants, but as of
+! now, none are adjusted after they are read from theriak.ini. Default 
+! values below seem to work well. OUTFLAGS controls whether or not some of  
+! these are printed along the right side of graphics diagrams produced by 
+! domino.
 
-module flags
+MODULE FLAGS
     !
     !declare and set default values
     !
-    logical(4), save :: OUTFLAGS = .false.
+    LOGICAL(4), SAVE :: OUTFLAGS = .FALSE.
     !
-    integer(4)    :: DOSTP = 2    !steep version:
+    INTEGER(4)    :: DOSTP = 2    !steep version:
                                   !0 = original. hard-coded vals
                                   !1 = original+ STPZAL,STPZNN,STPVMIN, array syntax
                                   !2 = no neg/zero checks. fast, 
                                   !    perhaps less stable when several neg ppns
     !
-    real(8), save :: STPZAL    = 2.22D-24      !for DOSTP=1  link to ZEROEM
-    real(8), save :: STPZNN    = 3.333333D-55  !for DOSTP=1  link to PMINXXX
-    real(8), save :: STPVMIN   = 1.0D-20       !for DOSTP=1; def 1.0D-20
+    REAL(8), SAVE :: STPZAL    = 2.22D-24      !for DOSTP=1  link to ZEROEM
+    REAL(8), SAVE :: STPZNN    = 3.333333D-55  !for DOSTP=1  link to PMINXXX
+    REAL(8), SAVE :: STPVMIN   = 1.0D-20       !for DOSTP=1; def 1.0D-20
     !
-    real(8), save :: ZEROEM    = 2.22D-24
-    real(8), save :: PMINXXX   = 3.333333D-55
-    real(8), save :: PMINAAA   = 2.22D-307
-    real(8), save :: PMINXELSI = 2.22D-16 
+    REAL(8), SAVE :: ZEROEM    = 2.22044D-24
+    REAL(8), SAVE :: PMINXXX   = 2.44249D-15     !>eps; may be decreased at times
+    REAL(8), SAVE :: PMINAAA   = 2.22507D-305    !>tiny;
+    REAL(8), SAVE :: PMINXELSI = 0.0D0 
     !
-    real(8), save :: VAFFSCALE  = 3.33D-02
-    real(8), save :: RLOWEXP    = -706.0D0
-    integer(4), save :: ILOWEXP = -706
+    REAL(8), SAVE :: VAFFSCALE  = 3.0D-02
+    REAL(8), SAVE :: RLOWEXP    = -706.0D0
+    INTEGER(4), SAVE :: ILOWEXP = -706
+    LOGICAL, SAVE :: DOEXTRAPPNSVA  = .FALSE.
     !
     !not all implemented yet
-    logical, save :: DOMINMAXSIELST = .false.
-    logical, save :: DOEXTRAPPNSVA  = .false.
-    logical, save :: DOBINGVA       = .false.
+    LOGICAL, SAVE :: DOMINMAXSIELST = .FALSE.
+    LOGICAL, SAVE :: DOBINGVA       = .FALSE.
     !
     !2021-12-19 - below flags not implemented
-    logical, save    :: SWITCHGCMAX = .FALSE.
-    integer(4), save :: LOO1GCMAX   = 7
-    integer(4), save :: GCMAXBIG    = 250
-    integer(4), save :: GCMAXSMALL  = 15 !3
-    real(8), save    :: ETCSCALE    = 0.5D0
+    LOGICAL, SAVE    :: SWITCHGCMAX = .FALSE.
+    INTEGER(4), SAVE :: LOO1GCMAX   = 7
+    INTEGER(4), SAVE :: GCMAXBIG    = 250
+    INTEGER(4), SAVE :: GCMAXSMALL  = 15 !3
+    REAL(8), SAVE    :: ETCSCALE    = 0.5D0
     !2022-01-07 for SR CLEAN to remove exceeding CALMAX error when 
     !keeping too many soln comps in memory
-    integer(4), save :: LOO1ISTABCUT = 20  !cdc default is 20.
+    INTEGER(4), SAVE :: LOO1ISTABCUT = 20  !cdc default is 20.
     ! These are not flags, but counters..
-    integer(4), save :: nbadstinvecadd = 0 !# bad st in sr vecadd
+    INTEGER(4), SAVE :: nbadstinvecadd = 0 !# bad st in sr vecadd
     !
   CONTAINS
     !
-    subroutine CALCFLAGS
-        implicit none
+    SUBROUTINE CALCFLAGS
+        IMPLICIT NONE
         !include 'theriak.cmn'
-        include 'files.cmn'
+        INCLUDE 'files.cmn'
         !
-        integer(kind=4) :: istat,spos,epos,dpos,bpos,lenofstr
-        character*500 linestr
-        character*1000 datstr,tdatstr
-        character(len=16) :: tstr1,tstr2
+        INTEGER(kind=4) :: istat,spos,epos,dpos,bpos,lenofstr
+        CHARACTER*500 linestr
+        CHARACTER*1000 datstr,tdatstr
+        CHARACTER(len=16) :: tstr1,tstr2
         !
         ! read (CALC-FLAGS)  2019-08-03
         !
@@ -222,4 +222,4 @@ module flags
     end subroutine CALCFLAGS
 
 
-end module flags
+END MODULE FLAGS
