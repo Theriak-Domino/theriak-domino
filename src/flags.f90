@@ -1,11 +1,29 @@
+! flags.f90  Version: 29.11.2022-dev
+! -----------------------------------------------------------------------
+! Copyright (C) 2022  Doug Tinkham
+!
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <https://www.gnu.org/licenses/>.
+! -----------------------------------------------------------------------
+!
 ! Module with various run-time specified values to be read in theriak.ini
 ! in a $CALC-FLAGS section. Can contain numeric, boolean or string values
 ! Some values below are not implemented yet in 2022 version of source, but
-! are in 2000 version of src. They are not parameters/constants, but as of
+! are in 2020 version of src. They are not parameters/constants, but as of
 ! now, none are adjusted after they are read from theriak.ini. Default 
 ! values below seem to work well. OUTFLAGS controls whether or not some of  
 ! these are printed along the right side of graphics diagrams produced by 
-! domino.
+! domino. Not thread safe. save attribut is redundant since in module.
 
 MODULE FLAGS
     !
@@ -56,7 +74,7 @@ MODULE FLAGS
         !include 'theriak.cmn'
         INCLUDE 'files.cmn'
         !
-        INTEGER(kind=4) :: istat,spos,epos,dpos,bpos,lenofstr
+        INTEGER(4)    :: istat,spos,epos,dpos,bpos,lenofstr
         CHARACTER*500 linestr
         CHARACTER*1000 datstr,tdatstr
         CHARACTER(len=16) :: tstr1,tstr2
