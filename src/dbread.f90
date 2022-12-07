@@ -87,6 +87,7 @@
          END DO
          DO I3=1,EMAX
            EMXX(I1,I2,I3)=0.0D0 
+           LEMXX(I1,I2,I3)=DLOG(TINY(0.0D0))
          END DO
        END DO
        DO I2=1,EMAX+1
@@ -1379,6 +1380,7 @@
             NEMQQ(K,JX)=NEMQQ(K,JX)+1
             EMQQ(K,JX,NEMQQ(K,JX))=IE
             EMXX(K,JX,IE)=FF/SITMUL(K,II)
+            LEMXX(K,JX,IE)=DLOG(EMXX(K,JX,IE))
             SIFEL(K,II,IL,IE)=FF/SITMUL(K,II)
           END IF
         END DO

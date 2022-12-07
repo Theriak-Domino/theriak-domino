@@ -36,6 +36,9 @@ MODULE FLAGS
                                   !1 = original+ STPZAL,STPZNN,STPVMIN, array syntax
                                   !2 = no neg/zero checks. fast, 
                                   !    perhaps less stable when several neg ppns
+    INTEGER(4)    :: DOACT = 2    !sr activi version
+                                  !0 = sr activi, rver
+                                  !2 = sr activi2 lver
     !
     REAL(8), SAVE :: STPZAL    = 2.22D-24      !for DOSTP=1  link to ZEROEM
     REAL(8), SAVE :: STPZNN    = 3.333333D-55  !for DOSTP=1  link to PMINXXX
@@ -67,6 +70,14 @@ MODULE FLAGS
     ! These are not flags, but counters..
     INTEGER(4), SAVE :: nbadstinvecadd = 0 !# bad st in sr vecadd
     !
+    REAL(8), PARAMETER :: TINEE=TINY(0.0D0)
+    REAL(8), PARAMETER :: LZERO=DLOG(TINEE)
+!    REAL(8), PARAMETER :: PMINAAA   = TINEE  !2.22507D-305    !>tiny;
+!    REAL(8), PARAMETER :: LMINAAA=DLOG(PMINAAA)
+!    REAL(8), PARAMETER :: PMINXELSI = 0.0D0
+!    REAL(8), PARAMETER :: LMINXELSI=LZERO !DLOG(PMINXELSI)
+
+
   CONTAINS
     !
     SUBROUTINE CALCFLAGS
@@ -142,6 +153,10 @@ MODULE FLAGS
             case("DOSTP")
               if(tstr2 /= '') then
                 READ(tstr2,*) DOSTP
+            endif
+            case("DOACT")
+              if(tstr2 /= '') then
+                READ(tstr2,*) DOACT
             endif
             case("STPZAL")
               if(tstr2 /= '') then

@@ -31,8 +31,9 @@
 !          CH-4056 BASEL
 !
 !
-      SUBROUTINE ACTIVI(IS,XXX,AAA)
-      USE flags, only: PMINAAA, PMINXELSI
+      !To be removed once activi fully tested
+      SUBROUTINE ACTIVI0(IS,XXX,AAA)
+      USE flags, only: PMINAAA, PMINXELSI, DOACT
       !ieee module only needed for testing purposes
       USE, INTRINSIC :: ieee_exceptions, only: ieee_get_flag, ieee_set_flag, &
                                                ieee_underflow, ieee_invalid 
@@ -58,6 +59,7 @@
           XELSI(IS,IX1)=XELSI(IS,IX1)+EMXX(IS,IX1,IE)*XXX(IE)
         END DO
         !dkt test xelsi here (efficiency) instead of in inner loop below
+        IF(XELSI(IS,IX1).LT.0.0D0) XELSI(IS,IX1)=0.0D0 !07-12-22
         IF(XELSI(IS,IX1).GT.0.0D0 .AND. XELSI(IS,IX1).LT.PMINXELSI) THEN
           XELSI(IS,IX1)=PMINXELSI
         END IF
@@ -126,6 +128,98 @@
       DO I=1,NEMBAS(IS)
         IF (EMBCOD(IS,I).NE.0) THEN
          AAA(EMBCOD(IS,I))=ABAS(I)
+        END IF
+      END DO
+      RETURN
+      END IF
+      END
+!-----
+!******************************
+      SUBROUTINE ACTIVI(IS,XXX,AAA)
+      USE flags, only: PMINAAA, PMINXELSI, TINEE, LZERO !, LMINAAA, LMINXELSI
+      IMPLICIT NONE
+      INCLUDE 'theriak.cmn'
+      include 'files.cmn'
+!-----END OF COMMON VARIABLES
+      INTEGER(4) IS,IE,I,II,IK,IM,IX1,IX0
+      REAL(8) XXX(EMAX),AAA(EMAX),XBAS(EMAX),ABAS(EMAX),SPARC(15)
+      REAL(8) LXELSI(SIELMAX),LSUM,LMINXELSI,LMINAAA
+!=====
+      LMINAAA=DLOG(PMINAAA)       !move to flags
+      IF(PMINXELSI.GT.0.0D0) THEN
+        LMINXELSI=DLOG(PMINXELSI) !move to flags
+      ELSE
+        LMINXELSI=LZERO
+      END IF
+!     REAL* SUMM
+      DO I=1,15
+      SPARC(I)=0.0D0
+      END DO
+!=====
+      IF (MODELL(IS).EQ.'S') THEN
+      DO IX1=1,NSIEL(IS)
+        XELSI(IS,IX1)=0.0D0
+        DO IK=1,NEMQQ(IS,IX1)
+          IE=EMQQ(IS,IX1,IK)
+          XELSI(IS,IX1)=XELSI(IS,IX1)+EMXX(IS,IX1,IE)*XXX(IE)
+        END DO
+        IF(XELSI(IS,IX1).LT.0.0D0) XELSI(IS,IX1)=0.0D0 !07-12-22
+        IF(XELSI(IS,IX1).GT.0.0D0 .AND. XELSI(IS,IX1).LT.PMINXELSI) THEN
+          XELSI(IS,IX1)=PMINXELSI
+        END IF
+      END DO
+      LXELSI(1:SIELMAX)=XELSI(IS,1:SIELMAX)
+      WHERE(LXELSI > TINEE)
+        LXELSI=DLOG(LXELSI)
+      ELSEWHERE 
+        LXELSI=LMINXELSI
+      END WHERE 
+      !WRITE(UNIT=6,FMT='("LXELSI: ",/,5ES25.15E3 )') LXELSI(1:NSIEL(IS))
+      !-----
+      !      WRITE (6,1010) (XELSI(IS,IX1),IX1=1,NSIEL(IS))
+      !      WRITE (out,1010) (XELSI(IS,IX1),IX1=1,NSIEL(IS))
+      ! 1010 FORMAT ('XELSI  ',10F10.5)
+      !      WRITE (6,1011) ((EMXX(IS,IX1,IE),IX1=1,NSIEL(IS)),IE=1,NEND(IS))
+      !      WRITE (out,1011) ((EMXX(IS,IX1,IE),IX1=1,NSIEL(IS)),IE=1,NEND(IS))
+      ! 1011 FORMAT ('EMXX  ',10F10.5)
+      !-----
+      IELOOP: DO IE=1,NEND(IS)
+        IX0=0
+        LSUM=0.0D0
+        DO II=1,NSITE(IS)
+          IF (II.GT.1) IX0=IX0+NELPS(IS,II-1)
+          DO IM=1,IDINT(SITMUL(IS,II))
+            IX1=IX0+ELSI(IS,IE,II,IM)
+            LSUM=LSUM+LXELSI(IX1)-LEMXX(IS,IX1,IE)
+          END DO
+        END DO
+        IF(LSUM.GT.LMINAAA) THEN
+          AAA(IE)=DEXP(LSUM)
+        ELSE 
+          AAA(IE)=PMINAAA
+        END IF
+      END DO IELOOP
+      !-----
+      !      WRITE (6,1000) (XXX(I),I=1,NEND(IS))
+      !      WRITE (out,1000) (XXX(I),I=1,NEND(IS))
+      ! 1000 FORMAT (/'XXX  ',10F10.5)
+      !      WRITE (6,1001) (AAA(I),I=1,NEND(IS))
+      !      WRITE (out,1001) (AAA(I),I=1,NEND(IS))
+      ! 1001 FORMAT ('AAA  ',10F10.5)
+      !=====
+      RETURN
+      ELSE
+      DO I=1,NEMBAS(IS)
+        IF (EMBCOD(IS,I).EQ.0) THEN
+          XBAS(I)=0.0D0
+        ELSE
+          XBAS(I)=XXX(EMBCOD(IS,I))
+        END IF
+      END DO
+      CALL SOLCAL(SOLNAM(IS),P,T,NEMBAS(IS),XBAS,ABAS,SPARC)
+      DO I=1,NEMBAS(IS)
+        IF (EMBCOD(IS,I).NE.0) THEN
+          AAA(EMBCOD(IS,I))=ABAS(I)
         END IF
       END DO
       RETURN
