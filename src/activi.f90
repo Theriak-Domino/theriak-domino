@@ -153,7 +153,7 @@
       END IF
 !     REAL* SUMM
       DO I=1,15
-      SPARC(I)=0.0D0
+        SPARC(I)=0.0D0
       END DO
 !=====
       IF (MODELL(IS).EQ.'S') THEN
@@ -163,10 +163,6 @@
           IE=EMQQ(IS,IX1,IK)
           XELSI(IS,IX1)=XELSI(IS,IX1)+EMXX(IS,IX1,IE)*XXX(IE)
         END DO
-        IF(XELSI(IS,IX1).LT.0.0D0) XELSI(IS,IX1)=0.0D0 !07-12-22
-        IF(XELSI(IS,IX1).GT.0.0D0 .AND. XELSI(IS,IX1).LT.PMINXELSI) THEN
-          XELSI(IS,IX1)=PMINXELSI
-        END IF
       END DO
       LXELSI(1:SIELMAX)=XELSI(IS,1:SIELMAX)
       WHERE(LXELSI > TINEE)
