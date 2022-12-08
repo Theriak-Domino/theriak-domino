@@ -2233,14 +2233,12 @@
       SUBROUTINE LiqG16(X,A,N)
         !USE flags, only : PMINXXX, PMINAAA
         IMPLICIT NONE
-        INTEGER(kind=4),PARAMETER                   :: emax = 15  !ensure same as in theriak.cmn.
-        REAL(kind=8),INTENT(IN), DIMENSION(emax)    :: X(emax)
-        REAL(kind=8),INTENT(OUT),DIMENSION(emax)    :: A(emax)
-        INTEGER(kind=4),INTENT(IN)                  :: N
-        REAL(kind=8), DIMENSION(emax)               :: P(emax)
-        REAL(kind=8) :: OMPH2O,FF
-        !INTEGER(kind=4) :: I
-        !
+        INTEGER(4),PARAMETER                   :: EMAX = 15  !ensure same as in theriak.cmn.
+        REAL(8),INTENT(IN), DIMENSION(EMAX)    :: X(EMAX)
+        REAL(8),INTENT(OUT),DIMENSION(EMAX)    :: A(EMAX)
+        INTEGER(4),INTENT(IN)                  :: N
+        REAL(8),PARAMETER                      :: CUT = 2.0D-76
+        REAL(8) :: OMPH2O,FF
         ! X(1)='qL1'   pqL=X(1)
         ! X(2)='abL1'  pabL=X(2)
         ! X(3)='kspL1' pkspL=X(3)
@@ -2250,49 +2248,22 @@
         ! X(7)='foL1'  pfoL=X(7)
         ! X(8)='h2oL1' ph2oL=X(8)
         ! X(9)='anL1'  panL=X(9)
-        !
-        !P array is not technically needed for this model,
-        !but setting zero P(i) to PMINXXX anyway. don't do now
-        P(1:emax) = X(1:emax)
-        !DO I = 1, N
-        !  IF(P(I).LE.PMINXXX) P(I) = PMINXXX
-        !END DO
-        OMPH2O=1-P(8)
-        A(1:5) = OMPH2O*P(1:5)
-        !A(1)=(1.0D0-P(8))*P(1)   !omph2oL*pqL
-        !A(2)=(1.0D0-P(8))*P(2)   !omph2oL*pabL
-        !A(3)=(1.0D0-P(8))*P(3)   !omph2oL*pkspL
-        !A(4)=(1.0D0-P(8))*P(4)   !omph2oL*pwoL
-        !A(5)=(1.0D0-P(8))*P(5)   !omph2oL*psilL
-        !
-        !fails at PMINXXX < 10^-77 (-inf)
-        !FF=(P(6)+P(7))**4         !(pfaL+pfoL)  
-        !IF (FF.GT.1.0D-15) THEN
-        !  A(6)=(OMPH2O*P(6)**5)/FF  !(omph2oL*pfaL**5)/(FF*FF*FF*FF)
-        !  A(7)=(OMPH2O*P(7)**5)/FF  !(omph2oL*pfoL**5)/(FF*FF*FF*FF)
-        !ELSE
-        !  !setting ideal act to PMINAAA just in case
-        !  A(6)=0.0D0 !PMINAAA
-        !  A(7)=0.0D0 !PMINAAA
-        !END IF
-
-        !Keep these A's at 0 if P's=0. Use P6/P67 ratio
-        IF(P(6).GT.0.0D0) THEN
-          FF=( P(6)/(P(6)+P(7)) )**4         !(pfaL+pfoL)
-          A(6)=OMPH2O*P(6)*FF
-        ELSE 
-          A(6)=0.0D0
+        OMPH2O=1.0D0-X(8)
+        IF(OMPH2O.LT.0.0D0) OMPH2O=0.0D0
+        A(1:5) = OMPH2O*X(1:5)
+        !Keep these A's at 0 if X's=0. Use P6/P67
+        A(6)=0.0D0
+        A(7)=0.0D0
+        IF(X(6).GT.0.0D0) THEN
+          FF=( X(6)/(X(6)+X(7)) )
+          IF (FF.GT.CUT) A(6)=OMPH2O*X(6)*(FF**4)
         END IF
-        IF(P(7).GT.0.0D0) THEN
-          FF=( P(7)/(P(6)+P(7)) )**4         !(pfaL+pfoL)
-          A(7)=OMPH2O*P(7)*FF
-        ELSE 
-          A(7)=0.0D0
+        IF(X(7).GT.0.0D0) THEN
+          FF=( X(7)/(X(6)+X(7)) )
+          IF (FF.GT.CUT) A(7)=OMPH2O*X(7)*(FF**4)
         END IF
-        !
-        A(8)=P(8)*P(8)           !ph2oL*ph2oL
-        A(9)=(1.0D0-P(8))*P(9)
-        !A(9)=(1.0D0-P(8))*(1.0D0-P(1)-P(2)-P(3)-P(4)-P(5)-P(6)-P(7)-P(8))
+        A(8)=X(8)*X(8)           !ph2oL*ph2oL
+        A(9)=OMPH2O*X(9)
         RETURN
       END SUBROUTINE LiqG16      
 !-----
@@ -2317,6 +2288,7 @@
         INTEGER(kind=4) :: I
         REAL(kind=8) :: psl1L, pwo1L, pfo2L, pfa2L, ph2o1L
         REAL(kind=8) :: den, sumM, sumF, omh2
+        LOGICAL      :: flag_value
         ! ---------------------------
         ! X(1)='q4L'    X(7)='hmL'  
         ! X(2)='sl1L'   X(8)='ekL' 
@@ -2390,6 +2362,23 @@
           !A(12) = 0.0D0
           A(12) = PMINAAA
         END IF
+!#ifdef DEBUG
+        call ieee_get_flag(ieee_underflow,flag_value)
+        if(flag_value .eqv. .true.) then
+          call ieee_set_flag(ieee_underflow, .false.)
+          WRITE(UNIT=6,FMT='("  LIQH18 UNDERFLOW: ")') 
+        end if
+        call ieee_get_flag(ieee_overflow,flag_value)
+        if(flag_value .eqv. .true.) then
+          call ieee_set_flag(ieee_overflow, .false.)
+          WRITE(UNIT=6,FMT='("  LIQH18 OVERFLOW: ")') 
+        end if
+        call ieee_get_flag(ieee_invalid,flag_value)
+        if(flag_value .eqv. .true.) then
+          call ieee_set_flag(ieee_invalid, .false.)
+          WRITE(UNIT=6,FMT='("  LIQH18 INVALID:   ")') 
+        end if
+!#endif
         RETURN
       END SUBROUTINE LiqHGP18
 !********************************
