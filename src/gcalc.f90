@@ -409,6 +409,14 @@
       XX0=(UU0*UU0*DEXP(UU0)/((DEXP(UU0)-1.0D0)**2))
       PTH=(A0*K0*THE/XX0)* &
       (1.0D0/(DEXP(UU)-1.0D0)-(1.0D0/(DEXP(UU0)-1.0D0)))
+      !
+      IF(BB*PTH.GE.1.0D0) THEN
+        PTH=1.0D0/BB+EPSILON(0.0D0)
+        WRITE(UNIT=6,FMT='(" - The V EOS has failed for member ",A,&
+          &". You should deactivate",/,"   the phase that contains" &
+          &" this component at these temperatures. biotite??")') trim(NAME(IP))
+      END IF
+      !
       VOLUM=V0R*(1.0D0-AA*(1.0D0-(1.0D0+BB*(PK-PTH))**(-CC)))
       FVVOL=VOLUM-V0R
 !
