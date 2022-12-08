@@ -231,7 +231,7 @@
  1002 RECODE=' '
 !-----SKIP BLANK AND COMMENT RECORDS
  1003 IF (RECODE.NE.' '.AND.RECODE(1:1).NE.'!') GOTO 3
-      READ (UNIT=dbs,FMT='(A250)',END=5010) REC
+      READ (UNIT=dbs,FMT='(A500)',END=5010) REC        !was A250, but len REC=500 in theriak.cmn.
       CALL FIBLA(REC,I1)
       IF (I1.NE.0) RECODE=REC(I1:I1+2)
       GOTO 1003
@@ -899,7 +899,7 @@
       WRITE (UNIT=scr,FMT=304) (MODEL1(I:I),I=1,II)
       WRITE (UNIT=out,FMT=304) (MODEL1(I:I),I=1,II)
   304 FORMAT (' The following string cannot be converted', &
-      ' to a real number: ',250A1)
+      ' to a real number: ',500A1)
       STOP
       END IF
 !-----
@@ -992,7 +992,7 @@
       CHARACTER(16) AINFO1
       COMMON /SECINFO/ SECTIO,PROVID,AINFO1
 !-----END OF COMMON VARIABLES
-      CHARACTER(250) CH001
+      CHARACTER(500) CH001
       CHARACTER(60) TMPSOL
       CHARACTER(8) CH8
       CHARACTER(1) CH1
@@ -1100,7 +1100,7 @@
 !-----END OF COMMON VARIABLES
       INTEGER(4) I,II,III,K,I3,IL,I2,LL,IM
       CHARACTER(16) EMNAM
-      CHARACTER(250) CH001,REC2
+      CHARACTER(500) CH001,REC2
       CHARACTER(1) CH1
       REAL(8) FF
 !-----
@@ -1596,7 +1596,7 @@
       CALL LABLA(REC,K)
       WRITE (UNIT=scr,FMT=303) (REC(I:I),I=1,K)
       WRITE (UNIT=out,FMT=303) (REC(I:I),I=1,K)
-  303 FORMAT (/' Remaining record: ',250A1)
+  303 FORMAT (/' Remaining record: ',500A1)
       CALL LABLA(CH,K)
       WRITE (UNIT=scr,FMT=304) (CH(I:I),I=1,K)
       WRITE (UNIT=out,FMT=304) (CH(I:I),I=1,K)
@@ -1980,7 +1980,7 @@
       WRITE (UNIT=scr,FMT=304) (MODEL1(I:I),I=1,II)
       WRITE (UNIT=out,FMT=304) (MODEL1(I:I),I=1,II)
   304 FORMAT (' The following string cannot be converted', &
-      ' to a real number: ',250A1)
+      ' to a real number: ',500A1)
       STOP
       END
 !-----

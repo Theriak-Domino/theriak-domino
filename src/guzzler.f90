@@ -1619,7 +1619,7 @@
   302 FORMAT (//' Troubles with format-free reading')
       CALL LABLA(CH001,II)
       WRITE (UNIT=6,FMT=303) (CH001(I:I),I=1,II)
-  303 FORMAT (/' Remaining record: ',250A1)
+  303 FORMAT (/' Remaining record: ',500A1)
       WRITE (UNIT=6,FMT=304) CH016
   304 FORMAT (' The following string cannot be converted', &
       ' to a real number: ',A16)

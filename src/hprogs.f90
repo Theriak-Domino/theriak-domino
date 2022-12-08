@@ -110,7 +110,7 @@
       IMPLICIT NONE
       include 'files.cmn'
       CHARACTER*(*) CH
-      CHARACTER(250) CH001
+      CHARACTER(500) CH001  !250
       CHARACTER(50) CH002
       CHARACTER(16) CH016
       REAL(8) FF,F1,F2
@@ -143,7 +143,7 @@
       CALL LABLA(CH001,II)
       WRITE (UNIT=6,FMT=303) (CH001(I:I),I=1,II)
       WRITE (UNIT=out,FMT=303) (CH001(I:I),I=1,II)
-  303 FORMAT (/' Remaining record: ',250A1)
+  303 FORMAT (/' Remaining record: ',500A1)
       WRITE (UNIT=6,FMT=304) CH016
       WRITE (UNIT=out,FMT=304) CH016
   304 FORMAT (' The following string cannot be converted', &
@@ -156,7 +156,7 @@
       SUBROUTINE TAXI(REC,CHST)
       IMPLICIT NONE
       CHARACTER*(*) REC
-      CHARACTER(250) CH001
+      CHARACTER(500) CH001  !250
       CHARACTER*(*) CHST
       INTEGER(4) I1
       CALL FIBLA(REC,I1)
@@ -175,7 +175,7 @@
       SUBROUTINE TAXI1(REC,CHST)
       IMPLICIT NONE
       CHARACTER*(*) REC
-      CHARACTER(250) CH001
+      CHARACTER(500) CH001  !250
       CHARACTER*(*) CHST
       INTEGER(4) I1
       CALL FIBLA(REC,I1)
@@ -358,12 +358,12 @@
       CALL LABLA(FORMUL,II)
       WRITE (UNIT=6,FMT=302) (FORMUL(I:I),I=1,II)
       WRITE (UNIT=out,FMT=302) (FORMUL(I:I),I=1,II)
-  302 FORMAT (//' Troubles with formula: ',250A1)
+  302 FORMAT (//' Troubles with formula: ',500A1)
       CALL LABLA(CH170,II)
       WRITE (UNIT=6,FMT=304) (CH170(I:I),I=1,II)
       WRITE (UNIT=out,FMT=304) (CH170(I:I),I=1,II)
   304 FORMAT (' The following string cannot be converted', &
-      ' to a real number: ',250A1)
+      ' to a real number: ',500A1)
       WRITE (UNIT=6,FMT=306)
       WRITE (UNIT=out,FMT=306)
   306 FORMAT (' PRTCOD = -2 may be useful to trace error')
@@ -466,7 +466,7 @@
       IMPLICIT NONE
 ! ----
       CHARACTER*(*) REC
-      CHARACTER(250) CH001
+      CHARACTER(500) CH001   !250
       CHARACTER(26) UPPER,LOWER
       INTEGER(4) I1,I2,I,J
       DATA UPPER /'ABCDEFGHIJKLMNOPQRSTUVWXYZ'/
@@ -540,7 +540,7 @@
       LOGICAL(4) FUNCTION VERGL(A1,A2)
       IMPLICIT NONE
       CHARACTER*(*) A1,A2
-      CHARACTER(250) B1,B2
+      CHARACTER(500) B1,B2  !250
       B1=A1
       B2=A2
       CALL LOWUP(B1)
