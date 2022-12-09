@@ -2139,13 +2139,13 @@
       SUBROUTINE LiqJH15(X,A,N)
         USE flags, only : PMINXXX, PMINAAA
         IMPLICIT NONE
-        INTEGER(kind=4),PARAMETER                   :: emax = 15  !ensure same as in theriak.cmn.
-        REAL(kind=8),INTENT(IN), DIMENSION(emax)    :: X(emax)
-        REAL(kind=8),INTENT(OUT),DIMENSION(emax)    :: A(emax)
-        INTEGER(kind=4),INTENT(IN)                  :: N
-        REAL(kind=8), DIMENSION(emax)               :: P(emax)
-        REAL(kind=8) :: rMg,rFe,rCa,sM,rAlSi2,rAl2Si,rSi2p,rSi,rSi2q,rCr,rF3,sF
-        INTEGER(kind=4) :: I
+        INTEGER(4),PARAMETER  :: emax = 15  !ensure same as in theriak.cmn.
+        REAL(8),INTENT(IN)    :: X(emax)
+        REAL(8),INTENT(OUT)   :: A(emax)
+        INTEGER(4),INTENT(IN) :: N
+        REAL(8)               :: P(emax)
+        REAL(8) :: rMg,rFe,rCa,sM,rAlSi2,rAl2Si,rSi2p,rSi,rSi2q,rCr,rF3,sF
+        INTEGER(4) :: I
         !
         !  X(1)=jd: NaAlSi2O6
         !  X(2)=di: CaMgSi2O6
@@ -2225,7 +2225,6 @@
         !    A(8)=rF3/sF
         !  endif
         !endif
-
       END SUBROUTINE LiqJH15
 !********************************
       !Liquid Green, Holland & Powell (2016)
@@ -2233,11 +2232,11 @@
       SUBROUTINE LiqG16(X,A,N)
         !USE flags, only : PMINXXX, PMINAAA
         IMPLICIT NONE
-        INTEGER(4),PARAMETER                   :: EMAX = 15  !ensure same as in theriak.cmn.
-        REAL(8),INTENT(IN), DIMENSION(EMAX)    :: X(EMAX)
-        REAL(8),INTENT(OUT),DIMENSION(EMAX)    :: A(EMAX)
-        INTEGER(4),INTENT(IN)                  :: N
-        REAL(8),PARAMETER                      :: CUT = 2.0D-76
+        INTEGER(4),PARAMETER  :: EMAX = 15  !as in theriak.cmn.
+        REAL(8),PARAMETER     :: CUT = 2.0D-76
+        REAL(8),INTENT(IN)    :: X(EMAX)
+        REAL(8),INTENT(OUT)   :: A(EMAX)
+        INTEGER(4),INTENT(IN) :: N
         REAL(8) :: OMPH2O,FF
         ! X(1)='qL1'   pqL=X(1)
         ! X(2)='abL1'  pabL=X(2)
@@ -2272,14 +2271,14 @@
       SUBROUTINE LiqHGP18(X,A,N)
         USE flags, only : PMINAAA                              
         IMPLICIT NONE
-        INTEGER(kind=4),PARAMETER  :: emax = 15  !as in theriak.cmn
-        REAL(kind=8),INTENT(IN)    :: X(emax)
-        REAL(kind=8),INTENT(OUT)   :: A(emax)
-        INTEGER(kind=4),INTENT(IN) :: N
-        REAL(8),PARAMETER          :: CUT = 1.0D-49
-        REAL(kind=8)               :: P(emax)
-        REAL(kind=8) :: psl1L, pwo1L, pfo2L, pfa2L, ph2o1L
-        REAL(kind=8) :: sumM, sumF, omh2, F1, F2
+        INTEGER(4),PARAMETER  :: emax = 15  !as in theriak.cmn
+        REAL(8),INTENT(IN)    :: X(emax)
+        REAL(8),INTENT(OUT)   :: A(emax)
+        INTEGER(4),INTENT(IN) :: N
+        REAL(8),PARAMETER     :: CUT = 1.0D-49
+        REAL(8)               :: P(emax)
+        REAL(8) :: psl1L, pwo1L, pfo2L, pfa2L, ph2o1L
+        REAL(8) :: sumM, sumF, omh2, F1, F2
         ! ---------------------------------------------------
         ! X(1)='q4L'   X(4)='fo2L'  X(7)='hmL'  X(10)='kjL' 
         ! X(2)='sl1L'  X(5)='fa2L'  X(8)='ekL'  X(11)='ctL' 
@@ -2340,23 +2339,22 @@
 !-----
 !********************************
 !Tomlinson & Holland (2021) Peridotite melting. 
-      !Coded by dkt, Feb. 2021 (in-progress; bit of a mess, stay tuned. Is in to test other code.)
+      !Coded by dkt, Feb. 2021 (in-progress; bit of a mess, 
+      !stay tuned. Is in to test other code.)
       SUBROUTINE LiqTH21(X,A,N)
         USE flags, only : PMINXXX, PMINAAA 
         IMPLICIT NONE
-        INTEGER(kind=4),PARAMETER                   :: emax = 15  !ensure same as in theriak.cmn
-        REAL(kind=8),INTENT(IN), DIMENSION(emax)    :: X(emax)
-        REAL(kind=8),INTENT(OUT),DIMENSION(emax)    :: A(emax)
-        INTEGER(kind=4),INTENT(IN)                  :: N
-        REAL(kind=8), DIMENSION(emax)               :: P(emax)
-        !
-        INTEGER(kind=4) :: I
-        !
-        REAL(kind=8) :: den, sumM
-        REAL(kind=8) :: pq3L, psl1L, pwo1L, pfo2L, pfa2L, pneL1, phmL
-        REAL(kind=8) :: pekL, ptiL, pkjL, panL1, pab1L, penL1, pkfL
-        REAL(kind=8) :: aq3L, asl1L, awo1L, afo2L, afa2L, aneL1, ahmL
-        REAL(kind=8) :: aekL, atiL, akjL, aanL1, aab1L, aenL1, akfL
+        INTEGER(4),PARAMETER  :: emax = 15  !as in theriak.cmn
+        REAL(8),INTENT(IN)    :: X(emax)
+        REAL(8),INTENT(OUT)   :: A(emax)
+        INTEGER(4),INTENT(IN) :: N
+        REAL(8)               :: P(emax)
+        INTEGER(4) :: I
+        REAL(8) :: den, sumM
+        REAL(8) :: pq3L, psl1L, pwo1L, pfo2L, pfa2L, pneL1, phmL
+        REAL(8) :: pekL, ptiL, pkjL, panL1, pab1L, penL1, pkfL
+        REAL(8) :: aq3L, asl1L, awo1L, afo2L, afa2L, aneL1, ahmL
+        REAL(8) :: aekL, atiL, akjL, aanL1, aab1L, aenL1, akfL
         logical :: isnorm = .true.
         ! ---------------------------
         !   N=14  
