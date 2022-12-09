@@ -1,0 +1,54 @@
+! ----------> dont' forget: at least two blanks between items!!! <----------
+!
+!	For the most typical case, only one chemical input line is needed. The following lines are
+!       ignored. For calculation of binary or ternary diagrams however, two or three chemical input
+!       lines are needed that define the the system�s endmember compositions.
+!    1.0000    250    0.020000   0.1000000E-08   0.1000000E-06   0.1000000E+01 0.1000000E-04     25      15     100
+    1000  40000
+0   SI(53.96)TI(1.35)AL(18.52)MG(8.11)FE(10.14)CA(10.15)NA(5.08)K(0.22)H(6.84)O(173.85)H(12)O(6)   *  med-H BL478
+
+
+0   SI(53.96)TI(1.35)AL(18.52)MG(8.11)FE(10.14)CA(10.15)NA(5.08)K(0.22)H(6.84)O(173.85)   *  med-H BL478
+
+
+
+
+0   SI(38.451)TI(0.1)AL(1.774)AL(1.774)FE(5.879)MG(50.51)CA(2.821)NA(0.5)K(0.02)CR(0.218)O(?)O(0.096)   *   KLB-1 H-free tc-ig50 ex 
+
+0   SI(39.40)TI(0.11)AL(4.40)FE(5.89)MG(48.78)CA(3.24)NA(0.38)K(0.10)CR(0.28)H(2.0)O(?)O(0.06)   *   KR4003 Walter 1998 tc-kr4003.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+1   SI(39.15)TI(1.88)AL(11.37)FE(8.41)MG(22.53)CA(11.11)NA(4.19)K(0.99)CR(0.4)H(0.37)O(?)O(0.16)   *  Olivine Nephelinite HTAC_1436  Braunger et al. 2018
+
+1   SI(53.96)TI(1.35)AL(18.52)MG(8.11)FE(10.14)CA(10.15)NA(5.08)K(0.22)CR(0.02)H(6.84)O(173.85) H(0)O(0)   *  +Cr BL478 Green '16 Fig4
+
+
+
+0   SI(39.15)TI(1.88)AL(11.37)FE(8.41)MG(22.53)CA(11.11)NA(4.19)K(0.99)H(0.37)O(?)O(0.16)   *  Olivine Nephelinite HTAC_1436  Braunger et al. 2018
+
+
+
+
+0   SI(53.96)TI(1.35)AL(18.52)MG(8.11)FE(10.14)CA(10.15)NA(5.08)K(0.22)H(6.84)O(173.85) H(10)O(5)   *  high h2o BL478 Green '16 Fig4
+
+
+
+0   SI(50.086)TI(1.006)AL(17.382)MG(12.145)FE(7.784)CA(11.671)NA(4.996)K(0.430)H(10.874)O(168.474) H(0)O(0)   *  MORB Palin '16 Fig1
+
+
+
+0   SI(52.47)TI(1.05)AL(18.20)MG(12.71)FE(8.15)CA(12.21)NA(5.22)K(0.46)H(11.2)O(177.32) H(40)O(29)   *  SM89 Green '16, +H2O Fig2 c,d
+
+
+
