@@ -1439,8 +1439,10 @@
 !      END DO
 !
       IF (NSED.GT.0.AND.LOO1.LT.5) THEN
-       DO I=1,NSED
-        IF (SIS(I).EQ.IS) THEN
+      !presence of seeds causes failure at times (liq); needs
+      !reconsideration at some point.
+       DO I=1,NSED                                     
+        IF (SIS(I).EQ.IS) THEN                         
          DO J=1,NEND(IS)
           XXSC(J)=SXX(I,J)
          END DO

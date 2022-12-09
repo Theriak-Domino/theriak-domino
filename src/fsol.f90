@@ -2268,120 +2268,76 @@
       END SUBROUTINE LiqG16      
 !-----
 !********************************
-      !Liquid Holland, Green & Powell (2018). It ignores all the external/microscipic/vars=f(ppn,X) etc.
-      !In this model, no site species is shared by more than one component except the hydrous/vac site.
-      !This allows to simply make most site species abundance proportional to pc ppn, with normalization.
-      !Then just straight mixing on sites approach
+      !Liquid: Holland, Green & Powell (2018).
       SUBROUTINE LiqHGP18(X,A,N)
-        USE flags, only : PMINXXX, PMINAAA
-        use, intrinsic :: ieee_exceptions, only: ieee_underflow, ieee_overflow, &
-                                                 ieee_invalid, ieee_divide_by_zero, &
-                                                 ieee_get_flag, ieee_set_flag
-        use, intrinsic :: ieee_arithmetic, only: ieee_is_normal                                 
+        USE flags, only : PMINAAA                              
         IMPLICIT NONE
-        INTEGER(kind=4),PARAMETER                   :: emax = 15  !ensure same as in theriak.cmn
-        REAL(kind=8),INTENT(IN), DIMENSION(emax)    :: X(emax)
-        REAL(kind=8),INTENT(OUT),DIMENSION(emax)    :: A(emax)
-        INTEGER(kind=4),INTENT(IN)                  :: N
-        !
-        REAL(kind=8), DIMENSION(emax)               :: P(emax)
-        INTEGER(kind=4) :: I
+        INTEGER(kind=4),PARAMETER  :: emax = 15  !as in theriak.cmn
+        REAL(kind=8),INTENT(IN)    :: X(emax)
+        REAL(kind=8),INTENT(OUT)   :: A(emax)
+        INTEGER(kind=4),INTENT(IN) :: N
+        REAL(8),PARAMETER          :: CUT = 1.0D-49
+        REAL(kind=8)               :: P(emax)
         REAL(kind=8) :: psl1L, pwo1L, pfo2L, pfa2L, ph2o1L
-        REAL(kind=8) :: den, sumM, sumF, omh2
-        LOGICAL      :: flag_value
-        ! ---------------------------
-        ! X(1)='q4L'    X(7)='hmL'  
-        ! X(2)='sl1L'   X(8)='ekL' 
-        ! X(3)='wo1L'   X(9)='tiL'  
-        ! X(4)='fo2L'   X(10)='kjL' 
-        ! X(5)='fa2L'   X(11)='ctL'    
-        ! X(6)='jdL'    X(12)='h2o1L'   
-        ! ---------------------------
+        REAL(kind=8) :: sumM, sumF, omh2, F1, F2
+        ! ---------------------------------------------------
+        ! X(1)='q4L'   X(4)='fo2L'  X(7)='hmL'  X(10)='kjL' 
+        ! X(2)='sl1L'  X(5)='fa2L'  X(8)='ekL'  X(11)='ctL' 
+        ! X(3)='wo1L'  X(6)='jdL'   X(9)='tiL'  X(12)='h2o1L' 
+        ! ---------------------------------------------------
         ! N=12 for HGP18
-        ! Neg adj and P norm to 1.
-        P(1:12) = X(1:12)
-        !should not have to check if neg!
-        DO I = 1, N
-           IF(P(I).LE.0.0D0) P(I) = PMINXXX  !2022-10-10 trying to remove invalid_flag on pc's who are 0
-        END DO
-        !norm to 1
-        !norm not reqd if converges, which happens with increased GCMAX,
-        !but it did seem to help converge tiny bit with low GCMAX. 
-        ! If nothing, ensures ph2o1L<=1
-        den = sum(P(1:12))
-        P(1:12) = P(1:12)/den  
-          !IF(P(12)>1.0D0) P(12)=1.0D0          
-          !pq4L = P(1)  
-          !pjdL = P(6)
-          !phmL = P(7)
-          !pekL = P(8)
-          !ptiL = P(9)
-          !pkjL = P(10)
-          !pctL = P(11) !assoc species
-        psl1L= P(2)
-        pwo1L= P(3)
-        pfo2L= P(4)
-        pfa2L= P(5)
+        A(1:12)=PMINAAA
+        P(1:12)=X(1:12)
+        IF (P(2).LT.CUT) P(2)=0.0D0
+        IF (P(3).LT.CUT) P(3)=0.0D0
+        IF (P(4).LT.CUT) P(4)=0.0D0
+        IF (P(5).LT.CUT) P(5)=0.0D0
+        IF(P(12).GT.1.0D0) P(12)=1.0D0
+        psl1L=P(2)
+        pwo1L=P(3)
+        pfo2L=P(4)
+        pfa2L=P(5)
         ph2o1L=P(12)
-        ! site sums; calc in terms of pc ppns
-        ! sumA = pjdL+pkjL !no Smix from this site so not needed
-        sumM = 4.0D0*pfo2L + 4.0D0*pfa2L + pwo1L + psl1L 
-        sumF = 1.0D0 - ph2o1L            
-        omh2 = (1.0D0-ph2o1L)   !if ph2o1L >eps<1, otherwise 1.0
-        IF(omh2 .GT. 0.0D0) THEN
-          omh2 = omh2**2
-        ELSE 
-          omh2 = 0.0D0
-        END IF 
-        IF(sumF .GT. 0.0D0) THEN   !always
-          IF(sumM .GT. 0.0D0) THEN !usually
-            !2022-10-10: those p's =0 now set to PMINXXX to avoid invalid flag. A(4) op signalling when pfo2L=0
-            A(2) = psl1L/sumM * psl1L/sumF * omh2  !asl1L
-            A(3) = pwo1L/sumM * pwo1L/sumF * omh2  !awo1L
-            A(4) = (4.0D0*pfo2L)**4 / (sumM**4) * (pfo2L+pfa2L)/sumF * omh2  !afo2L. todo den before pow
-            A(5) = (4.0D0*pfa2L)**4 / (sumM**4) * (pfo2L+pfa2L)/sumF * omh2  !afa2L. todo den before pow
-          ELSE 
-            !A(2:5) = 0.0D0
-            A(2:5) = PMINAAA
+        sumM=4.0D0*pfo2L+4.0D0*pfa2L+pwo1L+psl1L
+        sumF=1.0D0-ph2o1L
+        omh2=sumF
+        IF(omh2.GT.1.0D-24) THEN
+          omh2=omh2*omh2
+        ELSE
+          omh2=0.0D0
+        END IF
+        IF(sumF.GT.0.0D0) THEN
+          IF(sumM.GT.0.0D0) THEN
+            A(2)=(psl1L/sumM)*(psl1L/sumF)*omh2
+            A(3)=(pwo1L/sumM)*(pwo1L/sumF)*omh2
+            F1=(4.0D0*pfo2L)/sumM
+            F2=((pfo2L+pfa2L)/sumF)
+            IF (F1.GT.CUT.AND.F2.GT.CUT.AND.omh2.GT.CUT) THEN
+              A(4)=F1**4*F2*omh2
+            END IF
+            F1=(4.0D0*pfa2L)/sumM
+            IF (F1.GT.CUT.AND.F2.GT.CUT.AND.omh2.GT.CUT) THEN
+              A(5)=F1**4*F2*omh2
+            END IF
+          !ELSE
+          !  !A(2:5)=0.0D0
+          !  A(2:5)=PMINAAA
           END IF
-          A(1)  = P(1)/sumF * omh2   !aq4L
-          A(6)  = P(6)/sumF * omh2   !ajdL
-          A(7)  = P(7)/sumF * omh2   !ahmL
-          A(8)  = P(8)/sumF * omh2   !aekL
-          A(9)  = P(9)/sumF * omh2   !atiL
-          A(10) = P(10)/sumF * omh2  !akjL
-          A(11) = P(11)/sumF * omh2  !actL
-        ElSE 
-            !todo: add a kill if here!
-            !A(1:11) = 0.0D0
-            A(1:11) = PMINAAA
+          A(1)   =(P(1)/sumF)*omh2
+          A(6:11)=(P(6:11)/sumF)*omh2
+        !ElSE
+        !    !A(1:11)=0.0D0
+        !    A(1:11)=PMINAAA
         END IF
-        IF(ph2o1L .GT. 0.0D0) THEN !now always
-          A(12) = ph2o1L**2  !ah2o1L
-        ELSE 
-          !A(12) = 0.0D0
-          A(12) = PMINAAA
+        IF(ph2o1L.GT.1.5D-152) THEN
+          A(12)=ph2o1L**2
+        ELSE
+          !A(12)=0.0D0
+          A(12)=PMINAAA
         END IF
-!#ifdef DEBUG
-        call ieee_get_flag(ieee_underflow,flag_value)
-        if(flag_value .eqv. .true.) then
-          call ieee_set_flag(ieee_underflow, .false.)
-          WRITE(UNIT=6,FMT='("  LIQH18 UNDERFLOW: ")') 
-        end if
-        call ieee_get_flag(ieee_overflow,flag_value)
-        if(flag_value .eqv. .true.) then
-          call ieee_set_flag(ieee_overflow, .false.)
-          WRITE(UNIT=6,FMT='("  LIQH18 OVERFLOW: ")') 
-        end if
-        call ieee_get_flag(ieee_invalid,flag_value)
-        if(flag_value .eqv. .true.) then
-          call ieee_set_flag(ieee_invalid, .false.)
-          WRITE(UNIT=6,FMT='("  LIQH18 INVALID:   ")') 
-        end if
-!#endif
         RETURN
       END SUBROUTINE LiqHGP18
-!********************************
+!-----
 !********************************
 !Tomlinson & Holland (2021) Peridotite melting. 
       !Coded by dkt, Feb. 2021 (in-progress; bit of a mess, stay tuned. Is in to test other code.)
