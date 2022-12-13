@@ -13,7 +13,7 @@
 ### developer set values based on preference
 
 ## Set some unique value to print at top of program headers to identify build
-VERSIONSTR=29.11.2022-0xmain
+VERSIONSTR=2022.12.13-0xmain
 
 ## Select compiler: gfortran, or ifort/ifx for intel
 #COMPILER="gfortran"
