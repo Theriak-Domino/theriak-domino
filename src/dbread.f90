@@ -764,6 +764,11 @@
 !---- volume function (Holland and Powell 2011)
       IF (RECODE.EQ.'V11') THEN
       READ (UNIT=REC,FMT='(5X,6D15.0)',ERR=999) VAA,D1,D2,D3,VLN,VL2
+      !V11 props are in/for kJ, kbar
+      !for V11, VLN acts as flag to determine specific case; VL2 is
+      !optional theta (it is calc in GCALC if it is absent)
+      !0=normal, 1=Landau, 2=BW, 3=aq, 4=melt, 5=test melt; pre-ds633
+      !alt is above+6: 6=normal,7=Landau,8=BW,10=melt
       VOLVO=5
       VO3=.FALSE.
       VO1=.FALSE.

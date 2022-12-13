@@ -41,10 +41,12 @@
       PJ,GCH,HCH,SCH,VCH,CPCH,DG1,DG2,SII,FV1,A01
 !      REAL(8) F1,F2,PXM,PXP
       INTEGER(4) I,I001,IP
-! variables used by Doug Tinkham (+k0,dkdt,pth)
-      REAL(8) pref,ivpo,ao,k0p,k0pp,tk,tref,vr,kt,v1t,a,b,c,ivdp, &
-      pkb,vpt
-!=====
+! variables used by Doug Tinkham
+      REAL(8) V0,V1T,OMC
+      INTEGER(4) IVLN
+!=====      
+      IVLN=NINT(VLN)
+!-----
       FGVOL=0.0D0
       FVVOL=0.0D0
       FGDIS=0.0D0
@@ -133,6 +135,20 @@
       HR=H0R+CPRDT
       SR=S0R+CPRTDT
       VOLUM=V0R
+      !For COM/MAKE phase, TC does a+bT+cP. A COM phase in TD will not go through
+      !any of the V-specific code below, so if c/=0, only V0R will be adjusted,
+      !and G will not have c*P added on. Can do here if a COM phase. Really need
+      !a way to know if HPCOM. Could increase size of LODATA, but how to detect
+      !if HP ds make in dbread? New line keys OMK, DMK, EMK would be most flexible
+      !as it would allow both straight adjust of V0R (in ST of COM), and c*P (of
+      !OMK, DMK, EMK), and further provides the entry point to internally stripping
+      !lnd and bw appropriately instead of requiring the database file to provide
+      !the stripping. 2022-12-13, dkt
+      !ToDo: Add new db keyword for TCM, or OMK, DMK, EMK,
+      !as below is a potentially breaking change for others
+!      IF(LODATA(4,IP).EQV..TRUE.) THEN
+!        GR=GR+P*V0R !not P-P0 for TC compat. tc dqf approach
+!      END IF
 !********************************************************************************
 !-----
 !===== van der Waals or Redlich-Kwong
@@ -373,14 +389,15 @@
       END IF
 !********************************************************************************
 !-----
-!===== volume function from Holland and Powell 2011.
-!===== V11  VAA, D1,  D2,  D3,   VLN   VL2
-!           A0   K0   K0'  K0''  (1=Landau, 2=Bragg-Williams, 3=aquous, 4=melt)
-!                                       VL2=THETA (Einstein Temperature)
+!===== volume function from Holland and Powell 2011. Updated 2022-12-08 tc350si
+!===== V11  VAA, D1,  D2,  D3,   VLN   VL2                        compatibility
+!           A0   K0   K0'  K0''  (VLN: 1=Land, 2=Bragg-Williams, 3=aqu, 4=melt)
+!                                      VL2=THETA (Einstein Temperature)
 !-----
       IF (VOLVO.EQ.5) THEN
       IF (DABS(VLN).LT.1D-20.OR.(DABS(VLN)-1.0D0).LT.1D-20 &
-      .OR.(DABS(VLN)-2.0D0).LT.1D-20) THEN
+        .OR.(DABS(VLN)-2.0D0).LT.1D-20) THEN
+      !V11 props in db are in kJ, kbar
       PK=P*1.0D-3
       PK0=1.0D-3
       DPK=PK-1D-3
@@ -388,54 +405,75 @@
       K0=D1
       K01=D2
       K02=D3
-!-K02 is normally = -K01/K0
-! The data set includes a term for K02 to anticipate for the rare occasion 
-! where a value other than K02=-K01/K0 might be warranted
-!---      K02=-K01/K0
+      !-K02 is normally = -K01/K0
+      ! The data set includes a term for K02 to anticipate for the rare occasion 
+      ! where a value other than K02=-K01/K0 might be warranted
+      !---      K02=-K01/K0
       SII=S0R
-!---  NAT number of atoms stored because of phases with CODE = +...
+      !---  NAT number of atoms stored because of phases with CODE = +...
       NN0=NAT
-!
-      THE=10636.0D0/((SII/NN0)+6.44D0)
-!     try: THETA as input
-!!      WRITE (UNIT=6,FMT='(''THETA= '',A,F20.10)') NAME(IP),THE
+      !
+      !Calc theta if not in db file
+      THE=REAL(NINT(10636.0D0/((SII/NN0)+6.44D0)))
+      !     try: THETA as input
+      !!      WRITE (UNIT=6,FMT='(''THETA= '',A,F20.10)') NAME(IP),THE
       IF (DABS(VL2).GT.1D-20) THE=VL2
-!
+      !
       AA=(1.0D0+K01)/(1.0D0+K01+K0*K02)
-      BB=K01/K0-K02/(1.0D0+K01)
+      !BB=K01/K0-K02/(1.0D0+K01)                 !pre-ds633/tc350beta. Same as below,
+      BB=(K01+K01*K01-K0*K02)/(K0*(1.0D0+K01))   !just rearranged
       CC=(1.0D0+K01+K0*K02)/(K01*K01+K01-K0*K02)
       UU0=THE/T0
       UU=THE/T
-      XX0=(UU0*UU0*DEXP(UU0)/((DEXP(UU0)-1.0D0)**2))
+      XX0=(UU0*UU0*DEXP(UU0)/((DEXP(UU0)-1.0D0)**2))     !this could be pre-calc
       PTH=(A0*K0*THE/XX0)* &
-      (1.0D0/(DEXP(UU)-1.0D0)-(1.0D0/(DEXP(UU0)-1.0D0)))
-      !
+      (1.0D0/(DEXP(UU)-1.0D0)-(1.0D0/(DEXP(UU0)-1.0D0))) !likewise, last term can be pre-calc
+      !                                                  !could reduce 4 EXP to 1 EXP
+      !nasty message to convince user
       IF(BB*PTH.GE.1.0D0) THEN
-        PTH=1.0D0/BB+EPSILON(0.0D0)
+        PTH=1.0D0/BB  !(1.0D0-EPSILON(0.0D0))/BB
         WRITE(UNIT=6,FMT='(" - The V EOS has failed for member ",A,&
           &". You should deactivate",/,"   the phase that contains" &
           &" this component at these temperatures. biotite??")') trim(NAME(IP))
       END IF
       !
-      VOLUM=V0R*(1.0D0-AA*(1.0D0-(1.0D0+BB*(PK-PTH))**(-CC)))
+      !old
+      !VOLUM=V0R*(1.0D0-AA*(1.0D0-(1.0D0+BB*(PK-PTH))**(-CC)))
+      !
+      !volume at P,T (kJ/kbar = J/bar)
+      !new tc350si volume expression, back-derived from IntVdP for ds633; 
+      !this is also applied to older ds62 in tc350si. dkt 2022-12-08
+      VOLUM=(V0R*(1.0D0+AA*(-1.0D0+(1.0D0+BB*PK-BB*PTH)**(-CC)))) &
+            /(1.0D0+AA*(-1.0D0+(1.0D0+BB*PK0)**(-CC)))
+      !
       FVVOL=VOLUM-V0R
-!
-!---- from maxima (not so good: rounding errors?)
-!      FGVOL=-((-BB*PTH+BB*PK+1.0D0)**CC*(AA*BB*PTH-AA*BB*PK-AA)+ &
-!      (1.0D0-BB*PTH)**CC*(AA-AA*BB*PTH)+((AA-1.0D0)*BB*CC+ &
-!      (AA-1.0D0)*BB)*PK)*V0R/(BB*CC+BB)
-!      FGVOL=FGVOL*1000.0D0
-!
-!---- from Holland and Powell 2011
-      FV=(1.0D0-BB*PTH)**(1.0D0-CC)-(1.0D0+BB*(PK-PTH))**(1.0D0-CC)
-      FF=AA*FV/(BB*(CC-1.0D0)*PK)
-      FF=FF+1.0D0-AA
-!- achtung: hier P-P0 statt P
-!21aug2015 doch nur P statt (P-P0) (damit dG/dP = V)
-!      FGVOL=(P-P0)*V0R*FF
-      FGVOL=(P)*V0R*FF
+      !
+      !---- from maxima (not so good: rounding errors?)
+      !      FGVOL=-((-BB*PTH+BB*PK+1.0D0)**CC*(AA*BB*PTH-AA*BB*PK-AA)+ &
+      !      (1.0D0-BB*PTH)**CC*(AA-AA*BB*PTH)+((AA-1.0D0)*BB*CC+ &
+      !      (AA-1.0D0)*BB)*PK)*V0R/(BB*CC+BB)
+      !      FGVOL=FGVOL*1000.0D0
+      !
+      !---- from Holland and Powell 2011
+      !FV=(1.0D0-BB*PTH)**(1.0D0-CC)-(1.0D0+BB*(PK-PTH))**(1.0D0-CC)
+      !FF=AA*FV/(BB*(CC-1.0D0)*PK)
+      !FF=FF+1.0D0-AA
+      !
+      !IntVdP (in kJ). Old above was for P0=0 bar instead of 1 bar
+      FGVOL= (1.0D0-AA)*(PK-PK0) + &
+        AA*( (BB*(PK0-PTH)+1.0D0)**(1.0D0-CC) - (BB*(PK-PTH)+1.0D0)**(1.0D0-CC) ) / &
+        (BB*(CC-1.0D0)) 
+      FGVOL= V0R*FGVOL / (1.0D0-AA+AA*((1.0D0+BB*PK0)**(-CC)))
+      FGVOL= 1.0D3*FGVOL !kJ->J
+      !
+      !- achtung: hier P-P0 statt P
+      !21aug2015 doch nur P statt (P-P0) (damit dG/dP = V)
+      !FGVOL=(P-P0)*V0R*FF 
+      !FGVOL=(P)*V0R*FF
+      !
       GR=GR+FGVOL
-! special variables for V11 Feb. 2012
+      !
+      ! special variables for V11 Feb. 2012
       CHSPEC(1)='PTH'
       FSPEC(1)=PTH
       CHSPEC(2)='A'
@@ -478,6 +516,80 @@
       GR=GR+FGVOL
 !
       END IF
+
+!********************************************************************************
+!-----
+!===== volume function from Holland and Powell 2011, All-In-One. updated 2022-12-08. 
+!===== Normal,Landua,Bragg-Williams,Liquid all-in-one vers; tc350si compat vers.
+!===== V11  VAA, D1,  D2,  D3,   VLN   VL2                        
+!           A0   K0   K0'  K0''  (VLN: 6=Norm, 7=Land, 8=Bragg-Williams, 10=liq)
+!                                      VL2=THETA (Einstein Temperature)
+!      Land and B-W cases will also be caught in below iff's to add on ord/dis
+!-----   
+      IF (VOLVO.EQ.5 .AND. (IVLN.EQ.6.OR.IVLN.EQ.7.OR.IVLN.EQ.8.OR.IVLN.EQ.10)) THEN
+        !set data; V11 props in db are in kJ, kbar
+        PK =P * 1.0D-3  !bar->kbar
+        PK0=1.0D-3      !0.001 kbar
+        A0 =VAA
+        K0 =D1
+        K01=D2
+        K02=D3
+        DKDT= VL0
+        !theta; yes, round to nearest int for some reason
+        SII=S0R
+        NN0=NAT           !#atoms
+        THE=REAL(NINT(10636.0D0/((SII/NN0)+6.44D0)),8)
+        !IF (DABS(VL2).GT.1D-20) THE=VL2 !if theta input by user in dset
+        !
+        !V0 and PTH, melt K0(KTT)
+        IF(IVLN.EQ.5 .OR. IVLN.EQ.10) THEN
+          KTT=K0+DKDT*(T-T0)
+          K0=KTT
+          !this is really V1T for melts
+          V0=V0R*DEXP(A0*(T-T0)) !melts
+          PTH=0.0D0
+        ELSE
+          V0=V0R
+          !thermal pressure
+          UU0=THE/T0
+          UU=THE/T
+          XX0=(UU0*UU0*DEXP(UU0)/((DEXP(UU0)-1.0D0)**2))     
+          PTH=(A0*K0*THE/XX0)* &
+            (1.0D0/(DEXP(UU)-1.0D0)-(1.0D0/(DEXP(UU0)-1.0D0))) 
+        END IF
+        !
+        !bulk modulus & derivative terms
+        AA=(1.0D0+K01)/(1.0D0+K01+K0*K02)
+        BB=(K01+K01*K01-K0*K02)/(K0*(1.0D0+K01))
+        CC=(1.0D0+K01+K0*K02)/(K01*K01+K01-K0*K02)
+        OMC=1.0D0-CC
+        !
+        !nasty message to convince user
+        IF(BB*PTH.GE.1.0D0) THEN !liq case will be 0.0, so ok
+          PTH=1.0D0/BB  !(1.0D0-EPSILON(0.0D0))/BB
+          WRITE(UNIT=6,FMT='(" - The V EOS has failed for member ",A,&
+            &". You should deactivate",/,"   the phase that contains" &
+            &" this component at these temperatures. biotite??")') trim(NAME(IP))
+        END IF
+        !
+        !volume at P,T (kJ/kbar = J/bar)
+        !new tc350si volume expression, back-derived from IntVdP for ds633; 
+        !this is also applied to older ds62 in tc350si
+        VOLUM=(V0*(1.0D0+AA*(-1.0D0+(1.0D0+BB*PK-BB*PTH)**(-CC)))) &
+                 /(1.0D0+AA*(-1.0D0+(1.0D0+BB*PK0)**(-CC)))
+        FVVOL=VOLUM-V0R
+        !
+        !IntVdP (in kJ)
+        FGVOL= (1.0D0-AA)*(PK-PK0) + &
+          AA*( (BB*(PK0-PTH)+1.0D0)**OMC - (BB*(PK-PTH)+1.0D0)**OMC ) / &
+          (BB*(CC-1.0D0)) 
+        FGVOL= V0*FGVOL / (1.0D0-AA+AA*((1.0D0+BB*PK0)**(-CC)))
+        FGVOL= 1.0D3*FGVOL  !kJ->J
+        !
+        GR=GR+FGVOL
+        !
+!-----
+      END IF
 !********************************************************************************
 !-----
 !===== Landau order function from Holland and Powell 2011.
@@ -490,7 +602,7 @@
 !           Tcrit(T0)  Smax  Vmax
 !-----
 !!!      IF (VOLVO.EQ.5.AND.(DABS(VLN)-1.0D0).LT.1D-20) THEN
-      IF (VOLVO.EQ.5.AND.(DABS(VLN-1.0D0)).LT.1D-20) THEN
+      IF (VOLVO.EQ.5.AND.(IVLN.EQ.1.OR.IVLN.EQ.7)) THEN
 !-----
       DXP=P/1D5
       PJ=P
@@ -526,7 +638,7 @@
 !           deltaH  deltaV  W   Wv   n(Si)  Factor
 !-----
 !!!      IF (VOLVO.EQ.5.AND.(DABS(VLN)-2.0D0).LT.1D-20) THEN
-      IF (VOLVO.EQ.5.AND.(DABS(VLN-2.0D0)).LT.1D-20) THEN
+      IF (VOLVO.EQ.5.AND.(IVLN.EQ.2.OR.IVLN.EQ.8)) THEN
 !-----
       DXP=P/1D5
       PJ=P
@@ -555,61 +667,85 @@
 !-----
 !-----
 !********************************************************************************
-!  Holland and Powell 2011
-!  melts testing with VLN=5
-!  solution by Doug Tinkham
-!
-!===== use dkdt for melts from Holland and Powell 2011.
+!  Holland and Powell 2011 melts, with VLN=5 instead of 4
+!  solution by Doug Tinkham. TO BE REMOVED in very near future as integrated 
+!  in iff below; only few 2012 vintage files used. 2022-12-08 updated tc350si compat
+!===== use DKDT for melts from Holland and Powell 2011.
 !===== needs data from volume function, VOLVO=5
-!===== data needed: A0, K0, K0', DKDT
-!===== is KAPS=4 or what??
+!===== data needed: A0, K0, K0', K0'', DKDT
 !===== V11  VAA, D1,  D2,  D3,    VLN
 !           A0   K0   K0'  K0''  (0=no trans, 1=Landau, 2=Bragg-Williams, 3=aquous, 4=melt)
 !===== DK1  VL0
-!           dkdt
+!           DKDT
 !-----
-!! variables used by Doug Tinkham (+k0,a0,dkdt)
-!!      REAL(8) pref,ivpo,k0p,k0pp,tk,tref,vr,kt,v1t,a,b,c,ivdp,vdp,pkb
-!!!      IF (VOLVO.EQ.5.AND.(DABS(VLN)-5.0D0).LT.1D-20) THEN
-      IF (VOLVO.EQ.5.AND.(DABS(VLN-5.0D0)).LT.1D-20) THEN
-      PK=P*1.0D-3
-      PK0=1.0D-3
-      A0=VAA
-      K0=D1
-      K01=D2
-      DKDT=VL0
-!
-      pref=PK0
-      ivpo=0.0D0
-      ao=A0
-      k0p=D2
-      k0pp=D3
-      tk=T
-      tref=T0
-      pkb=PK
-      vr=V0R
-!
-!
-      kt = k0 + dkdt*(tk-tref)
-      v1t=vr*DEXP(ao*(tk-tref))
-      a=(1.0+k0p)/(1.0+k0p+kt*k0pp)
-      b=k0p/kt-k0pp/(1.0+k0p)
-      c=(1.0+k0p+kt*k0pp)/(k0p*k0p+k0p-kt*k0pp)
-      pth=0.0
-      ivdp = v1t*(pkb-ivpo)*(1-a) &
-         -v1t*(a*(1+b*(pkb-ivpo-pth))**(1 - c))/(b*(-1 + c)) &
-         +v1t*(a*(1-b*pth)**(1-c))/(b*(-1 + c))
-      vpt = v1t*(1 - a*(1 - (1 + b*((pkb-pref) - pth))**(-c)))
-!
-!!      WRITE (UNIT=6,FMT='(''v1t  '',F20.10)') v1t
-!!      WRITE (UNIT=6,FMT='(''ivdp '',F20.10)') ivdp
-!!      WRITE (UNIT=6,FMT='(''vpt  '',F20.10)') vpt
-!
-      VOLUM=vpt
-      FVVOL=VOLUM-V0R
-      FGVOL=1D3*ivdp
-!
-      GR=GR+FGVOL
+      !2022-12-08: Updated for tc350si compat. variables renamed to use same 
+      !var names as elsewhere; V1T retained.
+      !pref->PK0; ivpo->PK0; k0p->K01; k0pp->K02; tk->T; tref->T0;
+      !vr->V0R; kt->KTT; v1t->v1t; a->AA; b->BB, c->CC; 
+      IF (VOLVO.EQ.5 .AND. IVLN.EQ.5) THEN
+        !set data: V11 props in db are in kJ, kbar
+        PK=P*1.0D-3
+        PK0=1.0D-3  !tc350si
+        A0=VAA
+        K0=D1
+        K01=D2
+        K02=D3
+        DKDT=VL0
+        !
+        KTT = K0 + DKDT*(T-T0)
+        V1T = V0R*DEXP(A0*(T-T0))
+        AA  = (1.0D0+K01)/(1.0D0+K01+KTT*K02)
+        !BB  = K01/KTT - K02/(1.0D0+K01)               !old, same as ds633 rearrangement
+        BB  = (K01+K01*K01-KTT*K02)/(KTT*(1.0D0+K01))  !ds633 rearrangement
+        CC  = (1.0D0+K01+KTT*K02)/(K01*K01+K01-KTT*K02)
+        
+        !
+        !earlier tc compat, with IVP0=0.0D0 & PTH=0.0D0
+        !PTH=0.0D0
+        !IVP0=0.0D0
+        !FGVOL= V1T*(PK-IVP0)*(1.0D0-AA) &
+        !      -V1T*(AA*(1.0D0+BB*(PK-IVP0-PTH))**(1.0D0 - CC))/(BB*(-1.0D0 + CC)) &
+        !      +V1T*(AA*(1.0D0-BB*PTH)**(1.0D0-CC))/(BB*(-1.0D0 + CC))
+        !FGVOL= AA*( ((BB*(IVP0-PTH0)+1.0D0)**(1.0D0-CC) - (BB*(PK-PTH1)+1.0D0)**(1.0D0-CC)))/(BB*(CC-1.0D0))
+        !FGVOL= FGVOL + (AA-1.0D0)*(PZERO-PK) 
+        !
+        !tc350si compat
+        FGVOL= (1.0D0-AA)*(PK-PK0) + &
+          AA*( (BB*(PK0)+1.0D0)**(1.0D0-CC) - (BB*(PK)+1.0D0)**(1.0D0-CC) ) / &
+          (BB*(CC-1.0D0)) 
+        FGVOL= V1T*FGVOL / (1.0D0-AA+AA*((1.0D0+BB*PK0)**(-CC)))
+        FGVOL= 1.0D3*FGVOL !kJ->J
+        !
+        !old
+        !VOLUM = V1T*(1.0D0 - AA*(1.0D0 - (1.0D0 + BB*((PK-PK0) - PTH))**(-CC)))
+        !
+        !volume at P,T
+        !new tc350si volume expression, back-derived from IntVdP for ds633; 
+        !this is also applied to older ds62 in tc350si
+        VOLUM=(V1T*(1.0D0+AA*(-1.0D0+(1.0D0+BB*PK)**(-CC)))) &
+                  /(1.0D0+AA*(-1.0D0+(1.0D0+BB*PK0)**(-CC)))
+        FVVOL=VOLUM-V0R 
+        !
+        GR=GR+FGVOL
+        !
+        !print*,'====================='
+        !print*,'PC : ',trim(NAME(IP))
+        !print*,'PK    = ',PK
+        !print*,'PK0   = ',PK0
+        !print*,'IVP0  = ',IVP0
+        !print*,'PTH   = ',PTH
+        !print*,'A0    = ',A0
+        !print*,'KTT   = ',KTT
+        !print*,'AA    = ',AA
+        !print*,'BB    = ',BB
+        !print*,'CC    = ',CC
+        !print*,'V1T   = ',V1T
+        !print*,'VOLUM = ',VOLUM
+        !print*,'FGVOL = ',FGVOL
+        !print*,'--------'
+        !print*,'GR(kJ)= ',GR
+        !print*,'4*GR  = ',4.0D0*GR  !for testing qL- to q4L
+        !print*,'---------------------'
 !-----
       END IF
 !-----
@@ -638,8 +774,8 @@
 !===== DK1  VL0
 !           dkdt  (not dKdT/1D3 in table) 
 !-----
-!!!      IF (VOLVO.EQ.5.AND.(DABS(VLN)-4.0D0).LT.1D-20) THEN
-      IF (VOLVO.EQ.5.AND.(DABS(VLN-4.0D0)).LT.1D-20) THEN
+      IF (VOLVO.EQ.5.AND.IVLN.EQ.4) THEN
+      !V11 props in db are in kJ, kbar
       PK=P*1.0D-3
       PK0=1.0D-3
       A0=VAA
@@ -647,7 +783,7 @@
       K01=D2
       K02=D3
 !
-!! the following provided by Doug Tinkham
+!! the following mathematica code provided by Doug Tinkham (2012)
 !! kt=KTT, tk=T, tref=T0, v1t-FV1,vr=V0R, pkb=PK,pref=PK0
 !      kt = k0 + dkdt*(tk-tref)
 !      v1t=vr*DEXP(ao*(tk-tref))
@@ -677,36 +813,45 @@
       KTT=K0+DKDT*(T-T0)
 
 ! Volume at T and 1 Bar (hopo 98) Thermal expansion
-!       FV1=V0R*(1.0D0+A0*(T-T0)-20.0D0*A0*(SQT-SQT0))
-! this is pure guesswork
-!!      FV1=V0R*(1.0D0+A0*(T-T0))
       FV1=V0R*DEXP(A0*(T-T0))
 ! Variables for hopo 11 using K0 at T and 1 Bar (=KTT)
+      !AA,BB,CC same as solids case above, but K0->KTT
       AA=(1.0D0+K01)/(1.0D0+K01+KTT*K02)
-      BB=K01/KTT-K02/(1.0D0+K01)
+      !BB=K01/KTT-K02/(1.0D0+K01)
+      !ds633 rearangement; exactly equiv to above
+      BB=(K01+K01*K01-KTT*K02)/(KTT*(1.0D0+K01))  
       CC=(1.0D0+K01+KTT*K02)/(K01*K01+K01-KTT*K02)
-!
-!! Variables for hopo 11 using K0 at 25 C and 1 Bar (=K0)
-!!      AA=(1.0D0+K01)/(1.0D0+K01+K0*K02)
-!!      BB=K01/K0-K02/(1.0D0+K01)
-!!      CC=(1.0D0+K01+K0*K02)/(K01*K01+K01-K0*K02)
 !
 ! Volume at T and P (hopo 11). No thermal Pressure term, PTH=0
       PTH=0.0D0
-      VOLUM=FV1*(1.0D0-AA*(1.0D0-(1.0D0+BB*(PK-PK0-PTH))**(-CC)))
 !21aug2015 leave out PK0
-      VOLUM=FV1*(1.0D0-AA*(1.0D0-(1.0D0+BB*(PK-PTH))**(-CC)))
+      !old ver
+      !VOLUM=FV1*(1.0D0-AA*(1.0D0-(1.0D0+BB*(PK-PTH))**(-CC)))
+      !
+      !new tc350si volume expression, back-derived from IntVdP for ds633; 
+      !this is also applied to older ds62 in tc350si. 2022-12-08
+      VOLUM=(FV1*(1.0D0+AA*(-1.0D0+(1.0D0+BB*PK)**(-CC)))) &
+                /(1.0D0+AA*(-1.0D0+(1.0D0+BB*PK0)**(-CC)))
+      !
       FVVOL=VOLUM-V0R
 !
 ! Integral VdP (hopo 11) (PTH=0.0D0)
 !      FV=(1.0D0-BB*PTH)**(1.0D0-CC)-(1.0D0+BB*(PK-PTH))**(1.0D0-CC)
-      FV=(1.0D0)-(1.0D0+BB*(PK))**(1.0D0-CC)
-      FF=AA*FV/(BB*(CC-1.0D0)*PK)
-      FF=FF+1.0D0-AA
+      !FV=(1.0D0)-(1.0D0+BB*(PK))**(1.0D0-CC)
+      !FF=AA*FV/(BB*(CC-1.0D0)*(PK))
+      !FF=FF+1.0D0-AA
+      !
+      !tc350si compat. 2022-10-08
+      FGVOL= (1.0D0-AA)*(PK-PK0) + &
+        AA*( (BB*PK0+1.0D0)**(1.0D0-CC) - (BB*PK+1.0D0)**(1.0D0-CC) ) / &
+        (BB*(CC-1.0D0)) 
+      FGVOL= FV1*FGVOL / (1.0D0-AA+AA*((1.0D0+BB*PK0)**(-CC)))
+      FGVOL=1.0D3*FGVOL  !kJ->J
+      !
 !- achtung: hier P-P0 statt P
 !21aug2015 doch nur P statt (P-P0) (damit dG/dP = V)
-!!      FGVOL=(P-P0)*FV1*FF
-      FGVOL=(P)*FV1*FF
+!      FGVOL=(P-P0)*FV1*FF  !dkt change back to P-P0, 2022-12-08
+!      FGVOL=(P)*FV1*FF
 !
       GR=GR+FGVOL
 !
