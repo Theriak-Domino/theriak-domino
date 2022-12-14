@@ -1,4 +1,4 @@
-CHANGES IN THERIAK-DOMINO version xx.xx.20xx
+CHANGES IN THERIAK-DOMINO version 2022-12-14
 --------------------------------------------
 - Theriak-Domino source repository moved to Git Hub; added 
 GPLv3 license
@@ -9,6 +9,10 @@ certain conditions.
 - updates to identify and correct underflow and invalid exceptions
 in certain places (a few places still to clean up); updated 
 parameters in theriak.ini for use with this version
+- updated HP11 thermo expressions for compatibility with tc350si;
+G's match to better than 1000'th of J.
+- added DGC data line to database file format to mimic tc dqf
+better.
 - added a CALC-FLAGS section to theriak.ini that can take
 additional parameters;  OUTFLAGS can be set to true to output
 active CALC-PARAMETERS used during calculation of dominograms;
