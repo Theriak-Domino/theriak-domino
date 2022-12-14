@@ -124,6 +124,7 @@
       LODATA(9,N)=AQU
       LODATA(10,N)=FIX
       LODATA(11,N)=TL1
+      LODATA(12,N)=DGC
       RETURN
       END
 !-----
@@ -214,5 +215,6 @@
       AQU=LODATA(9,N)
       FIX=LODATA(10,N)
       TL1=LODATA(11,N)
+      DGC=LODATA(12,N)
       RETURN
       END

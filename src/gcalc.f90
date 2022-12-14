@@ -79,10 +79,12 @@
        FSPEC(I)=0.0D0
        CHSPEC(I)=' '
       END DO
+      !print*,'---------------------  ',trim(NAME(IP))
 !-----
 !===== solution phases with fixed compositions
 !-----
       IF (FIX) THEN
+      !print*,'In FIX phase: ',trim(NAME(IP))
       I001=ISOFIX(IP)
       DO I=1,NEND(I001)
         X001(I)=XEMFIX(IP,I)
@@ -99,6 +101,7 @@
 !-----
 !      IF (AQU) THEN
       IF (PHASID(IP).EQ.'AQU') THEN
+      !print*,'In PHASID(IP).EQ.AQU: ',trim(NAME(IP))
       CALL AQUA
       RETURN
       END IF
@@ -135,20 +138,29 @@
       HR=H0R+CPRDT
       SR=S0R+CPRTDT
       VOLUM=V0R
-      !For COM/MAKE phase, TC does a+bT+cP. A COM phase in TD will not go through
-      !any of the V-specific code below, so if c/=0, only V0R will be adjusted,
-      !and G will not have c*P added on. Can do here if a COM phase. Really need
-      !a way to know if HPCOM. Could increase size of LODATA, but how to detect
-      !if HP ds make in dbread? New line keys OMK, DMK, EMK would be most flexible
-      !as it would allow both straight adjust of V0R (in ST of COM), and c*P (of
-      !OMK, DMK, EMK), and further provides the entry point to internally stripping
-      !lnd and bw appropriately instead of requiring the database file to provide
-      !the stripping. 2022-12-13, dkt
-      !ToDo: Add new db keyword for TCM, or OMK, DMK, EMK,
-      !as below is a potentially breaking change for others
-!      IF(LODATA(4,IP).EQV..TRUE.) THEN
-!        GR=GR+P*V0R !not P-P0 for TC compat. tc dqf approach
-!      END IF
+      !
+      !
+      !For default COM/MAKE phase with just ST and COM data lines, a COM phase 
+      !in TD with no V-EOS data lines will by default have VO1=.true,
+      !and data on the ST line is G0R,H0R,S0R,V0R (on top of linear comb of
+      !phases in COM line); VTA,VTB,VPA,VPB will be 0.
+      !Therefore the COM phase using V01 EOS will add ST volume term as:
+      ! FVVOL=0
+      ! VOLUM=V0R in ST line (added onto to volume of linear comb of phases)
+      ! FGVOL=(P-P0)*V0R  (TC does P*V0R, so G will be off a bit)
+      ! GR=GR+FGVOL
+      !
+!********************************************************************************
+!-----
+!===== delta_G for COM phase with no EOS; delG=a-b*T+c*P increment. P=P not P-1,
+!===== equiv to tc dqf with opp sign on b term. a=G0R and b=S0R handled above.
+!----- DGC is used with ST line data all 0.0.
+      IF (DGC) THEN
+        FVVOL=0.0D0
+        VOLUM=V0R+FVVOL
+        FGVOL=P*V0R
+        GR=GR+FGVOL
+      END IF
 !********************************************************************************
 !-----
 !===== van der Waals or Redlich-Kwong
@@ -156,6 +168,7 @@
 !===== R-K AA0,AAT,BB0,BBT
 !-----
       IF (RDK.OR.VDW) THEN
+      !print*,'In RDK.OR.VDW phase: ',trim(NAME(IP))
       CALL GAS
       END IF
 !********************************************************************************
@@ -164,6 +177,7 @@
 !===== CS1 AA0,BB0
 !-----
       IF (VOLVO.EQ.6) THEN
+      !print*,'In VOLVO.EQ.6, CORK CS1 phase: ',trim(NAME(IP))
       CALL CSGAS
       END IF
 !********************************************************************************
@@ -172,6 +186,7 @@
 !===== CS2 AA0,BB0
 !-----
       IF (VOLVO.EQ.7) THEN
+      !print*,'In VOLVO.EQ.7 CORK CS2 phase: ',trim(NAME(IP))
       CALL CORK
       END IF
 !********************************************************************************
@@ -180,6 +195,7 @@
 !===== V1 VTA,VTB,VPA,VPB (achtung Faktoren)
 !-----
       IF (VO1) THEN
+      !print*,'In VO1 for phase ',NAME(IP)
       FVVOL=VTA*(T-T0)+VTB*(T-T0)**2+VPA*(P-P0)+VPB*(P-P0)**2
       VOLUM=V0R+FVVOL
       FGVOL=(P-P0)*(V0R+VTA*(T-T0)+VTB*(T-T0)**2) &
@@ -196,6 +212,7 @@
 !===== VPA is now bar(-1),VTA is now K(-1)
 !-----
       IF (VOLVO.EQ.11) THEN
+      !print*,'In VOLVO.EQ.11 for phase ',NAME(IP)  
       PK=P*1.0D-3 ! bar-->kbar
       PK0=1.0D-3  ! P0 =0.001 kbar
       DPK=PK-1D-3 ! P-P0
@@ -256,6 +273,7 @@
 !===== v2 VAA,VAB,VB
 !-----
       IF (VO2) THEN
+      !print*,'In VO2 for phase ',NAME(IP)
       FVVOL=V0R*DEXP(VAA*(T-T0)+VAB*(TT-TT0)/2.0D0)
       IF (VB.GT.0.0D0) THEN
       FGVOL=(FVVOL/VB)*(1.0D0-DEXP(-VB*(P-P0)))
@@ -275,6 +293,7 @@
 !===== V3 VL0,VLA,VLN,VL2
 !-----
       IF (VO3) THEN
+      !print*,'In VO3 for phase ',NAME(IP)
       FVVOL=VL0+VLA*T
       IF (DABS(VL2).LT.1D-20.AND.DABS(VLN).GT.1D-20) THEN
       FF=1.0D-6/(0.7551D0+2.76D0*FVVOL/VLN)
@@ -299,6 +318,7 @@
 !===== K'=4, a2=10, dkdt (dKdT/1D3 in table) =-1.5D-4
 !-----
       IF (VOLVO.EQ.4.AND.DABS(VTB).GT.1D-20) THEN
+      !print*,'In HP98 VOLVO.EQ.4.AND.DABS(VTB)>1D-20 phase: ',trim(NAME(IP))
 !---- volume function
 !-
       DXP=P/1D5
@@ -397,6 +417,7 @@
       IF (VOLVO.EQ.5) THEN
       IF (DABS(VLN).LT.1D-20.OR.(DABS(VLN)-1.0D0).LT.1D-20 &
         .OR.(DABS(VLN)-2.0D0).LT.1D-20) THEN
+      !print*,'In VOLVO.EQ.5 type 0,1,2 for phase ',NAME(IP)
       !V11 props in db are in kJ, kbar
       PK=P*1.0D-3
       PK0=1.0D-3
@@ -431,7 +452,7 @@
       !                                                  !could reduce 4 EXP to 1 EXP
       !nasty message to convince user
       IF(BB*PTH.GE.1.0D0) THEN
-        PTH=1.0D0/BB  !(1.0D0-EPSILON(0.0D0))/BB
+        PTH=(1.0D0-EPSILON(0.0D0))/BB
         WRITE(UNIT=6,FMT='(" - The V EOS has failed for member ",A,&
           &". You should deactivate",/,"   the phase that contains" &
           &" this component at these temperatures. biotite??")') trim(NAME(IP))
@@ -497,6 +518,7 @@
 !           A0   K0   K0'  K0''
 !-----
       IF (VOLVO.EQ.10) THEN
+      !print*,'In VOLVO.EQ.10 for phase ',NAME(IP)
       PK=P*1.0D-3
       PK0=1.0D-3
       DPK=PK-1D-3
@@ -527,6 +549,7 @@
 !      Land and B-W cases will also be caught in below iff's to add on ord/dis
 !-----   
       IF (VOLVO.EQ.5 .AND. (IVLN.EQ.6.OR.IVLN.EQ.7.OR.IVLN.EQ.8.OR.IVLN.EQ.10)) THEN
+        !print*,'In VOLVO.EQ.5 and IVLN for phase ',NAME(IP),' IVLN=',IVLN
         !set data; V11 props in db are in kJ, kbar
         PK =P * 1.0D-3  !bar->kbar
         PK0=1.0D-3      !0.001 kbar
@@ -566,7 +589,7 @@
         !
         !nasty message to convince user
         IF(BB*PTH.GE.1.0D0) THEN !liq case will be 0.0, so ok
-          PTH=1.0D0/BB  !(1.0D0-EPSILON(0.0D0))/BB
+          PTH=(1.0D0-EPSILON(0.0D0))/BB  
           WRITE(UNIT=6,FMT='(" - The V EOS has failed for member ",A,&
             &". You should deactivate",/,"   the phase that contains" &
             &" this component at these temperatures. biotite??")') trim(NAME(IP))
@@ -603,6 +626,7 @@
 !-----
 !!!      IF (VOLVO.EQ.5.AND.(DABS(VLN)-1.0D0).LT.1D-20) THEN
       IF (VOLVO.EQ.5.AND.(IVLN.EQ.1.OR.IVLN.EQ.7)) THEN
+      !print*,'In VOLVO.EQ.5 IVLN=1 or 7, HP11 Landaue for phase ',NAME(IP)
 !-----
       DXP=P/1D5
       PJ=P
@@ -639,6 +663,7 @@
 !-----
 !!!      IF (VOLVO.EQ.5.AND.(DABS(VLN)-2.0D0).LT.1D-20) THEN
       IF (VOLVO.EQ.5.AND.(IVLN.EQ.2.OR.IVLN.EQ.8)) THEN
+      !print*,'In VOLVO.EQ.5 HP11 BW IVLN=2 or 8 for phase ',NAME(IP)
 !-----
       DXP=P/1D5
       PJ=P
@@ -683,6 +708,7 @@
       !pref->PK0; ivpo->PK0; k0p->K01; k0pp->K02; tk->T; tref->T0;
       !vr->V0R; kt->KTT; v1t->v1t; a->AA; b->BB, c->CC; 
       IF (VOLVO.EQ.5 .AND. IVLN.EQ.5) THEN
+        !print*,'In VOLVO.EQ.5 HP11 Melts VLN=5 for phase ',NAME(IP)
         !set data: V11 props in db are in kJ, kbar
         PK=P*1.0D-3
         PK0=1.0D-3  !tc350si
@@ -775,6 +801,7 @@
 !           dkdt  (not dKdT/1D3 in table) 
 !-----
       IF (VOLVO.EQ.5.AND.IVLN.EQ.4) THEN
+      !print*,'In VOLVO.EQ.5 HP11 Melts VLN=4 for phase ',NAME(IP)
       !V11 props in db are in kJ, kbar
       PK=P*1.0D-3
       PK0=1.0D-3
@@ -863,6 +890,7 @@
 !===== VG VTA,VTB
 !-----
       IF (VOLVO.EQ.8) THEN
+      !print*,'In VOLVO.EQ.8 Gottschalk for phase ',NAME(IP)
       VTB=VTB/10.0D0
       VOLUM=V0R*DEXP(VTA*(T-T0)-VTB*(P-P0))
       FVVOL=VOLUM-V0R
@@ -878,30 +906,32 @@
 !===== T2 TEQ(I),DVTR(I),DVDT(I),DVDP(I)
 !-----
       IF (TRTYP.EQ.0) THEN
-      DXP=P/1D5
-      DO I=1,NLANDA
-       I001=I
-       PJ=P
-       CALL LANDA(I001,PJ,GCH,HCH,SCH,CPCH,VCH)
-       FGTR=FGTR+GCH
-       FHTR=FHTR+HCH
-       FSTR=FSTR+SCH
-       FCPTR=FCPTR+CPCH
-       GR=GR+GCH
-       HR=HR+HCH
-       SR=SR+SCH
-       CPR=CPR+CPCH
-!---- now dG/dP
-       IF (VNEED) THEN
-         DG1=GCH
-         PJ=P+DXP
-         CALL LANDA(I001,PJ,GCH,HCH,SCH,CPCH,VCH)
-         DG2=GCH
-         VCH=(DG2-DG1)/DXP
-       END IF
-       VOLUM=VOLUM+VCH
-       FVTR=FVTR+VCH
-      END DO
+        !print*,'In TRTYP.EQ.0 BB85 Lambda; proto for dG/dP, for phase ',NAME(IP), &
+        !  '  NLADA=',NLANDA
+        DXP=P/1D5
+        DO I=1,NLANDA
+          I001=I
+          PJ=P
+          CALL LANDA(I001,PJ,GCH,HCH,SCH,CPCH,VCH)
+          FGTR=FGTR+GCH
+          FHTR=FHTR+HCH
+          FSTR=FSTR+SCH
+          FCPTR=FCPTR+CPCH
+          GR=GR+GCH
+          HR=HR+HCH
+          SR=SR+SCH
+          CPR=CPR+CPCH
+          !---- now dG/dP
+          IF (VNEED) THEN
+            DG1=GCH
+            PJ=P+DXP
+            CALL LANDA(I001,PJ,GCH,HCH,SCH,CPCH,VCH)
+            DG2=GCH
+            VCH=(DG2-DG1)/DXP
+          END IF
+          VOLUM=VOLUM+VCH
+          FVTR=FVTR+VCH
+        END DO
       END IF
 !*************************************************************************
 !-----
@@ -909,15 +939,18 @@
 !===== CSK ASPK(I),BSPK(I),DVDP(I),TQ1B(I),DHTR(I),DVTR(I),TEQ(I)
 !-----
       IF (TRTYP.EQ.1) CALL SUPTRAN2
+
+
+
 !-----
 !===== lambda transitions ?
 !===== TL1 TKRI,SMA
 !-----
       IF (TL1.AND.(T.LT.TKRI)) THEN
-      Q4=(1.0D0-T/TKRI)
-      Q2=DSQRT(Q4)
-      FGTR=-SMA*(TKRI-T)*Q2+SMA*TKRI*Q4*Q2/3.0D0
-      GR=GR-SMA*(TKRI-T)*Q2+SMA*TKRI*Q4*Q2/3.0D0
+        Q4=(1.0D0-T/TKRI)
+        Q2=DSQRT(Q4)
+        FGTR=-SMA*(TKRI-T)*Q2+SMA*TKRI*Q4*Q2/3.0D0
+        GR=GR-SMA*(TKRI-T)*Q2+SMA*TKRI*Q4*Q2/3.0D0
       END IF
 !*************************************************************************
 !-----
@@ -926,36 +959,36 @@
 !===== D2 D2,D5,TD0,TDMAX,VADJ
 !-----
       IF (DIS.AND.DABS(TD0).GT.1D-20.AND.DABS(TDMAX).GT.1D-20.AND.T.GT.TD0) THEN
-      TD=DMIN1(T,TDMAX)
-      FCPDIS=D1+D2*TD+D3/(TD*TD)+D4/DSQRT(TD)+D5*TD*TD+D6/TD &
-      +D7*DSQRT(TD)+D8/(TD**3)+D9*(TD**3)
-      CPRDT=D1*(TD-TD0)+D2*(TD*TD-TD0*TD0)/2.0D0 &
-      -D3*(1.0D0/TD-1.0D0/TD0)+2D0*D4*(DSQRT(TD)-DSQRT(TD0)) &
-      +D5*(TD**3-TD0**3)/3.0D0+D6*DLOG(TD/TD0) &
-      +D7*(TD*DSQRT(TD)-TD0*DSQRT(TD0))*2.0D0/3.0D0 &
-      -D8*(1.0D0/(TD*TD)-1.0D0/(TD0*TD0))/2.0D0 &
-      +D9*(TD**4-TD0**4)/4.0D0
-      CPRTDT=D1*DLOG(TD/TD0)+D2*(TD-TD0) &
-      -D3*(1.0D0/(TD*TD)-1.0D0/(TD0*TD0))/2.0D0 &
-      -2D0*D4*(1.0D0/DSQRT(TD)-1.0D0/DSQRT(TD0)) &
-      +D5*(TD*TD-TD0*TD0)/2.0D0-D6*(1.0D0/TD-1.0D0/TD0) &
-      +2D0*D7*(DSQRT(TD)-DSQRT(TD0)) &
-      -D8*(1.0D0/(TD**3)-1.0D0/(TD0**3))/3.0D0 &
-      +D9*(TD**3-TD0**3)/3.0D0
-      IF (DABS(VADJ).GT.10.0D0) THEN
-      VD=CPRDT/(10.0D0*VADJ)
-      ELSE
-      VD=0.0D0
-      END IF
-      FGDIS=CPRDT-(T*CPRTDT)+VD*(P-1.0D0)
-      GR=GR+CPRDT-(T*CPRTDT)+VD*(P-1.0D0)
-      FHDIS=CPRDT
-      FSDIS=CPRTDT
-      FVDIS=VD
-      HR=HR+CPRDT
-      SR=SR+CPRTDT
-      CPR=CPR+FCPDIS
-      VOLUM=VOLUM+VD
+        TD=DMIN1(T,TDMAX)
+        FCPDIS=D1+D2*TD+D3/(TD*TD)+D4/DSQRT(TD)+D5*TD*TD+D6/TD &
+        +D7*DSQRT(TD)+D8/(TD**3)+D9*(TD**3)
+        CPRDT=D1*(TD-TD0)+D2*(TD*TD-TD0*TD0)/2.0D0 &
+        -D3*(1.0D0/TD-1.0D0/TD0)+2D0*D4*(DSQRT(TD)-DSQRT(TD0)) &
+        +D5*(TD**3-TD0**3)/3.0D0+D6*DLOG(TD/TD0) &
+        +D7*(TD*DSQRT(TD)-TD0*DSQRT(TD0))*2.0D0/3.0D0 &
+        -D8*(1.0D0/(TD*TD)-1.0D0/(TD0*TD0))/2.0D0 &
+        +D9*(TD**4-TD0**4)/4.0D0
+        CPRTDT=D1*DLOG(TD/TD0)+D2*(TD-TD0) &
+        -D3*(1.0D0/(TD*TD)-1.0D0/(TD0*TD0))/2.0D0 &
+        -2D0*D4*(1.0D0/DSQRT(TD)-1.0D0/DSQRT(TD0)) &
+        +D5*(TD*TD-TD0*TD0)/2.0D0-D6*(1.0D0/TD-1.0D0/TD0) &
+        +2D0*D7*(DSQRT(TD)-DSQRT(TD0)) &
+        -D8*(1.0D0/(TD**3)-1.0D0/(TD0**3))/3.0D0 &
+        +D9*(TD**3-TD0**3)/3.0D0
+        IF (DABS(VADJ).GT.10.0D0) THEN
+          VD=CPRDT/(10.0D0*VADJ)
+        ELSE
+          VD=0.0D0
+        END IF
+        FGDIS=CPRDT-(T*CPRTDT)+VD*(P-1.0D0)
+        GR=GR+CPRDT-(T*CPRTDT)+VD*(P-1.0D0)
+        FHDIS=CPRDT
+        FSDIS=CPRTDT
+        FVDIS=VD
+        HR=HR+CPRDT
+        SR=SR+CPRTDT
+        CPR=CPR+FCPDIS
+        VOLUM=VOLUM+VD
       END IF
 !*************************************************************************
 !-----

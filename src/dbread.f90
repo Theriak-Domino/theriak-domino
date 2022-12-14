@@ -482,7 +482,7 @@
       K8=0.0D0
       K9=0.0D0
       VOLVO=0
-      TRTYP=0
+      TRTYP=0   !todo: def should not be 0 b/c gcalc uses 0 to enter BB transition iff
       NLANDA=0
       NCOM=0
       DO I=1,10
@@ -531,12 +531,13 @@
       SPC=.FALSE.
       COM=.FALSE.
       DIS=.FALSE.
-      VO1=.TRUE.
+      VO1=.TRUE.    !default VO1, so if not VO1 need to set .false.
       VO2=.FALSE.
       VO3=.FALSE.
       AQU=.FALSE.
       FIX=.FALSE.
       TL1=.FALSE.
+      DGC=.FALSE.
       ELSE
       IF (PRTLOG(1)) THEN
       WRITE (UNIT=scr,FMT=107) NAM,REJECT
@@ -559,11 +560,21 @@
       INTEGER(4) I
       REAL(8) FF
 !-----
+      !most HP phases are going into TRTYP=0 in GCALC. Setting to -1
+      !by detecting HP db volume, V11/VHP,VH2
 !---- standard state
       IF (RECODE.EQ.'ST ') THEN
       READ (UNIT=REC,FMT='(5X,4D15.0)',ERR=999) G0R,H0R,S0R,V0R
       GENUG(2)=.TRUE.
 !     V0R=V0R/10.0D0
+      END IF
+!---- delta G COM style: delta_G = a - bT + cP increment; no EOS 
+      IF (RECODE.EQ.'DGC') THEN
+        READ (UNIT=REC,FMT='(5X,4D15.0)',ERR=999) G0R,H0R,S0R,V0R
+        VO3=.FALSE.
+        VO1=.FALSE.
+        VO2=.FALSE.
+        DGC=.TRUE.
       END IF
 !---- Redlich-Kwong
       IF (RECODE.EQ.'R-K') THEN
@@ -592,6 +603,7 @@
       VO3=.FALSE.
       VO1=.FALSE.
       VO2=.FALSE.
+      TRTYP=-1
       END IF
 !---- CORK with cubic equation
       IF (RECODE.EQ.'CS2') THEN
@@ -658,14 +670,15 @@
       END IF
 !---- combination of phases
       IF (RECODE.EQ.'COM') THEN
-      CALL TAXI(REC,CH)
-      CALL TAXI(REC,FORMUL)
-      CALL GELI(REC,FF)
-      CALL TAXI(REC,AINFO1)
-      COM=.TRUE.
-      GENUG(2)=.TRUE.
-      GENUG(3)=.TRUE.
-      IF (FF.GT.0.0D0) S0R=-R*DLOG(FF)
+        CALL TAXI(REC,CH)
+        CALL TAXI(REC,FORMUL)
+        CALL GELI(REC,FF)
+        CALL TAXI(REC,AINFO1)
+        COM=.TRUE.
+        GENUG(2)=.TRUE.
+        GENUG(3)=.TRUE.
+        IF (FF.GT.0.0D0) S0R=-R*DLOG(FF)
+        TRTYP=-1  !2022-12-13
       END IF
 !---- lambda transitions 1 (Berman and Brown 1985)
       IF (RECODE.EQ.'TR1'.OR.RECODE.EQ.'T1') THEN
@@ -753,6 +766,7 @@
       VO3=.FALSE.
       VO1=.FALSE.
       VO2=.FALSE.
+      TRTYP=-1  !2022-12-13
       END IF
       IF (RECODE.EQ.'VH2') THEN
       READ (UNIT=REC,FMT='(5X,5D15.0)',ERR=999) D1,D2,D3
@@ -760,6 +774,7 @@
       VO3=.FALSE.
       VO1=.FALSE.
       VO2=.FALSE.
+      TRTYP=-1  !2022-12-13
       END IF
 !---- volume function (Holland and Powell 2011)
       IF (RECODE.EQ.'V11') THEN
@@ -773,6 +788,7 @@
       VO3=.FALSE.
       VO1=.FALSE.
       VO2=.FALSE.
+      TRTYP=-1  !2022-12-13
       END IF
 !---- volume function (SIMPLIFIED Holland and Powell 2011)
       IF (RECODE.EQ.'EX1') THEN
