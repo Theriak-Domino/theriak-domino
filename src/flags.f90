@@ -45,8 +45,8 @@ MODULE FLAGS
     REAL(8), SAVE :: STPVMIN   = 1.0D-20       !for DOSTP=1; def 1.0D-20
     !
     REAL(8), SAVE :: ZEROEM    = 2.22044D-24
-    REAL(8), SAVE :: PMINXXX   = 2.44249D-15     !>eps; may be decreased at times
-    REAL(8), SAVE :: PMINAAA   = 2.22507D-305    !>tiny;
+    REAL(8), SAVE :: PMINXXX   = 2.44249D-24        !>eps; may be decreased at times
+    REAL(8), SAVE :: PMINAAA   = TINY(0.0D0)*10.0D0 !2.22507D-305    !>tiny;
     REAL(8), SAVE :: PMINXELSI = 0.0D0 
     !
     REAL(8), SAVE :: VAFFSCALE  = 3.0D-02
