@@ -630,7 +630,8 @@
 !-----
       DXP=P/1D5
       PJ=P
-      CALL LANDHP11(PJ,GCH,HCH,SCH,CPCH,VCH)
+      !CALL LANDHP11(PJ,GCH,HCH,SCH,CPCH,VCH)
+      CALL FULLLANDHP11(PJ,GCH,HCH,SCH,CPCH,VCH,0)
       FGTR=FGTR+GCH
       FHTR=FHTR+HCH
       FSTR=FSTR+SCH
@@ -643,7 +644,8 @@
       IF (VNEED) THEN
         DG1=GCH
         PJ=P+DXP
-        CALL LANDHP11(PJ,GCH,HCH,SCH,CPCH,VCH)
+        !CALL LANDHP11(PJ,GCH,HCH,SCH,CPCH,VCH)
+        CALL FULLLANDHP11(PJ,GCH,HCH,SCH,CPCH,VCH,0)
         DG2=GCH
         VCH=(DG2-DG1)/DXP
       END IF
@@ -1468,6 +1470,85 @@
       RETURN
       END
 !-----
+!******************************
+!===== Landau expressions for the Holland and Powell 2011 database
+!===== Expressions are derived by taking various partial derivatives
+!===== of the delGlandau expression. Expressions for G, H, S, V
+!===== and Cp are included.  ODFLAG determines return values:
+!===== ODFLAG; 0=equil, 1=disorder, 2=order.   Coded by D.Tinkham
+      SUBROUTINE FULLLANDHP11(PJ,GCH,HCH,SCH,CPCH,VCH,ODFLAG)
+        IMPLICIT NONE
+        INCLUDE 'theriak.cmn'
+  !-----END OF COMMON VARIABLES
+        REAL(8),INTENT(IN)   :: PJ 
+        REAL(8),INTENT(OUT)  :: GCH,HCH,SCH,CPCH,VCH
+        INTEGER(4),INTENT(IN):: ODFLAG
+        REAL(8),PARAMETER    :: O3RD=1.0D0/3.0D0
+        REAL(8) :: PK,SM,VM,TKR,PSTc0,Q,Q0,Q2,Q02,Q6,Q06,F1
+        !===
+        ! delGlnd  = Smax * (Q**2*(T-Tc0)+(Q**6*Tc0)/3) - P*Q**2*Vmax
+        ! delGlnd0 = delGlnd//.{Q->Q0} where Q0=Qeq at Pref,Tref
+        ! GlndEq   = delGlnd - delGlnd0 (strips ref contributions from ref data)
+        ! Qeq = Solve[ D[delGlnd,Q] == 0 ] where D is partial deriv.
+        !            substitute PSTc0 = P*Vmax + Smax*Tc0
+        !     = (PSTc0-Smax*T)**(0.25) / (Smax**0.25 * Tc0**0.25)
+        ! SM=SMAX, VM=VMAX, TKRI=TC0 (from dasave); TKR=TCrit
+        Q=0.0D0;   Q0=0.0D0; Q2=0.0D0; 
+        Q02=0.0D0; Q6=0.0D0; Q06=0.0D0;
+        PK=PJ   !PK is now P(bars)
+        SM=SMA; !SMA in J/mol.K
+        VM=VPA; 
+        !
+        !TODO: ENSURE VM & SM>0; ds634 has vm<0?, for flagging
+        TKR=TKRI+PK*(VM/SM)  
+        !
+        PSTc0=PK*VM+SM*TKRI !TC0, not TC
+        Q0=(1.0D0-298.15D0/TKRI)**0.25
+        Q02=Q0*Q0
+        Q06=Q02*Q02*Q02
+        IF (T.LT.TKR) THEN
+          !Q = (PSTc0-SM*T)**0.25 / (SM**0.25 * TKRI**0.25)
+          !simplified
+          Q = ((TKR-T)/TKRI)**0.25
+          Q2= Q*Q
+          Q6= Q2*Q2*Q2 
+        ELSE
+          Q = 0.0D0
+          Q2= 0.0D0
+          Q6= 0.0D0
+        END IF
+        IF (ODFLAG.EQ.0) THEN !equilibrium case
+          !Q02-Q2... can be close to equal, so..
+          GCH=(Q02-Q2)*(PSTc0-SM*T)+O3RD*(Q6-Q06)*SM*TKRI
+          HCH=(Q02-Q2)*PSTc0       +O3RD*(Q6-Q06)*SM*TKRI
+          SCH=(Q02-Q2)*SM
+          VCH=(Q02-Q2)*VM
+          F1=PK*VM-SM*T+SM*TKRI
+          IF (T.GE.TKRI .OR. F1.LT.TINY(0.0D0)) THEN
+            CPCH=0.0D0
+          ELSE
+            CPCH=(SM**1.5D0 * T) / (2.0D0*SQRT(TKRI)*SQRT(F1))
+          END IF
+        ELSE IF (ODFLAG.EQ.1) THEN !disorder case
+          GCH=(Q02)*(PSTc0-SM*T)+O3RD*(-Q06)*SM*TKRI
+          HCH=(Q02)*PSTc0       +O3RD*(-Q06)*SM*TKRI
+          SCH=(Q02)*SM
+          VCH=(Q02)*VM
+          CPCH=0.0D0
+        ELSE IF (ODFLAG.EQ.2) THEN !full order case
+          GCH=(Q02-1.0D0)*(PSTc0-SM*T)+O3RD*(1.0D0-Q06)*SM*TKRI
+          HCH=(Q02-1.0D0)*PSTc0       +O3RD*(1.0D0-Q06)*SM*TKRI
+          SCH=(Q02-1.0D0)*SM
+          VCH=(Q02-1.0D0)*VM
+          CPCH=0.0D0
+        ELSE
+          WRITE(UNIT=6,FMT='(A)') &
+          "ERROR: UNKNOWN ODFLAG IN FULLLANDHP11"
+          STOP "ERROR: UNKNOWN ODFLAG IN FULLLANDHP11"
+        END IF
+        
+      END SUBROUTINE FULLLANDHP11
+!-----      
 !******************************
 !===== Bragg-Williams order function from Holland and Powell 2011.
 !===== equations in Holland and Powell 1996a, p 1414 and Appendix 2)
