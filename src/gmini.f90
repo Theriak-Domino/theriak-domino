@@ -3521,7 +3521,7 @@
       TOLER=0.0D0
       I001=0
 !-
-      !-2022-05-09: Test for -EXT soln, because site check won't work.
+      !-2022-05-09: Test for -EXT soln with illegal neg ppn.
       ! For -EXT and NNEGEM>0, assume min ppn=-1, maxppn=1 or 2.
       IF(MODELL(IS).EQ.'F'.AND.NNEGEM(IS).GT.0) THEN
         DO IE=1, NEND(IS) 
@@ -3537,7 +3537,6 @@
            END IF
            IF(CODE==0) RETURN
         END DO
-        RETURN
       END IF
       IF (NNEGEM(IS).NE.0) THEN
       DO ILX=1,NSIEL(IS)
