@@ -1477,75 +1477,75 @@
 !===== and Cp are included.  ODFLAG determines return values:
 !===== ODFLAG; 0=equil, 1=disorder, 2=order.   Coded by D.Tinkham
       SUBROUTINE FULLLANDHP11(PJ,GCH,HCH,SCH,CPCH,VCH,ODFLAG)
-        IMPLICIT NONE
-        INCLUDE 'theriak.cmn'
-  !-----END OF COMMON VARIABLES
-        REAL(8),INTENT(IN)   :: PJ 
-        REAL(8),INTENT(OUT)  :: GCH,HCH,SCH,CPCH,VCH
-        INTEGER(4),INTENT(IN):: ODFLAG
-        REAL(8),PARAMETER    :: O3RD=1.0D0/3.0D0
-        REAL(8) :: PK,SM,VM,TKR,PSTc0,Q,Q0,Q2,Q02,Q6,Q06,F1
-        !===
-        ! delGlnd  = Smax * (Q**2*(T-Tc0)+(Q**6*Tc0)/3) - P*Q**2*Vmax
-        ! delGlnd0 = delGlnd//.{Q->Q0} where Q0=Qeq at Pref,Tref
-        ! GlndEq   = delGlnd - delGlnd0 (strips ref contributions from ref data)
-        ! Qeq = Solve[ D[delGlnd,Q] == 0 ] where D is partial deriv.
-        !            substitute PSTc0 = P*Vmax + Smax*Tc0
-        !     = (PSTc0-Smax*T)**(0.25) / (Smax**0.25 * Tc0**0.25)
-        ! SM=SMAX, VM=VMAX, TKRI=TC0 (from dasave); TKR=TCrit
-        Q=0.0D0;   Q0=0.0D0; Q2=0.0D0; 
-        Q02=0.0D0; Q6=0.0D0; Q06=0.0D0;
-        PK=PJ   !PK is now P(bars)
-        SM=SMA; !SMA in J/mol.K
-        VM=VPA; 
-        !
-        !TODO: ENSURE VM & SM>0; ds634 has vm<0?, for flagging
-        TKR=TKRI+PK*(VM/SM)  
-        !
-        PSTc0=PK*VM+SM*TKRI !TC0, not TC
-        Q0=(1.0D0-298.15D0/TKRI)**0.25
-        Q02=Q0*Q0
-        Q06=Q02*Q02*Q02
-        IF (T.LT.TKR) THEN
-          !Q = (PSTc0-SM*T)**0.25 / (SM**0.25 * TKRI**0.25)
-          !simplified
-          Q = ((TKR-T)/TKRI)**0.25
-          Q2= Q*Q
-          Q6= Q2*Q2*Q2 
-        ELSE
-          Q = 0.0D0
-          Q2= 0.0D0
-          Q6= 0.0D0
-        END IF
-        IF (ODFLAG.EQ.0) THEN !equilibrium case
-          !Q02-Q2... can be close to equal, so..
-          GCH=(Q02-Q2)*(PSTc0-SM*T)+O3RD*(Q6-Q06)*SM*TKRI
-          HCH=(Q02-Q2)*PSTc0       +O3RD*(Q6-Q06)*SM*TKRI
-          SCH=(Q02-Q2)*SM
-          VCH=(Q02-Q2)*VM
-          F1=PK*VM-SM*T+SM*TKRI
-          IF (T.GE.TKRI .OR. F1.LT.TINY(0.0D0)) THEN
-            CPCH=0.0D0
-          ELSE
-            CPCH=(SM**1.5D0 * T) / (2.0D0*SQRT(TKRI)*SQRT(F1))
-          END IF
-        ELSE IF (ODFLAG.EQ.1) THEN !disorder case
-          GCH=(Q02)*(PSTc0-SM*T)+O3RD*(-Q06)*SM*TKRI
-          HCH=(Q02)*PSTc0       +O3RD*(-Q06)*SM*TKRI
-          SCH=(Q02)*SM
-          VCH=(Q02)*VM
-          CPCH=0.0D0
-        ELSE IF (ODFLAG.EQ.2) THEN !full order case
-          GCH=(Q02-1.0D0)*(PSTc0-SM*T)+O3RD*(1.0D0-Q06)*SM*TKRI
-          HCH=(Q02-1.0D0)*PSTc0       +O3RD*(1.0D0-Q06)*SM*TKRI
-          SCH=(Q02-1.0D0)*SM
-          VCH=(Q02-1.0D0)*VM
+      IMPLICIT NONE
+      INCLUDE 'theriak.cmn'
+!-----END OF COMMON VARIABLES
+      REAL(8),INTENT(IN)   :: PJ 
+      REAL(8),INTENT(OUT)  :: GCH,HCH,SCH,CPCH,VCH
+      INTEGER(4),INTENT(IN):: ODFLAG
+      REAL(8),PARAMETER    :: O3RD=1.0D0/3.0D0
+      REAL(8) :: PK,SM,VM,TKR,PSTc0,Q,Q0,Q2,Q02,Q6,Q06,F1
+      !===
+      ! delGlnd  = Smax * (Q**2*(T-Tc0)+(Q**6*Tc0)/3) - P*Q**2*Vmax
+      ! delGlnd0 = delGlnd//.{Q->Q0} where Q0=Qeq at Pref,Tref
+      ! GlndEq   = delGlnd - delGlnd0 (strips ref contributions from ref data)
+      ! Qeq = Solve[ D[delGlnd,Q] == 0 ] where D is partial deriv.
+      !            substitute PSTc0 = P*Vmax + Smax*Tc0
+      !     = (PSTc0-Smax*T)**(0.25) / (Smax**0.25 * Tc0**0.25)
+      ! SM=SMAX, VM=VMAX, TKRI=TC0 (from dasave); TKR=TCrit
+      Q=0.0D0;   Q0=0.0D0; Q2=0.0D0; 
+      Q02=0.0D0; Q6=0.0D0; Q06=0.0D0;
+      PK=PJ   !PK is now P(bars)
+      SM=SMA; !SMA in J/mol.K
+      VM=VPA; 
+      !
+      !TODO: ENSURE VM & SM>0;
+      TKR=TKRI+PK*(VM/SM)  
+      !
+      PSTc0=PK*VM+SM*TKRI !TC0, not TC
+      Q0=(1.0D0-298.15D0/TKRI)**0.25
+      Q02=Q0*Q0
+      Q06=Q02*Q02*Q02
+      IF (T.LT.TKR) THEN
+        !Q = (PSTc0-SM*T)**0.25 / (SM**0.25 * TKRI**0.25)
+        !simplified
+        Q = ((TKR-T)/TKRI)**0.25
+        Q2= Q*Q
+        Q6= Q2*Q2*Q2 
+      ELSE
+        Q = 0.0D0
+        Q2= 0.0D0
+        Q6= 0.0D0
+      END IF
+      IF (ODFLAG.EQ.0) THEN !equilibrium case
+        !Q02-Q2... can be close to equal, so..
+        GCH=(Q02-Q2)*(PSTc0-SM*T)+O3RD*(Q6-Q06)*SM*TKRI
+        HCH=(Q02-Q2)*PSTc0       +O3RD*(Q6-Q06)*SM*TKRI
+        SCH=(Q02-Q2)*SM
+        VCH=(Q02-Q2)*VM
+        F1=PK*VM-SM*T+SM*TKRI
+        IF (T.GE.TKRI .OR. F1.LT.TINY(0.0D0)) THEN
           CPCH=0.0D0
         ELSE
-          WRITE(UNIT=6,FMT='(A)') &
-          "ERROR: UNKNOWN ODFLAG IN FULLLANDHP11"
-          STOP "ERROR: UNKNOWN ODFLAG IN FULLLANDHP11"
+          CPCH=(SM**1.5D0 * T) / (2.0D0*SQRT(TKRI)*SQRT(F1))
         END IF
+      ELSE IF (ODFLAG.EQ.1) THEN !disorder case
+        GCH=(Q02)*(PSTc0-SM*T)+O3RD*(-Q06)*SM*TKRI
+        HCH=(Q02)*PSTc0       +O3RD*(-Q06)*SM*TKRI
+        SCH=(Q02)*SM
+        VCH=(Q02)*VM
+        CPCH=0.0D0
+      ELSE IF (ODFLAG.EQ.2) THEN !full order case
+        GCH=(Q02-1.0D0)*(PSTc0-SM*T)+O3RD*(1.0D0-Q06)*SM*TKRI
+        HCH=(Q02-1.0D0)*PSTc0       +O3RD*(1.0D0-Q06)*SM*TKRI
+        SCH=(Q02-1.0D0)*SM
+        VCH=(Q02-1.0D0)*VM
+        CPCH=0.0D0
+      ELSE
+        WRITE(UNIT=6,FMT='(A)') &
+        "ERROR: UNKNOWN ODFLAG IN FULLLANDHP11"
+        STOP "ERROR: UNKNOWN ODFLAG IN FULLLANDHP11"
+      END IF
         
       END SUBROUTINE FULLLANDHP11
 !-----      
@@ -1553,76 +1553,100 @@
 !===== Bragg-Williams order function from Holland and Powell 2011.
 !===== equations in Holland and Powell 1996a, p 1414 and Appendix 2)
 !===== must be used with volume function VOLVO=5
-!===== what is FAC???? (assume to divide DH, WW and DV by FAC)
+!===== 
 !===== V11  VAA, D1,  D2,  D3,   VLN
 !           A0   K0   K0'  K0''  (0=no trans, 1=Landau, 2=Bragg-Williams, 3=aquous, 4=melt)
 !===== BW1  D4,     D5,     D6, D7,  D8,    D9
 !           deltaH  deltaV  W   Wv   n(Si)  Factor
+!      If D9 is neg, scale factor is only applied to one of the sites, and
+!      scale factor is really positive; negative serves as a flag. Reformulated
+!      2022-12-20 D.Tinkham
       SUBROUTINE BRAWIHP11(PJ,GCH,HCH,SCH,CPCH,VCH)
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
 !-----END OF COMMON VARIABLES
-      REAL(8) PJ,GCH,HCH,SCH,CPCH,VCH,PK,DH,DV,WW,NSI,FAC,TKR,AA,BB, &
-      F1,F2,F3,AID1,AID2,RTLNAID1,RTLNAID2,RTLNA1,RTLNA2, &
-      DIF,QOB,QUN,Q2,XX0
+      REAL(8) PJ,GCH,HCH,SCH,CPCH,VCH,PK,DH,WW,NSI,FAC1,FAC2,TKR, &
+      F1,F2,F3,DIF,QOB,QUN,Q2,XX0,SC
+      !REAL(8) AA,BB,AID1,AID2,RTLNAID1,RTLNAID2,RTLNA1,RTLNA2,DV
+      LOGICAL :: BOTHSITES
 !      INTEGER(4) K
+      BOTHSITES=.TRUE.
 !-----
-      PK=PJ*1.0D-3
-      DH=D4
-      DV=D5
-      WW=D6+D7*PJ
-      NSI=D8
-      FAC=D9
-      DH=DH/FAC
-      WW=WW/FAC
-      DV=DV/FAC
+      PK=PJ       !Pk now in bar
+      DH=D4+PK*D5 !sfdh+p*sfdhv; adding p*DV now as it never changes
+      !DV=D5      !sfdhv
+      WW=D6+D7*PJ !sfw+sfwv*p=W
+      NSI=D8      !sfn=n
+      FAC1=D9     !sffac
+      FAC2=D9     !sffac
+      IF (FAC1.LT.0.0D0) THEN
+        !inverse case
+        FAC1=1.0D0
+        FAC2=-FAC2 !reversing here so don't have to reverse in an inner iff below
+      END IF
+      !dkt don't apply FAC to DH and DW
       TKR=2.0D0*WW/R/(1.0D0+NSI)
 !----
       QUN=0.0D0
       QOB=1.0D0
       DIF=1.0D0
       Q2=0.5D0
-!      XX0=1.0D0
-!---- 1D-15 is smallest possible in REAL(8)
-!---- e.g. for anorthite: (P=1Bar) 1D-13 is necessary
-!---- e.g. for anorthite: (P=0.001Bar) 1D-15 is necessary
-!---- try different approach ???
+      !XX0=1.0D0
       DO WHILE (DABS(DIF).GT.1D-14)
         Q2=(QOB+QUN)/2.0D0
-        F1=(NSI-NSI*Q2)*(1.0D0-Q2)
-        F2=(1+NSI*Q2)*(NSI+Q2)
-        F3=(NSI/(NSI+1.0D0))*R*T*DLOG(F1/F2)
-        AA=DH-WW+DV*PJ
-        BB=2.0D0*WW
-        XX0=AA+BB*Q2+F3
+        !redefined F1,F2,F3 to allow different FAC1 and FAC2
+        F1=(NSI-NSI*Q2)/(1+NSI*Q2)    !Q may be almost 1, so.. watch
+        F2=(1.0D0-Q2)/(NSI+Q2)        !
+        F3=(NSI/(NSI+1.0D0))*R*T*(FAC1*DLOG(F1)+FAC2*DLOG(F2))
+        XX0=DH+2.0D0*Q2*WW-WW+F3
         IF (XX0.GT.0.0D0) THEN
-         QUN=Q2
+          QUN=Q2
         ELSE
-         QOB=Q2
+          QOB=Q2
         END IF
         DIF=DABS(QOB-QUN)
       END DO
+      !-Sc. Not explicitly calculating 2 activities as below
+      F1=NSI-NSI*Q2
+      F2=1.0D0+NSI*Q2
+      F3=1.0D0+NSI 
+      SC=FAC1*(F1*DLOG(F1/F3)+F2*DLOG(F2/F3))
+      F1=1.0D0-Q2
+      F2=NSI+Q2
+      SC=SC+FAC2*NSI*(F1*DLOG(F1/F3)+F2*DLOG(F2/F3))
+      SC=SC/F3
+      !
+      !Contrary to what is stated in HP96A, DH and WW
+      !are not also scaled by D9; based on comparion to
+      !tc350si for ds633
+      GCH=DH-DH*Q2+Q2*WW-Q2*Q2*WW+R*T*SC
+      HCH=0.0D0
+      SCH=0.0D0
+      CPCH=0.0D0
+      VCH=0.0D0
+!     Older formulation; works when no neg sffac's and could work
+!     with slight mod
 !   99 CONTINUE
 !!      WRITE (UNIT=6,FMT='(/,''NAM '',A)') NAM
 !!      WRITE (UNIT=6,FMT='(''T,TC,PJ,TKR '',4F20.10)') T,TC,PJ,TKR
 !!      WRITE (UNIT=6,FMT='(''WW,Q2,XX0   '',3F20.10)') WW,Q2,XX0
 !----
-      AID1=(1.0D0/(NSI+1.0D0)**(NSI+1.0D0))* &
-      (1.0D0+NSI*Q2)*(NSI+Q2)**NSI
-      AID2=(1.0D0/NSI**NSI)*(1.0D0+NSI*Q2)**(1.0D0/(NSI+1.0D0))* &
-      (NSI-NSI*Q2)**(NSI/(NSI+1.0D0))* &
-      (1.0D0-Q2)**(NSI/(NSI+1.0D0))* &
-      (NSI+Q2)**(NSI*NSI/(NSI+1.0D0))
-      RTLNAID1=R*T*DLOG(AID1)
-      RTLNAID2=R*T*DLOG(AID2)
-      RTLNA1=RTLNAID1+WW*(1.0D0-Q2)*(1.0D0-Q2)
-      RTLNA2=RTLNAID2+WW*Q2*Q2
+!      AID1=(1.0D0/(NSI+1.0D0)**(NSI+1.0D0))* &
+!      (1.0D0+NSI*Q2)*(NSI+Q2)**NSI
+!      AID2=(1.0D0/NSI**NSI)*(1.0D0+NSI*Q2)**(1.0D0/(NSI+1.0D0))* &
+!      (NSI-NSI*Q2)**(NSI/(NSI+1.0D0))* &
+!      (1.0D0-Q2)**(NSI/(NSI+1.0D0))* &
+!      (NSI+Q2)**(NSI*NSI/(NSI+1.0D0))
+!      RTLNAID1=R*T*DLOG(AID1)
+!      RTLNAID2=R*T*DLOG(AID2)
+!      RTLNA1=RTLNAID1+WW*(1.0D0-Q2)*(1.0D0-Q2)
+!      RTLNA2=RTLNAID2+WW*Q2*Q2
 !----- attention: in database: ordered phase (not hight T)
-      GCH=RTLNA1*FAC
-      HCH=0.0D0
-      SCH=0.0D0
-      CPCH=0.0D0
-      VCH=0.0D0
+!      GCH=RTLNA1*FAC
+!      HCH=0.0D0
+!      SCH=0.0D0
+!      CPCH=0.0D0
+!      VCH=0.0D0
 !      GR=GR+FGTR
 !----
       RETURN
