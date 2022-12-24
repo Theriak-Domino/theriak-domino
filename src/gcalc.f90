@@ -678,15 +678,16 @@
       HR=HR+HCH
       SR=SR+SCH
       CPR=CPR+CPCH
+      !using VCH from BRAWIHP11
 !---- now dG/dP
-      IF (VNEED) THEN
-        DG1=GCH
-        PJ=P+DXP
-        CALL BRAWIHP11(PJ,GCH,HCH,SCH,CPCH,VCH)
-        DG2=GCH
-        VCH=(DG2-DG1)/DXP
-        PJ=P
-      END IF
+      !IF (VNEED) THEN
+      !  DG1=GCH
+      !  PJ=P+DXP
+      !  CALL BRAWIHP11(PJ,GCH,HCH,SCH,CPCH,VCH)
+      !  DG2=GCH
+      !  VCH=(DG2-DG1)/DXP
+      !  PJ=P
+      !END IF
       VOLUM=VOLUM+VCH
       FVTR=FVTR+VCH
 !-----
@@ -1619,11 +1620,12 @@
       !Contrary to what is stated in HP96A, DH and WW
       !are not also scaled by D9; based on comparion to
       !tc350si for ds633
-      GCH=DH-DH*Q2+Q2*WW-Q2*Q2*WW+R*T*SC
-      HCH=0.0D0
-      SCH=0.0D0
-      CPCH=0.0D0
-      VCH=0.0D0
+      !GCH=DH-DH*Q2+Q2*WW-Q2*Q2*WW+R*T*SC
+      GCH=DH*F1+WW*Q2*F1+R*T*SC
+      HCH=D4*F1+D6*Q2*F1  
+      SCH=SC              
+      CPCH=0.0D0          
+      VCH=D5*F1+D7*Q2*F1
 !     Older formulation; works when no neg sffac's and could work
 !     with slight mod
 !   99 CONTINUE
