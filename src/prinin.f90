@@ -322,7 +322,7 @@
       WRITE (UNIT=MODEL2,FMT='(F8.2)') FF
       MODEL2(9:)=' * '//MODEL3(1:489)
       CALL LABLA(MODEL2,IL02)
-      IF ((DABS(ALPHA(IS))-1.0D0).GT.1D-20) THEN
+      IF (DABS(ALPHA(IS)-1.0D0).GT.1D-20) THEN  !fixed print of alpha 2022-12-29
       MODEL3=MODEL2
       CH=' '
       WRITE (UNIT=CH,FMT='(F15.3)') ALPHA(IS)
