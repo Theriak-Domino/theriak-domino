@@ -2305,8 +2305,8 @@
         ELSE
           omh2=0.0D0
         END IF
-        IF(sumF.GT.0.0D0) THEN
-          IF(sumM.GT.0.0D0) THEN
+        IF(sumF.GT.1.0D-150) THEN
+          IF(sumM.GT.1.0D-150) THEN
             A(2)=(psl1L/sumM)*(psl1L/sumF)*omh2
             A(3)=(pwo1L/sumM)*(pwo1L/sumF)*omh2
             F1=(4.0D0*pfo2L)/sumM
