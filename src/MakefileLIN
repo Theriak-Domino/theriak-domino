@@ -5,12 +5,12 @@
 ### developer set values based on preference
 
 ## Set some unique value to print at top of program headers to identify build
-VERSIONSTR=2022.12.18
+VERSIONSTR=2022.12.31
 
 ## Select compiler: gfortran, or ifort/ifx for intel
 #COMPILER=gfortran
-#COMPILER=ifort
-COMPILER=ifx
+COMPILER=ifort
+#COMPILER=ifx
 
 ## Select debug or release build 
 BUILDTYPE=release
