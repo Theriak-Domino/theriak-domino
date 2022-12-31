@@ -1300,6 +1300,7 @@
 !-----
 !******************************
       SUBROUTINE ADDPH(ADDCOD)
+      USE FLAGS, ONLY: L1SCANMAX
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -1412,7 +1413,7 @@
 !===========================================================
       IF (DXSCAN.LT.1.0D0.OR.WSCAN.GT.0) THEN
       SKIPSCAN=.TRUE.
-      IF (LOO1.LE.3) SKIPSCAN=.FALSE.
+      IF (LOO1.LE.L1SCANMAX) SKIPSCAN=.FALSE. !def was 3; 5 helps some solns
       IF (MOD(LOO1,10).EQ.0) SKIPSCAN=.FALSE.
       IF (LOO1A.EQ.1) SKIPSCAN=.FALSE.
       IF (.NOT.SKIPSCAN) THEN
@@ -1888,7 +1889,7 @@
 !-----START = 222:Initial gess from ideal solution
 !-----START = 777:reserved for test !!!
 !-----
-      USE flags, ONLY: ZEROEM
+      USE flags, ONLY: ZEROEM,EMDXSCALE
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -2113,7 +2114,7 @@
       END DO
       XXEM(II)=1.0D0
       GSOL=GG(EM(IS,II))
-      DELTAX=DXSTAR
+      DELTAX=DXSTAR*EMDXSCALE
       NSTEP=STPSTA
       SUGCOD(0)='endm'
       END IF
