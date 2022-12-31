@@ -79,12 +79,10 @@
        FSPEC(I)=0.0D0
        CHSPEC(I)=' '
       END DO
-      !print*,'---------------------  ',trim(NAME(IP))
 !-----
 !===== solution phases with fixed compositions
 !-----
       IF (FIX) THEN
-      !print*,'In FIX phase: ',trim(NAME(IP))
       I001=ISOFIX(IP)
       DO I=1,NEND(I001)
         X001(I)=XEMFIX(IP,I)
@@ -101,7 +99,6 @@
 !-----
 !      IF (AQU) THEN
       IF (PHASID(IP).EQ.'AQU') THEN
-      !print*,'In PHASID(IP).EQ.AQU: ',trim(NAME(IP))
       CALL AQUA
       RETURN
       END IF
@@ -168,7 +165,6 @@
 !===== R-K AA0,AAT,BB0,BBT
 !-----
       IF (RDK.OR.VDW) THEN
-      !print*,'In RDK.OR.VDW phase: ',trim(NAME(IP))
       CALL GAS
       END IF
 !********************************************************************************
@@ -177,7 +173,6 @@
 !===== CS1 AA0,BB0
 !-----
       IF (VOLVO.EQ.6) THEN
-      !print*,'In VOLVO.EQ.6, CORK CS1 phase: ',trim(NAME(IP))
       CALL CSGAS
       END IF
 !********************************************************************************
@@ -186,7 +181,6 @@
 !===== CS2 AA0,BB0
 !-----
       IF (VOLVO.EQ.7) THEN
-      !print*,'In VOLVO.EQ.7 CORK CS2 phase: ',trim(NAME(IP))
       CALL CORK
       END IF
 !********************************************************************************
@@ -195,7 +189,6 @@
 !===== V1 VTA,VTB,VPA,VPB (achtung Faktoren)
 !-----
       IF (VO1) THEN
-      !print*,'In VO1 for phase ',NAME(IP)
       FVVOL=VTA*(T-T0)+VTB*(T-T0)**2+VPA*(P-P0)+VPB*(P-P0)**2
       VOLUM=V0R+FVVOL
       FGVOL=(P-P0)*(V0R+VTA*(T-T0)+VTB*(T-T0)**2) &
@@ -212,7 +205,6 @@
 !===== VPA is now bar(-1),VTA is now K(-1)
 !-----
       IF (VOLVO.EQ.11) THEN
-      !print*,'In VOLVO.EQ.11 for phase ',NAME(IP)  
       PK=P*1.0D-3 ! bar-->kbar
       PK0=1.0D-3  ! P0 =0.001 kbar
       DPK=PK-1D-3 ! P-P0
@@ -273,7 +265,6 @@
 !===== v2 VAA,VAB,VB
 !-----
       IF (VO2) THEN
-      !print*,'In VO2 for phase ',NAME(IP)
       FVVOL=V0R*DEXP(VAA*(T-T0)+VAB*(TT-TT0)/2.0D0)
       IF (VB.GT.0.0D0) THEN
       FGVOL=(FVVOL/VB)*(1.0D0-DEXP(-VB*(P-P0)))
@@ -293,7 +284,6 @@
 !===== V3 VL0,VLA,VLN,VL2
 !-----
       IF (VO3) THEN
-      !print*,'In VO3 for phase ',NAME(IP)
       FVVOL=VL0+VLA*T
       IF (DABS(VL2).LT.1D-20.AND.DABS(VLN).GT.1D-20) THEN
       FF=1.0D-6/(0.7551D0+2.76D0*FVVOL/VLN)
@@ -318,7 +308,6 @@
 !===== K'=4, a2=10, dkdt (dKdT/1D3 in table) =-1.5D-4
 !-----
       IF (VOLVO.EQ.4.AND.DABS(VTB).GT.1D-20) THEN
-      !print*,'In HP98 VOLVO.EQ.4.AND.DABS(VTB)>1D-20 phase: ',trim(NAME(IP))
 !---- volume function
 !-
       DXP=P/1D5
@@ -417,7 +406,6 @@
       IF (VOLVO.EQ.5) THEN
       IF (DABS(VLN).LT.1D-20.OR.(DABS(VLN)-1.0D0).LT.1D-20 &
         .OR.(DABS(VLN)-2.0D0).LT.1D-20) THEN
-      !print*,'In VOLVO.EQ.5 type 0,1,2 for phase ',NAME(IP)
       !V11 props in db are in kJ, kbar
       PK=P*1.0D-3
       PK0=1.0D-3
@@ -518,7 +506,6 @@
 !           A0   K0   K0'  K0''
 !-----
       IF (VOLVO.EQ.10) THEN
-      !print*,'In VOLVO.EQ.10 for phase ',NAME(IP)
       PK=P*1.0D-3
       PK0=1.0D-3
       DPK=PK-1D-3
@@ -549,7 +536,6 @@
 !      Land and B-W cases will also be caught in below iff's to add on ord/dis
 !-----   
       IF (VOLVO.EQ.5 .AND. (IVLN.EQ.6.OR.IVLN.EQ.7.OR.IVLN.EQ.8.OR.IVLN.EQ.10)) THEN
-        !print*,'In VOLVO.EQ.5 and IVLN for phase ',NAME(IP),' IVLN=',IVLN
         !set data; V11 props in db are in kJ, kbar
         PK =P * 1.0D-3  !bar->kbar
         PK0=1.0D-3      !0.001 kbar
@@ -626,7 +612,6 @@
 !-----
 !!!      IF (VOLVO.EQ.5.AND.(DABS(VLN)-1.0D0).LT.1D-20) THEN
       IF (VOLVO.EQ.5.AND.(IVLN.EQ.1.OR.IVLN.EQ.7)) THEN
-      !print*,'In VOLVO.EQ.5 IVLN=1 or 7, HP11 Landaue for phase ',NAME(IP)
 !-----
       DXP=P/1D5
       PJ=P
@@ -665,7 +650,6 @@
 !-----
 !!!      IF (VOLVO.EQ.5.AND.(DABS(VLN)-2.0D0).LT.1D-20) THEN
       IF (VOLVO.EQ.5.AND.(IVLN.EQ.2.OR.IVLN.EQ.8)) THEN
-      !print*,'In VOLVO.EQ.5 HP11 BW IVLN=2 or 8 for phase ',NAME(IP)
 !-----
       DXP=P/1D5
       PJ=P
@@ -711,7 +695,6 @@
       !pref->PK0; ivpo->PK0; k0p->K01; k0pp->K02; tk->T; tref->T0;
       !vr->V0R; kt->KTT; v1t->v1t; a->AA; b->BB, c->CC; 
       IF (VOLVO.EQ.5 .AND. IVLN.EQ.5) THEN
-        !print*,'In VOLVO.EQ.5 HP11 Melts VLN=5 for phase ',NAME(IP)
         !set data: V11 props in db are in kJ, kbar
         PK=P*1.0D-3
         PK0=1.0D-3  !tc350si
@@ -756,25 +739,6 @@
         FVVOL=VOLUM-V0R 
         !
         GR=GR+FGVOL
-        !
-        !print*,'====================='
-        !print*,'PC : ',trim(NAME(IP))
-        !print*,'PK    = ',PK
-        !print*,'PK0   = ',PK0
-        !print*,'IVP0  = ',IVP0
-        !print*,'PTH   = ',PTH
-        !print*,'A0    = ',A0
-        !print*,'KTT   = ',KTT
-        !print*,'AA    = ',AA
-        !print*,'BB    = ',BB
-        !print*,'CC    = ',CC
-        !print*,'V1T   = ',V1T
-        !print*,'VOLUM = ',VOLUM
-        !print*,'FGVOL = ',FGVOL
-        !print*,'--------'
-        !print*,'GR(kJ)= ',GR
-        !print*,'4*GR  = ',4.0D0*GR  !for testing qL- to q4L
-        !print*,'---------------------'
 !-----
       END IF
 !-----
@@ -804,7 +768,6 @@
 !           dkdt  (not dKdT/1D3 in table) 
 !-----
       IF (VOLVO.EQ.5.AND.IVLN.EQ.4) THEN
-      !print*,'In VOLVO.EQ.5 HP11 Melts VLN=4 for phase ',NAME(IP)
       !V11 props in db are in kJ, kbar
       PK=P*1.0D-3
       PK0=1.0D-3
@@ -893,7 +856,6 @@
 !===== VG VTA,VTB
 !-----
       IF (VOLVO.EQ.8) THEN
-      !print*,'In VOLVO.EQ.8 Gottschalk for phase ',NAME(IP)
       VTB=VTB/10.0D0
       VOLUM=V0R*DEXP(VTA*(T-T0)-VTB*(P-P0))
       FVVOL=VOLUM-V0R
@@ -909,8 +871,6 @@
 !===== T2 TEQ(I),DVTR(I),DVDT(I),DVDP(I)
 !-----
       IF (TRTYP.EQ.0) THEN
-        !print*,'In TRTYP.EQ.0 BB85 Lambda; proto for dG/dP, for phase ',NAME(IP), &
-        !  '  NLADA=',NLANDA
         DXP=P/1D5
         DO I=1,NLANDA
           I001=I
