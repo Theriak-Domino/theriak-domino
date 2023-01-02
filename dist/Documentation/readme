@@ -1,4 +1,4 @@
-C-----Version: 28.05.2022   of Theriak-Domino
+C-----Version: 2023.01.02   of Theriak-Domino
 
 Getting started: Short instruction for installation are given below.
 Examples and description of the programs are given in the document "TheriakDominoGuide".
@@ -8,15 +8,18 @@ All programs provide some help with the "?" keyword in the input dialogues.
 ------------------------------------------------------------------------------------------
 List of distributed files and folders
 -------------------------------------
-In the Folder ThrtiakDominoMAC or TheriakDominoWIN:
-(The difference between ThrtiakDominoMAC and TheriakDominoWIN are the executables, the theriak.ini 
-file and the line endings of text files. Mac:  <CR>, DOS:  <CR><LF>)
+In the Folder ThrtiakDominoMAC, ThrtiakDominoMACAS, TheriakDominoWIN or
+TheriakDominoLIN:
+(The difference between TheriakDominoMAC/MACAS/WIN/LIN versions are the 
+binaries/executables, the theriak.ini provided with the programs,
+and the line endings of text files. Mac/LIN:  <LF>, DOS:  <CR><LF>)
 
 Folders:
 	Documentation
 	Working
 	Programs
 	Examples
+  src
 
 -------------------------------------
 In folder Documentation
@@ -74,8 +77,8 @@ Berman R.G., Brown T.H. (1984): A thermodynamic model for multicomponent melts, 
 to the system CaO-Al2O3-SiO2. Geochim. Cosmochim. Acta 48:661-678
 
 -------------------------------------
-In folder programs (program directory) source codes and compiled versions
-main programs
+In folder programs (program directory) and src (source codes) and compiled versions
+of the main programs and their source code, respectively
 	theriak.f90	(Calculates equilibrium assemblages)
 	domino.f90	(Calculates equilibrium assemblage phase diagrams)
 	therbin.f90	(Calculates binary phase diagrams)
@@ -99,8 +102,10 @@ essential files
 	theriakWIN.ini	(initialization file with definitions for file names, preferred by KP)
 makefile (1)
 	Makefile	(Is usually identical to MakefileMAC)
-	MakefileWIN	(Makefile to compile for Win)
-	MakefileMAC	(Mkefile to compile for UNIX or Mac)
+	MakefileWIN	(Makefile to compile for Win using the MinGW make program mingw32-make with gfort/ifort/ifx)
+  MakefileNMWIN	(Makefile to compile for Win using the Microsoft make program NMAKE with gfort/ifort/ifx)
+	MakefileMAC	(Makefile to compile for UNIX, Mac(Intel with gfort/ifort) or Mac(Apple Silicon with gfort))
+  MakefileLIN	(Makefile to compile for Linux with /gfort/ifort/ifx; tested on Ubuntu 22 only)
 	
 common block files
 	theriak.cmn
@@ -150,12 +155,15 @@ shawL55/			Phasediagram for metapelite Nr.55, composition from Shaw (1955)
 shawL62/			Phasediagram for metapelite Nr.62, composition from Shaw (1955)
 sialca_examples/		Example of Binary and Ternary phase diagrams with the database "sialca"
 parigi/				Example from Coggon and Holland (2002), Fig. 6. (with fixed H2O activity)
+bl478_ds62/   Example with a metabasite composition and the Holland & Powell dataset 6.2
+klb-1_ds633/  Example of an ultramafic comosition and the Holland & Powell dataset 6.3.3
 
 
 ====================================================================================
 Installation on Macintosh OS X (Is tested on OS X 3.7 - 10.15.4)
 ====================================================================================
-Unzip TheriakDominoMAC.zip (double-clicking should work, else donwload the free
+Unzip TheriakDominoMAC.zip (Intel) or TheriakDominoMACAS.zip (Apple Silicon and macos 12.0 
+or greater). double-clicking should work, else donwload the free
 expander software from http://www.stuffit.com/mac/index.html.
 
 Prepare the Terminal application 
@@ -165,7 +173,7 @@ Put the Terminal application in the Dock.
 In the menu "Terminal / Preferences" choose the shell and the appropriate settings
 (e.g. Text and background colours). Define the Dimensions with 133 Columns and 30 to 50 Rows.
 
-Copy the Folder "TheriakDominoMAC" to your Home Directory.
+Copy the Folder "TheriakDominoMAC" or "TheriakDominoMACAS" to your Home Directory.
 (The name of the Home Directory is your user name.)
 
 In order to start the programs from a Terminal and to keep your input files
@@ -174,7 +182,9 @@ to the path where the programs are stored and also to add this path to the searc
 executing programs.
 
 The folder "Working" contains the file "bash_profile" and “.zshrc”
-Copy "bash_profile" (for bash) or "zshrc" (for zsh) to your Home directory.
+Copy "bash_profile" (for bash) or "zshrc" (for zsh) to your Home directory (if you already
+have one of these profiles in your home directory, you can read the provided profiles and
+make sure you have the commands that are needed add THERDOM to your path).
 Edit it to define the Program directory. (use e.g. BBEdit or TextEdit)
 Write the name of your Home directory instead of "capi"
 (If your user name contains blanks these have to be written as "\ " (backslash, blank))

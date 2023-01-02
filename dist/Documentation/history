@@ -1,4 +1,53 @@
-C-----Version: 28.05.2022
+C-----Version: 2023.01.02
+
+CHANGES IN THERIAK-DOMINO version 2023.01.02
+--------------------------------------------
+- Theriak-Domino source repository moved to Git Hub; added 
+GPLv3 license
+- implemented changes to allow significantly lower phase component
+proportions and site element fractions in complex ax models,
+that otherwise leads to minimization failures for some models at
+certain conditions.
+- updates to identify and correct underflow and invalid exceptions
+in certain places (a few places still to clean up); updated 
+parameters in theriak.ini for use with this version
+- updated HP11 thermo expressions for compatibility with tc350si;
+G's match to better than 1000'th of J.
+- added DGC data line to database file format to mimic tc dqf
+better.
+- added a CALC-FLAGS section to theriak.ini that can take
+additional parameters;  OUTFLAGS can be set to true to output
+active CALC-PARAMETERS used during calculation of dominograms;
+(other flags that can be set in the .ini file are found in the 
+flags source file but generally should not be changed)
+- fixed svg output in guzzler/explot to display correctly in 
+web browser.
+- update makefiles
+    - updated makefiles to allow selection of compilers with preset
+flags; 
+    - makefile for osx now allows static linking with gfortran
+to remove binary dependency on dynamic gcc/gfort libs; 
+    - added a makefile for linux that works with gfortran/ifort/ifx 
+(only tested on ubuntu 22); 
+    - versioning string added to top of makefile to allow specifying 
+versioning during building; this allows outputting the build version 
+during program execution that is useful when you have multiple builds
+installed on your system;
+    - osx makefile allows use of gfortran or ifort on intel macs, 
+gfortran only on apple silicon;
+    - on Windows, added an NMake formatted makefile so windows builds
+don't require gcc/gfort to be installed to build from a provided
+makefile (for e.g., can use nmake (visual studio) with ifort/ifx)
+    - a CMake based build system is being worked on for the next 
+release
+- added additional dataset files (converted from THERMOCALC format to 
+Theriak-Domino format).
+- renamed and added new liquid models to fsol.f90, (attempting
+for consistent naming). The Tomlinson & Holland (2021) liquid
+model is not working 100% correctly yet so don't use it (can generally
+give a good idea of relative equilibrium assemblage sequence, but it 
+does not exactly match THERMOCALC results like the other models do)
+
 
 CHANGES IN THERIAK-DOMINO version 28.05.2022
 --------------------------------------------

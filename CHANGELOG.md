@@ -1,4 +1,4 @@
-CHANGES IN THERIAK-DOMINO version 2022-12-14
+CHANGES IN THERIAK-DOMINO version 2023.01.02
 --------------------------------------------
 - Theriak-Domino source repository moved to Git Hub; added 
 GPLv3 license
