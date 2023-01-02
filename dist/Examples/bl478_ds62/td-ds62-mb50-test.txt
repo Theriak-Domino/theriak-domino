@@ -20,7 +20,7 @@
 
           ** This is a file for testing purposes only. See the following site for the 
           latest version of this file with corrections, updates, and missing species:  
-          https://github.com/Theriak-Domino/theriak-dbax   
+          https://github.com/Theriak-Domino/Databases  
 
 
 
