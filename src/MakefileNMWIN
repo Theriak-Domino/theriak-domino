@@ -101,6 +101,25 @@ BDIR=$(BUILDDIR)
 SETUPDIRS:
 	-@ if NOT EXIST "$(BDIR)" mkdir "$(BDIR)"
 	-@ if NOT EXIST "$(ODIR)" mkdir "$(ODIR)"
+RDIR=$(BUILDDIR)\..\RELEASE
+DDIR=$(BUILDDIR)\..\dist
+RELEASEDIRS:
+	-@ if NOT EXIST "$(RDIR)" mkdir "$(RDIR)"
+	xcopy "$(DDIR)\Documentation\" "$(RDIR)\Documentation\" /E 
+	xcopy /E "$(DDIR)\Examples\" "$(RDIR)\Examples\"
+	xcopy /E "$(DDIR)\Working\" "$(RDIR)\Working\"
+	-@ if NOT EXIST "$(RDIR)\Programs" mkdir "$(RDIR)\Programs"
+	xcopy /E "$(BDIR)\" "$(RDIR)\Programs\"
+	copy    "theriakPC.ini"  "$(RDIR)\Programs\theriak.ini"
+	copy    "thhelp.txt"  "$(RDIR)\Programs\thhelp.txt"
+#	del     /Q  "$(RDIR)\Programs\obj"
+	rmdir /Q /S  "$(RDIR)\Programs\obj"
+	mkdir "$(RDIR)\src"
+	copy    "."  "$(RDIR)\src\"
+	copy    "..\LICENSE"  "$(RDIR)\src\LICENSE"
+	copy    "..\LICENSE"  "$(RDIR)\Programs\LICENSE"
+	copy    "..\LICENSE"  "$(RDIR)\LICENSE"
+	copy    "..\CHANGELOG.md"  "$(RDIR)\CHANGELOG.md"
 #################################
 #ifx does not auto-add .exe extension using -o, so add .exe to exe targets
 
@@ -298,7 +317,7 @@ pretherion : pretherion.obj $(PLAT).obj
 all : theriak domino guzzler explot therbin therter thermo thalia makemap theriag plotxy plotg jfiles jphases\
  cat2 theriakd therion pretherion
 
-
+release : RELEASEDIRS
 
 
 .PHONY : clean

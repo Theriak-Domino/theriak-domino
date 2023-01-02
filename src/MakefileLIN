@@ -87,13 +87,32 @@ LOBJECTS= $(ODIR)/flags.$(MOD_EXT) $(ODIR)/activi.o $(ODIR)/dasave.o \
 #################################
 ##   SETUPDIRS for obj & bin   ##
 #################################
-ODIR=$(BUILDDIR)/obj
-BDIR=$(BUILDDIR)
 CHK_DIR_EXISTS= test -d
 MKDIR         = mkdir -p
+ODIR=$(BUILDDIR)/obj
+BDIR=$(BUILDDIR)
 SETUPDIRS:
 		@$(CHK_DIR_EXISTS) $(ODIR)/ || $(MKDIR) $(ODIR)/
 		@$(CHK_DIR_EXISTS) $(BDIR)/ || $(MKDIR) $(BDIR)/
+RDIR=$(BUILDDIR)/../RELEASE
+DDIR=$(BUILDDIR)/../dist
+RELEASEDIRS:
+		@$(CHK_DIR_EXISTS) $(RDIR)/ || $(MKDIR) $(RDIR)/
+		$(CPDIR) $(DDIR)/Documentation $(RDIR)/Documentation
+		$(CPDIR) $(DDIR)/Examples $(RDIR)/Examples
+		$(CPDIR) $(DDIR)/Working $(RDIR)/Working
+		$(CPDIR) $(BUILDDIR) $(RDIR)/Programs
+		$(CPDIR) ./theriakMAC.ini  $(RDIR)/Programs/theriak.ini
+		$(CPDIR) ./thhelp.txt  $(RDIR)/Programs/thhelp.txt
+		rm -f $(RDIR)/Programs/obj/*.o
+		rm -f $(RDIR)/Programs/obj/*.mod
+		rm -d  $(RDIR)/Programs/obj/
+		$(MKDIR) $(RDIR)/src
+		$(CPDIR) . $(RDIR)/src
+		$(CPDIR) ../LICENSE $(RDIR)/src/LICENSE
+		$(CPDIR) ../LICENSE $(RDIR)/Programs/LICENSE
+		$(CPDIR) ../LICENSE $(RDIR)/LICENSE
+		$(CPDIR) ../CHANGELOG.md $(RDIR)/CHANGELOG.md
 #################################
 
 activi.o : activi.$(SEX) theriak.cmn files.cmn SETUPDIRS
@@ -290,7 +309,7 @@ pretherion : pretherion.o $(PLAT).o
 all : theriak domino guzzler explot therbin therter thermo thalia makemap theriag plotxy plotg jfiles jphases\
  cat2 theriakd therion pretherion
 
-
+release : RELEASEDIRS
 
 .PHONY : clean
 clean :
