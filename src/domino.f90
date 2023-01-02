@@ -1,4 +1,4 @@
-!domino.f90  Version: 29.11.2022-dev
+!domino.f90  Version: 2023.01.02
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1984-2022  Christian de Capitani
 !
