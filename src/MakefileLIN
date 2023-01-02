@@ -89,6 +89,7 @@ LOBJECTS= $(ODIR)/flags.$(MOD_EXT) $(ODIR)/activi.o $(ODIR)/dasave.o \
 #################################
 CHK_DIR_EXISTS= test -d
 MKDIR         = mkdir -p
+CPDIR         = cp -Rv
 ODIR=$(BUILDDIR)/obj
 BDIR=$(BUILDDIR)
 SETUPDIRS:
