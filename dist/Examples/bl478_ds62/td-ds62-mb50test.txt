@@ -11,17 +11,47 @@
   ==============================================================================================
   File /Users/peq/Docs2/peq/TC2TD/MSTR-CNVRT//out/td-ds62-mb50-07test.txt
   Converted by D.K. Tinkham (tc2td.wl) to Theriak-Domino format from files tc-ds62.txt and 
-  tc-mb50NCKFMASHTO.txt on Wed 14 Dec 2022 18:11:46.
+  tc-mb50NCKFMASHTO.txt on Sat 24 Dec 2022 23:09:40.
 
+  Note 0: This database file can only be used with the 2023.01.02 or newer version of the
+        Theriak-Domino suite of programs.
+  Note 1: This database file has the solution models that appear in the equivalent
+        file on the HPxeos website (as of Dec 2022) and is for use with broadly metabasltic
+        composition systems in NCKFMSASHTO or simpler. It also has more pure database species
+        activated for consideration than the equivalent HPxeos file has. Several overly simplistic
+        models have been added to this file using mixing parameters listed in the Appendix of the 
+        Holland & Powell (2011) database paper, Appendix II. It does not include Mn-bearing ax 
+        models. If you are comfortable activating/deactivating spcific activity models you may want 
+        to use the td-ds62-v0x.txt which is more-or less the combined mp50 and mb50 files for use
+        with ds62; it also has some additional models added to it.
+  Note 2: If you deactivate the CPX model and are using the AUG model, note that at high 
+        pressure (>15 kb or so) or very low T (250-350 C), the |ppn| of the aluminous cpx phase 
+        components becomes very very low. In cases where the |ppn| < 10^-8 or so, you will
+        likely need to decrease the value of DELXMIN in theriak.ini to lower values (10^-12). In 
+        general, at higher-T's, I have found you can sometimes leave both CPX and AUG
+        active and achieve an acceptable AUG/CPX composition transition, but you should 
+        investigate for yourself if it is reasonable for your case. At very low-T, the AUG/CPX
+        transition preditions generally seem unreasonable to me, and you need to consider if 
+        the AUG model should even be activated at all at low-T depending your bulk composition.
+
+  Additional models, from Holland & Powell (2011), Appendix II:
+    STLP: Fe-Mg stilpnomelane, HP11 
+    MIN:  Fe-Mg minnesotaite, HP11 
+    PREH: Al-F3 prehnite, HP11
+    PMP:  Fe-Mg-Fe3-Al Pumpelleyite, HP11 
+    COR:  MAS, HP11 
+    PO:   Fe-vac Pyrrhotite, HP11, EP10
+  Additional models from the metapelite set:
+    MT00: low-T subsolidus mt, FTO
+    CTD:  MnFMASHO, WPJ14
+    MRG: NCKFMASHO, WPH14
 
 
   FILE UPDATES/ADDITIONS:
-  ver 07: Wed 14 Dec 2022 18:11:46. DKT
-
-          ** This is a file for testing purposes only. See the following site for the 
-          latest version of this file with corrections, updates, and missing species:  
-          https://github.com/Theriak-Domino/Databases  
-
+  ver 07: Sat 24 Dec 2022 23:09:40. DKT
+   
+  Consider this file a test database file. You can check the Databases 
+  repository for updated versions: https://github.com/Theriak-Domino/Databases
 
 
 !===============================================================================================
@@ -450,11 +480,11 @@ abh-                  NA(1)AL(1)SI(3)O(8)                    abh-             -c
  C3            452.0      -0.013364     -1275900.0        -3953.6           0.00
  V11       0.0000241          541.0           5.91        -0.0109           0.00
 ilmD-                 FE(1)TI(1)O(3)                        ilmD-             -c
- ST              0.0   -1215398.406   120.51831967   3.1873638661
+ ST              0.0     -1230450.0          109.5          3.169
  C3            138.9       0.005081     -1288800.0         -463.7           0.00
  V11        0.000024         1700.0            8.3        -0.0049           0.00
 hemD-                 FE(2)O(3)                             hemD-             -c
- ST              0.0   -816087.2292   100.33766837          3.027
+ ST              0.0      -825610.0           87.4          3.027
  C3            163.9            0.0     -2257200.0         -657.6           0.00
  V11       0.0000279         2230.0           4.04        -0.0018           0.00
 ann-                  K(1)FE(3)AL(1)SI(3)H(2)O(12)           ann-             -c
@@ -490,7 +520,7 @@ daph-                 FE(5)AL(2)SI(3)H(8)O(18)              daph-             -c
  C3           1192.0       -0.00594     -4826400.0        -9768.3           0.00
  V11       0.0000227          870.0           4.09        -0.0047           0.00
 mtD-                  FE(3)O(4)                              mtD-             -c
- ST              0.0   -1095766.074   175.08332527          4.452
+ ST              0.0     -1114500.0          146.9          4.452
  C3            262.5      -0.007205     -1926200.0        -1655.7           0.00
  V11       0.0000371         1857.0           4.05        -0.0022           0.00
 mnctd-                MN(1)AL(2)SI(1)H(2)O(7)              mnctd-             -c
@@ -523,7 +553,7 @@ fcel-                 K(1)FE(1)AL(1)SI(4)H(2)O(12)          fcel-             -c
 !------------------------------------------------------------------------------- AX MODEL LIQG16
 !   Ref:   GWD16  
 !   note:  ds62.  NCKFMASH melt, for melting of metabasites. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {qL-, woL-, silL-, faL-, foL-}
 !
@@ -669,7 +699,7 @@ h2oL - anoL
 !--------------------------------------------------------------------------------- AX MODEL CAMP
 !   Ref:   GWD16  
 !   note:  ds62.  Clinoamphibole: Green et. al (2016), JMG 34, -24. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {ts-, parg-, gl-, grun-, cumm-, gr-, andr-, mu-, pa-, dsp-, ru-}
 !
@@ -872,7 +902,7 @@ kprg - tts
 !---------------------------------------------------------------------------------- AX MODEL AUG
 !   Ref:   GWD16  
 !   note:  ds62.  NCFMASO calcic clinopyroxene with tetrahedral Si-Al mixing. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {en-, fs-, jd-, acm-, catsO-}
 !
@@ -1008,7 +1038,7 @@ dcats - fmc
 !   Ref:   GWD16  
 !   note:  ds62.  NCFMASO Di-Hed-Jd-Om clinopyroxene; M1 and M2 split  
 !          into half sites with ordering; No tetrahedral Al. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {acm-, jd-, di-, hed-}
 !
@@ -1125,7 +1155,7 @@ cfm - jac
 !   note:  ds62.  CFMASO orthopyroxene with 1 / 4 Smix on T site.  
 !          W's and DQF's are unadjusted from WPH14. CMAS W's based on  
 !          Green et. al (2012; GHP12); fm ordering DQF from HP96. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {en-, fs-, mgts-, gr-, andr-, di-}
 !
@@ -1226,7 +1256,7 @@ fopx - odi
 !          opx or opx2. Further, this model introduces ferric iron  
 !          through a different phase component than opx, and includes  
 !          Cr, Ti, and Na members. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {en-, fs-, di-, mgts-, kos-, jd-, per-, ru-, cor-, acm-}
 !
@@ -1386,7 +1416,7 @@ mess - ojd
 !   note:  ds62.  CFMASO Garnet with Fe3 through kho. HPx-eos note: manually  
 !          inserted P dependence on -14. However, there are no  
 !          P-dependent terms, and W's and a's same as in WPH14. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {py-, gr-, andr-}
 !
@@ -1442,7 +1472,7 @@ gr - kho
 !----------------------------------------------------------------------------------- AX MODEL OL
 !   Ref:   HP11  
 !   note:  ds62.  FMS Olivine. HP11 database, Table S2. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {}
 !
@@ -1463,7 +1493,7 @@ fa                    FE(2)SI(1)O(4)                           fa              c
  V11       0.0000282         1256.0           4.68        -0.0037           0.00
 !. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 *** SOLUTION DATA ***
-OL    (-SITE,MARGULES)   M(2):Mg,Fe 
+OL    (SITE,MARGULES)   M(2):Mg,Fe 
   fo            Mg,Mg
   fa            Fe,Fe
 *** MARGULES PARAMETERS ***
@@ -1477,7 +1507,7 @@ fo - fa
 !------------------------------------------------------------------------------- AX MODEL FSP4TR
 !   Ref:   HGP21  
 !   note:  ds62.  Uses equilibrium ordered ab, not abh; Use with ABHGP. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {}
 !
@@ -1513,7 +1543,7 @@ san                   K(1)AL(1)SI(3)O(8)                      san              c
  BW1          8650.0          0.024         8500.0          0.024            3.0            0.8
 !. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 *** SOLUTION DATA ***
-FSP4TR    (-SITE,MARGULES)1/4      A(4):Na,Ca,K - TB(4):Al,Si 
+FSP4TR    (SITE,MARGULES)1/4      A(4):Na,Ca,K - TB(4):Al,Si 
   ab            Na,Na,Na,Na - Al,Si,Si,Si    0.674   0       0       
   an            Ca,Ca,Ca,Ca - Al,Al,Si,Si    0.55    0       0       
   san           K,K,K,K - Al,Si,Si,Si    1.      0       0       
@@ -1533,7 +1563,7 @@ an - san
 !   Ref:   HGP21  
 !   note:  ds62.  Binary albite-rich plagioclase using equilibrium ab (not abh) and an;  
 !          For use with Fsp4TR. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {abE-, anE-}
 !
@@ -1552,7 +1582,7 @@ anm                   CA(1)AL(2)SI(2)O(8)                     anm              c
  COM      anE-[1]
 !. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 *** SOLUTION DATA ***
-ABHGP    (-SITE,MARGULES)   A(1):Na,Ca 
+ABHGP    (SITE,MARGULES)   A(1):Na,Ca 
   abm           Na    0.64    0       0       
   anm           Ca    1.      0       0       
 *** MARGULES PARAMETERS ***
@@ -1567,7 +1597,7 @@ abm - anm
 !   Ref:   HP03  
 !   note:  ds62.  Cbar1 ternary feldspar for Na-richer plagioclase (Xan < 0.12+0.00038*Tk)  
 !          or K-rich feldspar. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {anE-}
 !
@@ -1593,7 +1623,7 @@ san                   K(1)AL(1)SI(3)O(8)                      san              c
  BW1          8650.0          0.024         8500.0          0.024            3.0            0.8
 !. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 *** SuLUTION DATA ***
-FSPC    (-SITE,MARGULES)   A(1):Na,Ca,K 
+FSPC    (SITE,MARGULES)   A(1):Na,Ca,K 
   abh           Na    0.643   0       0       
   anC           Ca    1.      0       0       
   san           K    1.      0       0       
@@ -1612,7 +1642,7 @@ anC - san
 !--------------------------------------------------------------------------------- AX MODEL FSPI
 !   Ref:   HP03  
 !   note:  ds62.  Ibar1 ternary feldspar for Ca-richer plagioclase (Xan > 0.12+0.00038*Tk) 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {abh-}
 !
@@ -1639,7 +1669,7 @@ san                   K(1)AL(1)SI(3)O(8)                      san              c
  BW1          8650.0          0.024         8500.0          0.024            3.0            0.8
 !. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 *** SuLUTION DATA ***
-FSPI    (-SITE,MARGULES)   A(1):Na,Ca,K 
+FSPI    (SITE,MARGULES)   A(1):Na,Ca,K 
   abhI          Na    0.643   0       0       
   an            Ca    1.      0       0       
   san           K    1.      0       0       
@@ -1662,7 +1692,7 @@ an - san
 !          use non-aluminous mt1 (MT00) for subsolidus conditions. Your  
 !          observed vs. predicted phase compositions might tell you which  
 !          model is more appropriate to use. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {}
 !
@@ -1732,7 +1762,7 @@ mt - usp
 !   note:  ds62.  FTO Ilmenite (oilm-dilm-hem). This model does not contain  
 !          Mn or Mg. Model ILMM14 in this file contain Mg. Model ILMM  
 !          in the mp50 file contains both Mn and Mg. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {ilmD-, hemD-}
 !
@@ -1745,13 +1775,15 @@ mt - usp
 !-----------------------------------------------------------------------------------------------
 *** MINERAL DATA ***
 oilm                  FE(1)TI(1)O(3)                         oilm              c
- ST              0.0       -13607.5         -9.426              0
+ ST              0.0            0.0            0.0            0.0
+ DGC             0.0   1444.0939535      1.5923197    0.018363866
  COM      ilmD-[1]
 dilm                  FE(1)TI(1)O(3)                         dilm              c
- ST              0.0         1992.8            2.1              0
+ ST              0.0            0.0            0.0            0.0
+ DGC             0.0   17044.393953       13.11832    0.018363866
  COM      ilmD-[1]
 dhem                  FE(2)O(3)                              dhem              c
- ST              0.0            0.0            0.0            0.0
+ ST              0.0    9522.770803      12.937668            0.0
  COM      hemD-[1]
 !. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 *** SOLUTION DATA ***
@@ -1777,7 +1809,7 @@ dilm - dhem
 !          in the mp50 file contains both Mn and Mg. Note that the THERMOCALC  
 !          ax file indicates that this model may predict too much Mg in  
 !          ilmenite. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {ilmD-, hemD-}
 !
@@ -1791,13 +1823,15 @@ dilm - dhem
 !-----------------------------------------------------------------------------------------------
 *** MuNERAL DATA ***
 oilm1                 FE(1)TI(1)O(3)                        oilm1              c
- ST              0.0       -13607.5         -9.426              0
+ ST              0.0            0.0            0.0            0.0
+ DGC             0.0   1444.0939535      1.5923197    0.018363866
  COM      ilmD-[1]
 dilm1                 FE(1)TI(1)O(3)                        dilm1              c
- ST              0.0         1992.8            2.1              0
+ ST              0.0            0.0            0.0            0.0
+ DGC             0.0   17044.393953       13.11832    0.018363866
  COM      ilmD-[1]
 dhem1                 FE(2)O(3)                             dhem1              c
- ST              0.0            0.0            0.0            0.0
+ ST              0.0    9522.770803      12.937668            0.0
  COM      hemD-[1]
 geik                  MG(1)TI(1)O(3)                         geik              c
  ST              0.0     -1568960.0           73.6          3.086
@@ -1831,7 +1865,7 @@ dhem1 - geik
 !---------------------------------------------------------------------------------- AX MODEL EPI
 !   Ref:   HP11  
 !   note:  ds62.  CFASHO Epidote; HP11. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {}
 !
@@ -1876,7 +1910,7 @@ ep - fep
 !---------------------------------------------------------------------------------- AX MODEL BIO
 !   Ref:   WPH14  
 !   note:  ds62.  KFMASHTO Biotite. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {ann-, phl-, br-, ru-, east-, gr-, andr-}
 !
@@ -1960,7 +1994,7 @@ tbi - fbi
 !   Ref:   WPH14  HPx-eos  
 !   note:  ds62.  NCKFMASHO WM (for K-Na white micas); Per HPx-eos tc file, delG(tran)  
 !          for mam end-member changed from 6.5 to 5. since publication. 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {ma-, andr-, gr-, mu-}
 !
@@ -2045,7 +2079,7 @@ mam - fmu
 !---------------------------------------------------------------------------------- AX MODEL CHL
 !   Ref:   WPH14  
 !   note:  ds62.  FMASHO Chlorite 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
 !   Required dataset species for COM's: {afchl-, clin-, daph-, gr-, andr-}
 !
@@ -2146,10 +2180,12 @@ ochl4 - f3clin
 !-----------------------------------------------------------------------------------------------
 !--------------------------------------------------------------------------------- AX MODEL STLP
 !   Ref:   HP11  
-!   note:  ds62.  Fe-Mg Stilpnomelane mixing and W from HP11 Appendix II.  
+!   note:  ds62.  Fe-Mg Stilpnomelane mixing and W from HP11 Appendix II. This simplistic model,
+!          combined with other models in the file, likely predicts too large of a stability field 
+!          for some/many bulk comps. 
 !          DKT, 2022-04-05 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
-!   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
+!   Converted from files tc-ds62.txt & tc-dt-extramodels.txt.
 !   Required dataset species for COM's: {}
 !
 !   Site mixing table. 
@@ -2158,7 +2194,7 @@ ochl4 - f3clin
 !   fstp      5  0  
 !   mstp      0  5  
 !-----------------------------------------------------------------------------------------------
-*** MINERAL DATA ***
+*** MuNERAL DATA ***
 fstp                  K(0.5)FE(5)AL(2)SI(8)H(12.5)O(30.5)              fstp    c
  ST              0.0    -1.255107e7          930.2         37.239
  C3           1944.3      -0.012289     -4840200.0       -16635.0           0.00
@@ -2168,11 +2204,11 @@ mstp                  K(0.5)MG(5)AL(2)SI(8)H(12.5)O(30.5)              mstp    c
  C3           1862.2      -0.014018     -8983100.0       -14923.0           0.00
  V11       0.0000371          513.0           7.33        -0.0143           0.00
 !. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-*** SOLUTION DATA ***
-STLP    (-SITE,MARGULES)   M(5):Fe,Mg 
+*** SuLUTION DATA ***
+STLP    (SITE,MARGULES)   M(5):Fe,Mg 
   fstp          Fe,Fe,Fe,Fe,Fe
   mstp          Mg,Mg,Mg,Mg,Mg
-*** MARGULES PARAMETERS ***
+*** MuRGULES PARAMETERS ***
 fstp - mstp  
 12         20000.0      0.0      0.0
 !END AX MODEL STLP
@@ -2184,8 +2220,8 @@ fstp - mstp
 !   Ref:   HP11  
 !   note:  ds62.  Fe-Mg Minnesotaite mixing and W from HP11 Appendix II.  
 !          DKT, 2022-04-05 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
-!   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
+!   Converted from files tc-ds62.txt & tc-dt-extramodels.txt.
 !   Required dataset species for COM's: {}
 !
 !   Site mixing table. 
@@ -2205,7 +2241,7 @@ minm                  MG(3)SI(4)H(2)O(12)                    minm              c
  V11        0.000018          430.0           6.17        -0.0144           0.00
 !. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 *** SOLUTION DATA ***
-MIN    (-SITE,MARGULES)   M(3):Fe,Mg 
+MIN    (SITE,MARGULES)   M(3):Fe,Mg 
   minn          Fe,Fe,Fe
   minm          Mg,Mg,Mg
 *** MARGULES PARAMETERS ***
@@ -2220,8 +2256,8 @@ minn - minm
 !   Ref:   HP11  
 !   note:  ds62.  Al-Fe3 Prehnite mixing and W from HP11 Appendix II.  
 !          DKT, 2022-04-05 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
-!   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
+!   Converted from files tc-ds62.txt & tc-dt-extramodels.txt.
 !   Required dataset species for COM's: {}
 !
 !   Site mixing table. 
@@ -2241,7 +2277,7 @@ fpre                  CA(2)FE(1)AL(1)SI(3)H(2)O(12)          fpre              c
  V11       0.0000158         1093.0           4.01        -0.0037           0.00
 !. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 *** SOLUTION DATA ***
-PREH    (-SITE,MARGULES)   M(1):Al,F3 
+PREH    (SITE,MARGULES)   M(1):Al,F3 
   pre           Al
   fpre          F3
 *** MARGULES PARAMETERS ***
@@ -2256,8 +2292,8 @@ pre - fpre
 !   Ref:   HP11  
 !   note:  ds62.  Fe-Mg-Fe3-Al Pumpelleyite mixing and W from HP11 p. 349.  
 !          DKT, 2022-04-05 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
-!   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
+!   Converted from files tc-ds62.txt & tc-dt-extramodels.txt.
 !   Required dataset species for COM's: {}
 !
 !   Site mixing table. 
@@ -2295,8 +2331,8 @@ PMP    (-SITE,MARGULES)   M2A(1):Mg,Fe - M2B(1):Al,F3 - M1(4):Al,F3
 !   Ref:   HP11  
 !   note:  ds62.  MAS Corundum mixing and W from HP11 Appendix II.  
 !          DKT, 2022-04-05 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
-!   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
+!   Converted from files tc-ds62.txt & tc-dt-extramodels.txt.
 !   Required dataset species for COM's: {}
 !
 !   Site mixing table. !   Site M1 is reduced to 1/2 * the true multiplicity. 
@@ -2323,7 +2359,7 @@ mcor                  MG(1)SI(1)O(3)                         mcor              c
  V11       0.0000212         2110.0           4.55        -0.0022           0.00
 !. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 *** SOLUTION DATA ***
-CRND    (-SITE,MARGULES)1/2      M1(1):Al,Mg - M2(1):Al,Si 
+CRND    (SITE,MARGULES)1/2      M1(1):Al,Mg - M2(1):Al,Si 
   cor           Al - Al
   mcor          Mg - Si
 *** MARGULES PARAMETERS ***
@@ -2338,8 +2374,8 @@ cor - mcor
 !   Ref:   HP11  
 !   note:  ds62.  Fe-vac Pyrrhotite mixing and W from HP11 Appendix II.  
 !          DKT, 2022-04-05 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
-!   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
+!   Converted from files tc-ds62.txt & tc-dt-extramodels.txt.
 !   Required dataset species for COM's: {}
 !
 !   Site mixing table. 
@@ -2361,7 +2397,7 @@ trot                  FE(1)S(1)                              trot              c
  LA1             598           12.0          0.041
 !. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 *** SOLUTION DATA ***
-PO    (-SITE,MARGULES)1/8      M2(8):Fe,V 
+PO    (SITE,MARGULES)1/8      M2(8):Fe,V 
   trov          Fe,Fe,Fe,Fe,Fe,Fe,Fe,V
   trot          Fe,Fe,Fe,Fe,Fe,Fe,Fe,Fe
 *** MARGULES PARAMETERS ***
@@ -2375,9 +2411,8 @@ trov - trot
 !--------------------------------------------------------------------------------- AX MODEL MT00
 !   Ref:   WPH00  
 !   note:  ds62.  FTO Magnetite. Greenschist and amphibolite facies (subsolidus)  
-!          From file tc-mp50MnNCKFMASHTO.txt (with ds6.2) 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
-!   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
+!          Converted from HPxeos file tc-mp50MnNCKFMASHTO.txt (with ds6.2) 
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Required dataset species for COM's: {mtD-}
 !
 !   Site mixing table. 
@@ -2387,24 +2422,24 @@ trov - trot
 !   dmt      0 4/3 2/3   2/3 1/3  
 !   usp      1   0   1     0   1  
 !-----------------------------------------------------------------------------------------------
-*** MuNERAL DATA ***
+*** MINERAL DATA ***
 imt                   FE(3)O(4)                               imt              c
- ST              0.0        -1859.5         -3.166              0
+ ST              0.0   16874.426027      25.017325            0.0
  COM      mtD-[1]
 dmt                   FE(3)O(4)                               dmt              c
- ST              0.0         1330.5         1.1845              0
+ ST              0.0   20064.426027      29.367825            0.0
  COM      mtD-[1]
 usp                   FE(2)TI(1)O(4)                          usp              c
  ST              0.0     -1491120.0          180.0          4.682
  C3           -102.6        0.14252     -9144500.0         5270.7           0.00
  V11       0.0000386         1857.0           4.05        -0.0022           0.00
 !. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-*** SuLUTION DATA ***
+*** SOLUTION DATA ***
 MT00    (-SITE,MARGULES)1/3      M(6):F3,Fe,Ti - T(3):F3,Fe 
   imt           F3,F3,F3,Fe,Fe,Fe - F3,F3,F3
   dmt           F3,F3,F3,F3,Fe,Fe - F3,F3,Fe
   usp           Ti,Ti,Ti,Fe,Fe,Fe - Fe,Fe,Fe
-*** MuRGULES PARAMETERS ***
+*** MARGULES PARAMETERS ***
 imt - dmt  
 12          2400.0      0.0      0.0
 imt - usp  
@@ -2419,9 +2454,8 @@ dmt - usp
 !---------------------------------------------------------------------------------- AX MODEL CTD
 !   Ref:   WPH14  WPJ14  
 !   note:  ds62.  MnFMASHO Chloritoid with Smye et al. (2015) M1A site red.  
-!          From file tc-mp50MnNCKFMASHTO.txt (with ds6.2) 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
-!   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
+!          Converted from file tc-mp50MnNCKFMASHTO.txt (with ds6.2) 
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Required dataset species for COM's: {mnctd-, mctd-, andr-, gr-}
 !
 !   Site mixing table. !   Site M1A is reduced to 1/4 * the true multiplicity. 
@@ -2483,9 +2517,8 @@ mnct - ctdo
 !---------------------------------------------------------------------------------- AX MODEL MRG
 !   Ref:   WPH14  
 !   note:  ds62.  WPH14 NCKFMASHO Margarite  
-!          From file tc-mp50MnNCKFMASHTO.txt (with ds6.2) 
-!   entry: Converted by tc2td.wl on Wed 14 Dec 2022 18:11:46
-!   Converted from HPx-eos website files tc-ds62.txt & tc-mb50NCKFMASHTO.txt.
+!          Converted from file tc-mp50MnNCKFMASHTO.txt (with ds6.2) 
+!   entry: Converted by tc2td.wl on Sat 24 Dec 2022 23:09:41
 !   Required dataset species for COM's: {mu-, cel-, fcel-, pa-, gr-, andr-}
 !
 !   Site mixing table. 
@@ -2668,6 +2701,7 @@ PPS-BUFFER     S(2)                            PPS           *PPS
 !===============================================================================================
 !  5: REMAINING PURE SPECIES OF HP11 DATABASE NOT INCLUDED IN GROUPS 1 AND 3
 !===============================================================================================
+*** MINERAL DATA ***
 teph                  MN(2)SI(1)O(4)                         teph              c
  ST              0.0     -1733970.0          155.9          4.899
  C3            219.6            0.0     -1292700.0        -1308.3           0.00
@@ -2757,23 +2791,6 @@ osfa                  K(1)FE(2)AL(5)SI(10)O(30)              osfa              c
  ST              0.0    -1.421549e7          780.0          38.45
  C3           1558.6      -0.011359     -9476500.0       -11845.0           0.00
  V11       0.0000049         1290.0            4.1        -0.0031           0.00
-vsv                   CA(19)MG(2)AL(11)SI(18)H(9)O(78)        vsv              c
- ST              0.0    -4.234582e7         1890.0           85.2
- C3           4488.0      -0.057952     -2.22693e7       -33478.0           0.00
- V11       0.0000275         1255.0            4.8        -0.0038           0.00
-and                   AL(2)SI(1)O(5)                          and              c
- ST              0.0     -2588670.0           92.7          5.153
- C3            277.3      -0.006588     -1914100.0        -2265.6           0.00
- V11       0.0000181         1442.0           6.89        -0.0048           0.00
-ky                    AL(2)SI(1)O(5)                           ky              c
- ST              0.0     -2592970.0           83.5          4.414
- C3            279.4      -0.007124     -2055600.0        -2289.4           0.00
- V11       0.0000192         1601.0           4.05        -0.0025           0.00
-sill                  AL(2)SI(1)O(5)                         sill              c
- ST              0.0     -2585790.0           95.4          4.986
- C3            280.2        -0.0069     -1375700.0        -2399.4           0.00
- V11       0.0000112         1640.0           5.06        -0.0031           2.00
- BW1          4750.0           0.01         4750.0           0.01            1.0           0.25
 smul                  AL(2)SI(1)O(5)                         smul              c
  ST              0.0     -2569210.0          101.5          4.987
  C3            280.2        -0.0069     -1375700.0        -2399.4           0.00
@@ -2782,10 +2799,6 @@ amul                  AL(2.5)SI(0.5)O(4.75)                  amul              c
  ST              0.0     -2485530.0          113.0          5.083
  C3            244.8       0.000968     -2533300.0        -1641.6           0.00
  V11       0.0000136         1740.0            4.0        -0.0023           0.00
-tpz                   AL(2)SI(1)H(2)O(6)                      tpz              c
- ST              0.0     -2900710.0          100.5          5.339
- C3            387.7       -0.00712      -857200.0        -3744.2           0.00
- V11       0.0000157         1315.0           4.06        -0.0031           0.00
 mst                   MG(4)AL(18)SI(7.5)H(4)O(48)             mst              c
  ST              0.0    -2.512374e7          910.0          44.26
  C3           2820.5      -0.059366      -1.3774e7       -24126.0           0.00
@@ -2802,43 +2815,14 @@ mnctd                 MN(1)AL(2)SI(1)H(2)O(7)               mnctd              c
  ST              0.0     -3336150.0          166.0          7.175
  C3            464.4      -0.012654     -1147200.0        -4341.0           0.00
  V11        0.000026         1456.0           4.06        -0.0028           0.00
-merw                  CA(3)MG(1)SI(2)O(8)                    merw              c
- ST              0.0     -4545700.0          253.1          9.847
- C3            417.5       0.008117     -2923000.0        -2320.3           0.00
- V11       0.0000319         1200.0           4.07        -0.0034           0.00
 spu                   CA(5)SI(2)C(1)O(11)                     spu              c
  ST              0.0     -5846720.0          332.0         14.697
  C3            614.1      -0.003508     -2493100.0        -4168.0           0.00
  V11        0.000034          950.0           4.09        -0.0043           0.00
-zo                    CA(2)AL(3)SI(3)H(1)O(13)                 zo              c
- ST              0.0     -6896290.0          298.0         13.575
- C3            662.0       0.010416     -6006400.0        -4260.7           0.00
- V11       0.0000312         1044.0            4.0        -0.0038           0.00
 pmt                   CA(2)MN(1)AL(2)SI(3)H(1)O(13)           pmt              c
  ST              0.0     -6543030.0          340.0          13.82
  C3            569.8        0.02779     -5442900.0        -2812.6           0.00
  V11       0.0000238         1197.0           4.07        -0.0034           0.00
-law                   CA(1)AL(2)SI(2)H(4)O(10)                law              c
- ST              0.0     -4868630.0          229.0         10.132
- C3            687.8       0.001566       375900.0        -7179.2           0.00
- V11       0.0000265         1229.0           5.45        -0.0044           0.00
-geh                   CA(2)AL(2)SI(1)O(7)                     geh              c
- ST              0.0     -3992240.0          198.5          9.024
- C3            405.7      -0.007099     -1188300.0        -3174.4           0.00
- V11       0.0000223         1080.0           4.08        -0.0038           2.00
- BW1          7510.0           0.09         7500.0           0.09            1.0            0.8
-ak                    CA(2)MG(1)SI(2)O(7)                      ak              c
- ST              0.0     -3865620.0          212.5          9.254
- C3            385.4       0.003209      -247500.0        -2889.9           0.00
- V11       0.0000257         1420.0           4.06        -0.0029           0.00
-rnk                   CA(3)SI(2)O(7)                          rnk              c
- ST              0.0     -3943820.0          210.0          9.651
- C3            372.3      -0.002893     -2462400.0        -2181.3           0.00
- V11       0.0000328          950.0           4.09        -0.0043           0.00
-ty                    CA(5)SI(2)C(2)O(13)                      ty              c
- ST              0.0     -6368040.0          390.0         17.039
- C3            741.7      -0.005345     -1434600.0        -5878.5           0.00
- V11       0.0000342          950.0           4.09        -0.0043           0.00
 crd                   MG(2)AL(4)SI(5)O(18)                    crd              c
  ST              0.0     -9163430.0          404.1         23.322
  C3            906.1            0.0     -7902000.0        -6293.4           0.00
@@ -2863,11 +2847,6 @@ phA                   MG(7)SI(2)H(6)O(14)                     phA              c
  ST              0.0     -7129620.0          350.5         15.422
  C3            962.0      -0.011521     -4517800.0        -7724.7           0.00
  V11       0.0000355         1450.0           4.06        -0.0028           0.00
-sph                   CA(1)TI(1)SI(1)O(5)                     sph              c
- ST              0.0     -2601660.0          124.0          5.565
- C3            227.9       0.002924     -3539500.0         -894.3           0.00
- V11       0.0000158         1017.0           9.85        -0.0097           1.00
- LA1             485            0.4          0.005
 cstn                  CA(1)SI(2)O(5)                         cstn              c
  ST              0.0     -2496350.0           99.5          4.818
  C3            205.6       0.006034     -5517700.0         -352.6           0.00
@@ -2913,18 +2892,6 @@ pxmn                  MN(1)SI(1)O(3)                         pxmn              c
  ST              0.0     -1323160.0           99.3          3.472
  C3            138.4       0.004088     -1936000.0         -538.9           0.00
  V11        0.000028          840.0            4.0        -0.0048           0.00
-wo                    CA(1)SI(1)O(3)                           wo              c
- ST              0.0     -1633770.0           82.5          3.993
- C3            159.3            0.0      -967300.0        -1075.4           0.00
- V11       0.0000254          795.0            4.1        -0.0052           0.00
-pswo                  CA(1)SI(1)O(3)                         pswo              c
- ST              0.0     -1627960.0           87.8          4.008
- C3            157.8            0.0      -967300.0        -1075.4           0.00
- V11       0.0000285         1100.0           4.08        -0.0037           0.00
-wal                   CA(1)SI(1)O(3)                          wal              c
- ST              0.0     -1625900.0           83.5         3.7633
- C3            159.3            0.0      -967300.0        -1075.4           0.00
- V11       0.0000254          795.0            4.1        -0.0052           0.00
 fact                  CA(2)FE(5)SI(8)H(2)O(24)               fact              c
  ST              0.0    -1.050412e7          710.0          28.42
  C3           1290.0       0.029992     -8447500.0        -8947.0           0.00
@@ -2985,10 +2952,6 @@ fcar                  FE(1)AL(2)SI(2)H(4)O(10)               fcar              c
  ST              0.0     -4411440.0          251.1         10.695
  C3            686.6      -0.012415       186000.0        -6884.0           0.00
  V11       0.0000221          525.0           4.14        -0.0079           0.00
-deer                  FE(18)SI(12)H(10)O(50)                 deer              c
- ST              0.0     -1.83414e7         1650.0          55.74
- C3           3164.4      -0.027883     -5039100.0       -26721.0           0.00
- V11       0.0000275          630.0           4.12        -0.0065           0.00
 ann                   K(1)FE(3)AL(1)SI(3)H(2)O(12)            ann              c
  ST              0.0     -5143720.0          420.0         15.432
  C3            815.7      -0.034861        19800.0        -7466.7           0.00
@@ -3013,10 +2976,6 @@ fsud                  FE(2)AL(4)SI(3)H(8)O(18)               fsud              c
  ST              0.0     -7899850.0          456.0           20.4
  C3           1466.3      -0.047365     -1182800.0       -14388.0           0.00
  V11       0.0000208          870.0           4.09        -0.0047           0.00
-prl                   AL(2)SI(4)H(2)O(12)                     prl              c
- ST              0.0     -5640610.0          239.0         12.804
- C3            784.5      -0.042948      1251000.0        -8495.9           0.00
- V11        0.000045          370.0           10.0        -0.0271           0.00
 ta                    MG(3)SI(4)H(2)O(12)                      ta              c
  ST              0.0     -5897170.0          259.0         13.665
  C3            622.2            0.0     -6385500.0        -3916.3           0.00
@@ -3033,30 +2992,10 @@ tap                   AL(2)SI(4)H(2)O(12)                     tap              c
  ST              0.0     -5649780.0          235.0          13.45
  C3            784.5      -0.042948      1251000.0        -8495.9           0.00
  V11        0.000045          370.0           10.0        -0.0271           0.00
-kao                   AL(2)SI(2)H(4)O(9)                      kao              c
- ST              0.0     -4122000.0          203.7          9.934
- C3            436.7      -0.034295     -4055900.0        -2699.1           0.00
- V11       0.0000251          645.0           4.12        -0.0064           0.00
-chr                   MG(3)SI(2)H(4)O(9)                      chr              c
- ST              0.0     -4361000.0          221.3         10.746
- C3            624.7       -0.02077     -1721800.0        -5619.4           0.00
- V11        0.000022          628.0            4.0        -0.0064           0.00
-liz                   MG(3)SI(2)H(4)O(9)                      liz              c
- ST              0.0     -4369190.0          212.0         10.645
- C3            614.7       -0.02077     -1721800.0        -5619.4           0.00
- V11        0.000022          710.0            3.2        -0.0045           0.00
 glt                   FE(3)SI(2)H(4)O(9)                      glt              c
  ST              0.0     -3297620.0          310.0          11.98
  C3            576.4       0.002984     -3757000.0        -4166.2           0.00
  V11       0.0000228          630.0            4.0        -0.0063           0.00
-atg                   MG(48)SI(34)H(62)O(147)                 atg              c
- ST              0.0    -7.140469e7         3620.0         175.48
- C3           9621.0      -0.091183     -3.59416e7       -83034.2           0.00
- V11        0.000028          631.0           5.92        -0.0094           0.00
-mic                   K(1)AL(1)SI(3)O(8)                      mic              c
- ST              0.0     -3975350.0          214.3         10.871
- C3            448.8      -0.010075     -1007300.0        -3973.1           0.00
- V11       0.0000166          583.0           4.02        -0.0069           0.00
 kcm                   K(1)AL(1)SI(3)H(2)O(9)                  kcm              c
  ST              0.0     -4232640.0          281.5         11.438
  C3            536.5       -0.01009      -980400.0        -4735.0           0.00
@@ -3069,32 +3008,6 @@ hol                   K(1)AL(1)SI(3)O(8)                      hol              c
  ST              0.0     -3791960.0          166.2          7.128
  C3            417.6      -0.003617     -4748100.0        -2819.9           0.00
  V11        0.000028         1800.0            4.0        -0.0022           0.00
-q                     SI(1)O(2)                                 q              c
- ST              0.0      -910720.0          41.43          2.269
- C3             92.9      -0.000642      -714900.0         -716.1           0.00
- V11             0.0          730.0            6.0        -0.0082           1.00
- LA1             847           4.95         0.1188
-trd                   SI(1)O(2)                               trd              c
- ST              0.0      -907110.0           44.1            2.8
- C3             74.9         0.0031     -1174000.0         -236.7           0.00
- V11             0.0          150.0           4.36        -0.0291           0.00
-crst                  SI(1)O(2)                              crst              c
- ST              0.0      -904270.0          50.86          2.745
- C3             72.7       0.001304     -4129000.0            0.0           0.00
- V11             0.0          160.0           4.35        -0.0272           0.00
-coe                   SI(1)O(2)                               coe              c
- ST              0.0      -907000.0           39.6          2.064
- C3            107.8      -0.003279      -190300.0        -1041.6           0.00
- V11       0.0000123          979.0           4.19        -0.0043           0.00
-stv                   SI(1)O(2)                               stv              c
- ST              0.0      -876390.0           24.0          1.401
- C3             68.1        0.00601     -1978200.0          -82.1           0.00
- V11       0.0000158         3090.0            4.6        -0.0015           0.00
-ne                    NA(1)AL(1)SI(1)O(4)                      ne              c
- ST              0.0     -2094560.0          124.4          5.419
- C3            272.7      -0.012398            0.0        -2763.1           0.00
- V11       0.0000463          465.0           4.16        -0.0089           1.00
- LA1             467           10.0           0.08
 cg                    NA(1)AL(1)SI(1)O(4)                      cg              c
  ST              0.0     -2091720.0          118.7          5.603
  C3            116.1       0.086021     -1992700.0            0.0           0.00
@@ -3111,43 +3024,10 @@ kls                   K(1)AL(1)SI(1)O(4)                      kls              c
  ST              0.0     -2122960.0          136.0          6.052
  C3            242.0      -0.004482      -895800.0        -1935.8           0.00
  V11       0.0000316          514.0            2.0        -0.0039           0.00
-lc                    K(1)AL(1)SI(2)O(6)                       lc              c
- ST              0.0     -3029270.0          198.5          8.826
- C3            369.8      -0.016332       684700.0        -3683.1           0.00
- V11       0.0000185          450.0            5.7        -0.0127           2.00
- BW1         11610.0            0.4        11600.0            0.4            2.0            0.7
-me                    CA(4)AL(6)SI(6)C(1)O(27)                 me              c
- ST              0.0    -1.384182e7          752.0         33.985
- C3           1359.0       0.036442     -8594700.0        -9598.2           0.00
- V11       0.0000181          870.0           4.09        -0.0047           0.00
-wrk                   CA(1)AL(2)SI(4)H(4)O(14)                wrk              c
- ST              0.0     -6662450.0          380.0          19.04
- C3            838.3       -0.02146     -2272000.0        -7292.3           0.00
- V11       0.0000149          860.0           4.09        -0.0048           0.00
-lmt                   CA(1)AL(2)SI(4)H(8)O(16)                lmt              c
- ST              0.0     -7262700.0          465.0          20.37
- C3           1013.4      -0.021413     -2235800.0        -8806.7           0.00
- V11       0.0000137          860.0           4.09        -0.0048           0.00
-heu                   CA(1)AL(2)SI(7)H(12)O(24)               heu              c
- ST              0.0    -1.054522e7          783.0           31.7
- C3           1504.8      -0.033224     -2959300.0       -13297.2           0.00
- V11       0.0000157          274.0            4.0        -0.0146           0.00
-stlb                  CA(1)AL(2)SI(7)H(14)O(25)              stlb              c
- ST              0.0    -1.089676e7          710.0          32.87
- C3           1588.4      -0.032043     -3071600.0       -13966.9           0.00
- V11       0.0000151          860.0           4.09        -0.0048           0.00
-anl                   NA(1)AL(1)SI(2)H(2)O(7)                 anl              c
- ST              0.0     -3307220.0          232.0           9.74
- C3            643.5      -0.016067      9302300.0        -9179.6           0.00
- V11       0.0000276          400.0           4.18        -0.0104           0.00
 lime                  CA(1)O(1)                              lime              c
  ST              0.0      -634530.0           38.1          1.676
  C3             52.4       0.003673      -750700.0          -51.0           0.00
  V11       0.0000341         1130.0           3.87        -0.0034           0.00
-ru                    TI(1)O(2)                                ru              c
- ST              0.0      -944360.0           50.5          1.882
- C3             90.4         0.0029            0.0         -623.8           0.00
- V11       0.0000224         2220.0           4.24        -0.0019           0.00
 per                   MG(1)O(1)                               per              c
  ST              0.0      -601530.0           26.5          1.125
  C3             60.5       0.000362      -535800.0         -299.2           0.00
@@ -3209,49 +3089,10 @@ picr                  MG(1)CR(2)O(4)                         picr              c
  C3            196.1       0.005398     -3126000.0         -616.9           0.00
  V11        0.000018         1922.0           4.04        -0.0021           2.00
  BW1          8000.0            0.0         1200.0            0.0            2.0            0.5
-br                    MG(1)H(2)O(2)                            br              c
- ST              0.0      -925560.0           63.2          2.463
- C3            158.4      -0.004076     -1052300.0        -1171.3           0.00
- V11        0.000062          415.0           6.45        -0.0155           0.00
-dsp                   AL(1)H(1)O(2)                           dsp              c
- ST              0.0      -999840.0           34.5          1.786
- C3            145.1       0.008709       584400.0        -1741.1           0.00
- V11       0.0000357         2280.0           4.04        -0.0018           0.00
-gth                   FE(1)H(1)O(2)                           gth              c
- ST              0.0      -561770.0           60.3          2.082
- C3            139.3       0.000147      -212700.0        -1077.8           0.00
- V11       0.0000435         2500.0           4.03        -0.0016           0.00
-cc                    CA(1)C(1)O(3)                            cc              c
- ST              0.0     -1207760.0           92.5          3.689
- C3            140.9       0.005029      -950700.0         -858.4           0.00
- V11       0.0000252          733.0           4.06        -0.0055           1.00
- LA1            1240           10.0           0.04
-arag                  CA(1)C(1)O(3)                          arag              c
- ST              0.0     -1207650.0           89.8          3.415
- C3            167.1       0.010695       162000.0        -1564.9           0.00
- V11       0.0000614          614.0           5.87        -0.0096           0.00
-mag                   MG(1)C(1)O(3)                           mag              c
- ST              0.0     -1110920.0           65.5          2.803
- C3            186.4      -0.003772            0.0        -1886.2           0.00
- V11       0.0000338         1028.0           5.41        -0.0053           0.00
-sid                   FE(1)C(1)O(3)                           sid              c
- ST              0.0      -762220.0           93.3          2.943
- C3            168.4            0.0            0.0        -1483.6           0.00
- V11       0.0000439         1200.0           4.07        -0.0034           0.00
 rhc                   MN(1)C(1)O(3)                           rhc              c
  ST              0.0      -892280.0           98.0          3.107
  C3            169.5            0.0            0.0        -1534.3           0.00
  V11       0.0000244          953.0           3.88        -0.0041           0.00
-dol                   CA(1)MG(1)C(2)O(6)                      dol              c
- ST              0.0     -2326220.0          156.1          6.429
- C3            358.9      -0.004905            0.0        -3456.2           0.00
- V11       0.0000328          943.0           3.74         -0.004           2.00
- BW1         11910.0          0.016        11900.0          0.016            1.0            1.0
-ank                   CA(1)FE(1)C(2)O(6)                      ank              c
- ST              0.0     -1971410.0         188.46          6.606
- C3            341.0      -0.001161            0.0        -3054.8           0.00
- V11       0.0000346          914.0           3.88        -0.0043           2.00
- BW1         11910.0          0.016        11900.0          0.016            1.0            1.0
 syv                   K(1)CL(1)                               syv              c
  ST              0.0      -436500.0           82.6          3.752
  C3             46.2        0.01797            0.0            0.0           0.00
@@ -3304,4 +3145,114 @@ S                     S(1)                                      S              c
  ST              0.0            0.0          32.05          1.551
  C3             56.6      -0.004557       638000.0         -681.8           0.00
  V11        0.000064          145.0            7.0         -0.048           0.00
+*** GuS DATA ***
+CO2                   C(1)O(2)                                CO2              c
+ SPC   PS94CO2
+ ST              0.0      -393510.0          213.7            0.0
+ C3             87.8      -0.002644       706400.0         -998.9           0.00
+!you need to add proper corresponding states parameters for several species below.
+!see td-ds62-vXX.txt if you need to be using these species.
+CO                    C(1)O(1)                                 CO              c
+ ST              0.0      -110530.0         197.67            0.0
+ C3             45.7      -0.000097       662700.0         -414.7           0.00
+ CS1     X.XXXXXXXXX  XXX.XXXXXXXXX
+CH4                   C(1)H(4)                                CH4              c
+ ST              0.0       -74810.0         186.26            0.0
+ C3            150.1       0.002063      3427700.0        -2650.4           0.00
+ CS1     X.XXXXXXXXX  XXX.XXXXXXXXX
+O2                    O(2)                                     O2              c
+ ST              0.0            0.0          205.2            0.0
+ C3             48.3      -0.000691       499200.0         -420.7           0.00
+ CS1     X.XXXXXXXXX  XXX.XXXXXXXXX
+H2                    H(2)                                     H2              c
+ ST              0.0            0.0          130.7            0.0
+ C3             23.3       0.004627            0.0           76.3           0.00
+ CS1     X.XXXXXXXXX  XXX.XXXXXXXXX
+S2                    S(2)                                     S2              c
+ ST              0.0       128540.0          231.0            0.0
+ C3             37.1       0.002398      -161000.0          -65.0           0.00
+ CS1     X.XXXXXXXXX  XXX.XXXXXXXXX
+H2S                   S(1)H(2)                                H2S              c
+ ST              0.0       -20300.0         205.77            0.0
+ C3             47.4        0.01024       615900.0         -397.8           0.00
+ CS1     X.XXXXXXXXX  XXX.XXXXXXXXX
+*** MuNERAL DATA ***
+syvL                  K(1)CL(1)                              syvL              c
+ ST              0.0      -417410.0           94.5          3.822
+ C3             66.9            0.0            0.0            0.0           0.00
+ V11        0.000301           56.0           4.65         -0.083           4.00
+ DK1           -0.02
+hltL                  NA(1)CL(1)                             hltL              c
+ ST              0.0      -392990.0           80.1          2.938
+ C3             72.0      -0.003223            0.0            0.0           0.00
+ V11        0.000295           64.0           4.61         -0.072           4.00
+ DK1          -0.015
+perL                  MG(1)O(1)                              perL              c
+ ST              0.0      -654120.0          -64.3          0.839
+ C3             99.0            0.0            0.0            0.0           0.00
+ V11        0.000226          362.0          10.06        -0.0278           4.00
+ DK1          -0.041
+limL                  CA(1)O(1)                              limL              c
+ ST              0.0      -692280.0          -47.5          1.303
+ C3             99.0            0.0            0.0            0.0           0.00
+ V11        0.000175          362.0          10.06        -0.0278           4.00
+ DK1          -0.041
+corL                  AL(2)O(3)                              corL              c
+ ST              0.0     -1632160.0           14.9          3.369
+ C3            157.6            0.0            0.0            0.0           0.00
+ V11       0.0000703          150.0            6.0           0.04           4.00
+ DK1          -0.035
+qL                    SI(1)O(2)                                qL              c
+ ST              0.0      -921070.0           16.3           2.73
+ C3             82.5            0.0            0.0            0.0           0.00
+ V11             0.0          220.0           9.46         -0.043           4.00
+ DK1          -0.035
+foL                   MG(2)SI(1)O(4)                          foL              c
+ ST              0.0     -2237350.0          -62.0          4.312
+ C3            269.4            0.0            0.0            0.0           0.00
+ V11        0.000092          362.0          10.06        -0.0278           4.00
+ DK1          -0.044
+faL                   FE(2)SI(1)O(4)                          faL              c
+ ST              0.0     -1463020.0           96.0          4.677
+ C3            243.7            0.0            0.0            0.0           0.00
+ V11       0.0001071          290.0          10.42        -0.0359           4.00
+ DK1          -0.055
+woL                   CA(1)SI(1)O(3)                          woL              c
+ ST              0.0     -1642220.0           22.5          3.965
+ C3            167.4            0.0            0.0            0.0           0.00
+ V11       0.0000669          305.0           9.38        -0.0308           4.00
+ DK1           -0.02
+enL                   MG(2)SI(2)O(6)                          enL              c
+ ST              0.0     -3096570.0           -4.0          6.984
+ C3            353.6            0.0            0.0            0.0           0.00
+ V11       0.0000681          218.0            7.2         -0.033           4.00
+ DK1          -0.024
+diL                   CA(1)MG(1)SI(2)O(6)                     diL              c
+ ST              0.0     -3193870.0           42.1          7.288
+ C3            334.0            0.0            0.0            0.0           0.00
+ V11       0.0000851          249.0           8.04        -0.0323           4.00
+ DK1         -0.0373
+silL                  AL(2)SI(1)O(5)                         silL              c
+ ST              0.0     -2593430.0           10.0          6.051
+ C3            253.0            0.0            0.0            0.0           0.00
+ V11       0.0000408          220.0           6.36        -0.0289           4.00
+ DK1          -0.029
+anL                   CA(1)AL(2)SI(2)O(8)                     anL              c
+ ST              0.0     -4277970.0           29.0         10.014
+ C3            430.0            0.0            0.0            0.0           0.00
+ V11       0.0000514          210.0           6.38        -0.0304           4.00
+ DK1          -0.055
+neL                   NA(1)AL(1)SI(1)O(4)                     neL              c
+ ST              0.0     -2116730.0           52.9            5.2
+ C3            216.5            0.0            0.0            0.0           0.00
+ V11        0.000137          250.0           7.37        -0.0295           4.00
+ DK1          -0.008
+lcL                   K(1)AL(1)SI(2)O(6)                      lcL              c
+ ST              0.0     -3068410.0          102.0           8.59
+ C3            287.0            0.0            0.0            0.0           0.00
+ V11        0.000067          175.0            7.0        -0.0394           4.00
+ DK1             0.0
+!. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+!  Nothing.
+
 
