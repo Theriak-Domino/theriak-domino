@@ -8,7 +8,7 @@ All programs provide some help with the "?" keyword in the input dialogues.
 ------------------------------------------------------------------------------------------
 List of distributed files and folders
 -------------------------------------
-In the Folder ThrtiakDominoMAC, ThrtiakDominoMACAS, TheriakDominoWIN or
+In the Folder TheriakDominoMAC, TheriakDominoMACAS, TheriakDominoWIN or
 TheriakDominoLIN:
 (The difference between TheriakDominoMAC/MACAS/WIN/LIN versions are the 
 binaries/executables, the theriak.ini provided with the programs,
@@ -19,7 +19,7 @@ Folders:
 	Working
 	Programs
 	Examples
-  src
+	src
 
 -------------------------------------
 In folder Documentation
@@ -155,15 +155,15 @@ shawL55/			Phasediagram for metapelite Nr.55, composition from Shaw (1955)
 shawL62/			Phasediagram for metapelite Nr.62, composition from Shaw (1955)
 sialca_examples/		Example of Binary and Ternary phase diagrams with the database "sialca"
 parigi/				Example from Coggon and Holland (2002), Fig. 6. (with fixed H2O activity)
-bl478_ds62/   Example with a metabasite composition and the Holland & Powell dataset 6.2
-klb-1_ds633/  Example of an ultramafic comosition and the Holland & Powell dataset 6.3.3
+bl478_ds62/			Example with a metabasite composition and the Holland & Powell dataset 6.2
+klb-1_ds633/			Example of an ultramafic comosition and the Holland & Powell dataset 6.3.3
 
 
 ====================================================================================
 Installation on Macintosh OS X (Is tested on OS X 3.7 - 10.15.4)
 ====================================================================================
-Unzip TheriakDominoMAC.zip (Intel) or TheriakDominoMACAS.zip (Apple Silicon and macos 12.0 
-or greater). double-clicking should work, else donwload the free
+Unzip TheriakDominoMAC.zip (Intel and macos 11.0 or greater) or TheriakDominoMACAS.zip (Apple 
+Silicon and macos 12.0 or greater). double-clicking should work, else donwload the free
 expander software from http://www.stuffit.com/mac/index.html.
 
 Prepare the Terminal application 

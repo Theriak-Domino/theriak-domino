@@ -102,6 +102,7 @@ RELEASEDIRS:
 		$(CPDIR) $(DDIR)/Documentation $(RDIR)/Documentation
 		$(CPDIR) $(DDIR)/Examples $(RDIR)/Examples
 		$(CPDIR) $(DDIR)/Working $(RDIR)/Working
+		$(CPDIR) $(DDIR)/ReleaseNotes.txt  $(RDIR)/ReleaseNotes.txt
 		$(CPDIR) $(BUILDDIR) $(RDIR)/Programs
 		$(CPDIR) ./theriakMAC.ini  $(RDIR)/Programs/theriak.ini
 		$(CPDIR) ./thhelp.txt  $(RDIR)/Programs/thhelp.txt
@@ -110,6 +111,7 @@ RELEASEDIRS:
 		rm -d  $(RDIR)/Programs/obj/
 		$(MKDIR) $(RDIR)/src
 		$(CPDIR) . $(RDIR)/src
+		rm -f $(RDIR)/src/*.mod
 		$(CPDIR) ../LICENSE $(RDIR)/src/LICENSE
 		$(CPDIR) ../LICENSE $(RDIR)/Programs/LICENSE
 		$(CPDIR) ../LICENSE $(RDIR)/LICENSE

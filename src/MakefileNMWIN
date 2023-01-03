@@ -108,6 +108,7 @@ RELEASEDIRS:
 	xcopy "$(DDIR)\Documentation\" "$(RDIR)\Documentation\" /E 
 	xcopy /E "$(DDIR)\Examples\" "$(RDIR)\Examples\"
 	xcopy /E "$(DDIR)\Working\" "$(RDIR)\Working\"
+	copy  "$(DDIR)/ReleaseNotes.txt"  "$(RDIR)/ReleaseNotes.txt"
 	-@ if NOT EXIST "$(RDIR)\Programs" mkdir "$(RDIR)\Programs"
 	xcopy /E "$(BDIR)\" "$(RDIR)\Programs\"
 	copy    "theriakPC.ini"  "$(RDIR)\Programs\theriak.ini"
@@ -116,6 +117,7 @@ RELEASEDIRS:
 	rmdir /Q /S  "$(RDIR)\Programs\obj"
 	mkdir "$(RDIR)\src"
 	copy    "."  "$(RDIR)\src\"
+	del     "$(RDIR)\src\*.mod"
 	copy    "..\LICENSE"  "$(RDIR)\src\LICENSE"
 	copy    "..\LICENSE"  "$(RDIR)\Programs\LICENSE"
 	copy    "..\LICENSE"  "$(RDIR)\LICENSE"
