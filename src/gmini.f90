@@ -259,10 +259,18 @@
 !cdc2020  ev. nur IF (AOK) TRYMORE=.TRUE. ???
 !      IF (.NOT.AFAIL.AND.GTOT.LE.GTEST) TRYMORE=.TRUE.
       IF (AOK.AND.GTOT.LE.GTEST) TRYMORE=.TRUE.
-      IF (SAMEAS) TRYMORE=.TRUE.
+      !dkt 2023-02-14: when SAMEAS is true, added requirement that 
+      !  AOK is also req'd to be true for trymore to be true; 
+      !  will reduce early stops on failed min's with AOK=false, but 
+      !  increases time on such cases when calc is driven all
+      !  the way to max loops for really touch cases.
+      IF (SAMEAS.AND.AOK) TRYMORE=.TRUE.   
       IF (AOK.AND.MOK) TRYMORE=.TRUE.
       IF (LOO1.LE.10) TRYMORE=.FALSE.
-
+      !if trymore==true, we are potentially at a solution.
+      !now, don't clean any phases from main array, but 
+      !do a round of adding (addcod) and if remain 
+      !a potential solution twice, at minimum
       IF (TRYMORE.AND.LOO1.GT.10) THEN
 
         TRYMORE=.FALSE.
