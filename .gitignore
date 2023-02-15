@@ -3,6 +3,9 @@ RELEASE/
 
 .DS_Store
 
+# VS Code workspaces
+*.code-workspace
+
 # Prerequisites
 *.d
 
