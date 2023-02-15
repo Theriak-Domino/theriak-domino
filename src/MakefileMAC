@@ -4,7 +4,7 @@
 ### developer set values based on preference
 
 ## Set some unique value to print at top of program headers to identify build
-VERSIONSTR=2023.01.02
+VERSIONSTR=2023.02.15
 
 ## Select compiler: gfortran for apple silicon, gfortran or ifort for intel mac
 #nag compilation is experimental and not working
