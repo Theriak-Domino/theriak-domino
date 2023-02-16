@@ -55,7 +55,7 @@ MODULE FLAGS
     REAL(8), SAVE :: RLOWEXP    = -706.0D0
     INTEGER(4), SAVE :: ILOWEXP = -706
     LOGICAL, SAVE :: DOEXTRAPPNSVA  = .FALSE.
-    INTEGER(4), SAVE :: L1NEWSEED    = 2 !LOO1 loop that seeds are added via sr newph
+    INTEGER(4), SAVE :: L1NEWSEED    = 3 !LOO1 loop that seeds are added via sr newph
     INTEGER(4), SAVE :: NLOOPSDOSEED = 1 !# loops to do seeds in sr addph; loops L1NEWSEED:L1NEWSEED+NLOOPDOSEED
     !
     !not all implemented yet
