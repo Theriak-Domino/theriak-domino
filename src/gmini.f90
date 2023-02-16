@@ -114,6 +114,7 @@
 !-----
 !******************************
       SUBROUTINE THERIA
+      USE FLAGS, ONLY: L1NEWSEED
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -300,7 +301,11 @@
       CALL REBULK
       IF (LOO1.GT.1) THEN
 !====
-      IF (LOO1.EQ.2.AND.NSED.GT.0) THEN
+      !dkt: default was to add seeds on L001=2, with sr addph doing seeds (111) up to
+      !     loo1=5. Added flag l1newseed to specify which loop to add seeds through
+      !     sr newph; delaying addition of seeds to loo1=3 helped, but it appears key
+      !     is to only allow sr addph to do seeds from l1newseed:l1newseed+1.
+      IF (LOO1.EQ.L1NEWSEED.AND.NSED.GT.0) THEN !def was LOO1.EQ.2, 
         DO ISE=1,NSED
           IS=SIS(ISE)
           DO IE=1,NEND(IS)
@@ -310,7 +315,7 @@
           CALL NEWPH(IS)
         END DO
       ELSE
-      CALL ADDPH(ADDCOD)
+        CALL ADDPH(ADDCOD)
       END IF
 !===
 !----- for LOO1=1------
@@ -744,7 +749,7 @@
       IF (EMCODE(I).GT.0) THEN
       IS=EMCODE(I)
       DO J=1,NEND(IS)
-        XXSC(J)=XEM(I,J)
+      XXSC(J)=XEM(I,J)
       END DO
       CALL GNONID(IS,XXSC,GSC)
       IF (DABS(G(I)-GSC).GT.1D-10) THEN
@@ -780,7 +785,7 @@
         IF (ISTAB(K).NE.1) ISTAB(K)=LOO1
         G(K)=0.0D0
       END DO
-!-----
+!-----this next do is superfluous as done in above do
       DO K=1,NUN
         IF (ISTAB(K).NE.1) ISTAB(K)=LOO1
       END DO
@@ -801,7 +806,7 @@
       DO II=1,NUN
         X(K,II)=XX(NUMMER(K),II)
       END DO
-      GG(NUMMER(K))=G(K)
+      GG(NUMMER(K))=G(K)  !GG(k) for nummer(k)>0 case is 0 as G(1:NUN) set to 0 above
 !-----
       IF (ISOFIX(NUMMER(K)).NE.0.AND.K.LE.NUN) THEN
       IS=ISOFIX(NUMMER(K))
@@ -811,7 +816,7 @@
       END DO
       END IF
 !=====
-      ELSE
+      ELSE  !NUMMER(K)<=0
       IS=EMCODE(K)
 !CCC      IF (K.GT.NUN.AND.(GTOT.GT.GTEST.OR.TRY.EQ.1)) THEN
       IF (K.GT.NUN.AND.CLCOD.EQ.1) THEN
@@ -1308,7 +1313,7 @@
 !-----
 !******************************
       SUBROUTINE ADDPH(ADDCOD)
-      USE FLAGS, ONLY: L1SCANMAX
+      USE FLAGS, ONLY: L1SCANMAX, L1NEWSEED, NLOOPSDOSEED
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -1447,9 +1452,10 @@
 !       XXSC(I)=0.0D0
 !      END DO
 !
-      IF (NSED.GT.0.AND.LOO1.LT.5) THEN
+      !IF (NSED.GT.0.AND.LOO1.LT.5) THEN  !def is LT.5
+      IF (NSED.GT.0.AND.LOO1.GE.L1NEWSEED.AND.LOO1.LE.(L1NEWSEED+NLOOPSDOSEED)) THEN
       !presence of seeds causes failure at times (liq); needs
-      !reconsideration at some point.
+      !reconsideration at some point, but L1NEWSEED=2 and NLOOPSDOSEED=1 works ok.
        DO I=1,NSED                                     
         IF (SIS(I).EQ.IS) THEN                         
          DO J=1,NEND(IS)

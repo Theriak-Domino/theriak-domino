@@ -91,28 +91,30 @@
 
 !---- check for stable endmembers
 !---- was for some time in 'CLEAN' in gmini
+!      IF(.FALSE.) THEN
       DO I=1,NUN
-      IF (EMCODE(I).EQ.0) THEN
-      IF (EMSOL(NUMMER(I)).NE.0) THEN
-!      WRITE (UNIT=6,FMT='(''stable endmember '',A16)') NAME(NUMMER(I))
-      IS=EMSOL(NUMMER(I))
-      DO II=1,NEND(IS)
-      XXEM(II)=0.0D0
+        IF (EMCODE(I).EQ.0) THEN
+          IF (EMSOL(NUMMER(I)).NE.0) THEN
+            WRITE (UNIT=6,FMT='(''stable endmember at I='',I3,2x,A16)') I,NAME(NUMMER(I))
+            IS=EMSOL(NUMMER(I))
+            DO II=1,NEND(IS)
+              XXEM(II)=0.0D0
+            END DO
+            XXEM(EMNR(NUMMER(I)))=1.0D0
+            CALL NEWPH(IS)
+            IF (G(I).NE.G(NMAX)) THEN
+              WRITE (UNIT=6,FMT='(''Gi, Gnmax  '',1PE14.7,2X,1PE14.7)') &
+                G(I),G(NMAX)
+            END IF
+            I001=I
+            I002=NMAX
+            CALL COLCHG(I001,I002)
+            NN(I)=NN(NMAX)
+            NN(NMAX)=0.0D0
+          END IF
+        END IF
       END DO
-      XXEM(EMNR(NUMMER(I)))=1.0D0
-      CALL NEWPH(IS)
-!      IF (G(I).NE.G(NMAX)) THEN
-!      WRITE (UNIT=6,FMT='(''Gi, Gnmax  '',1PE14.7,2X,1PE14.7)') &
-!      G(I),G(NMAX)
 !      END IF
-      I001=I
-      I002=NMAX
-      CALL COLCHG(I001,I002)
-      NN(I)=NN(NMAX)
-      NN(NMAX)=0.0D0
-      END IF
-      END IF
-      END DO
 !---- end check for stable endmembers
 !----
 
