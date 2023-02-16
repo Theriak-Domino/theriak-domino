@@ -114,7 +114,7 @@
 !-----
 !******************************
       SUBROUTINE THERIA
-      USE FLAGS, ONLY: L1NEWSEED
+      USE FLAGS, ONLY: L1NEWSEED,DOAONNSEED
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -233,6 +233,7 @@
 !DC      IF (GTOT.LE.GTEST.OR.DISTAMAX.LT.DXMIN) THEN
       CLCOD=1
       ADDCOD=0
+      !ADDCOD is only used in write statements, in sr addph.
       IF (LOO1.EQ.2) ADDCOD=1
 !==
       IF (TEST.LT.0.0D0) THEN
@@ -303,9 +304,9 @@
 !====
       !dkt: default was to add seeds on L001=2, with sr addph doing seeds (111) up to
       !     loo1=5. Added flag l1newseed to specify which loop to add seeds through
-      !     sr newph; delaying addition of seeds to loo1=3 helped, but it appears key
-      !     is to only allow sr addph to do seeds from l1newseed:l1newseed+1.
+      !     sr newph; delaying addition of seeds to later loops (4-12) helps in larger systems
       IF (LOO1.EQ.L1NEWSEED.AND.NSED.GT.0) THEN !def was LOO1.EQ.2, 
+        IF (DOAONNSEED) CALL ADDPH(ADDCOD)
         DO ISE=1,NSED
           IS=SIS(ISE)
           DO IE=1,NEND(IS)

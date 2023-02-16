@@ -49,14 +49,18 @@ MODULE FLAGS
     REAL(8), SAVE :: PMINAAA   = TINY(0.0D0)*10.0D0 !2.22507D-305    !>tiny;
     REAL(8), SAVE :: PMINXELSI = 0.0D0 
     !
-    REAL(8), SAVE    :: EMDXSCALE = 0.25D0
-    INTEGER(4), SAVE :: L1SCANMAX = 5 
-    REAL(8), SAVE :: VAFFSCALE  = 3.0D-02
-    REAL(8), SAVE :: RLOWEXP    = -706.0D0
-    INTEGER(4), SAVE :: ILOWEXP = -706
-    LOGICAL, SAVE :: DOEXTRAPPNSVA  = .FALSE.
-    INTEGER(4), SAVE :: L1NEWSEED    = 3 !LOO1 loop that seeds are added via sr newph
-    INTEGER(4), SAVE :: NLOOPSDOSEED = 1 !# loops to do seeds in sr addph; loops L1NEWSEED:L1NEWSEED+NLOOPDOSEED
+    REAL(8), SAVE    :: EMDXSCALE     = 0.25D0
+    INTEGER(4), SAVE :: L1SCANMAX     = 5 
+    REAL(8), SAVE    :: VAFFSCALE     = 3.0D-02
+    REAL(8), SAVE    :: RLOWEXP       = -706.0D0
+    INTEGER(4), SAVE :: ILOWEXP       = -706
+    LOGICAL, SAVE    :: DOEXTRAPPNSVA = .FALSE.
+    !LOO1 loop that seeds are added via sr newph
+    INTEGER(4), SAVE :: L1NEWSEED     = 5 
+    !# loops to do seeds in sr addph; loops L1NEWSEED:L1NEWSEED+NLOOPDOSEED      
+    INTEGER(4), SAVE :: NLOOPSDOSEED  = 1      
+    !do addph on newph SEED
+    LOGICAL, SAVE    :: DOAONNSEED    = .TRUE.
     !
     !not all implemented yet
     LOGICAL, SAVE :: DOMINMAXSIELST = .FALSE.
@@ -222,6 +226,10 @@ MODULE FLAGS
               if(tstr2 /= '') then
                 READ(tstr2,*) NLOOPSDOSEED
               endif
+            case("DOAONNSEED")
+              CALL LOWUP(tstr2)
+              if(tstr2 == 'TRUE') DOAONNSEED = .TRUE.
+              if(tstr2 == 'FALSE') DOAONNSEED = .FALSE.
             case("OUTFLAGS")
               CALL LOWUP(tstr2)
               if(tstr2 == 'TRUE') OUTFLAGS = .TRUE.
