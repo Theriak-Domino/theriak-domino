@@ -1,25 +1,29 @@
-C-----Version: 2023.01.02
+C-----Version: 2023.03.06
 
-CHANGES IN THERIAK-DOMINO version 2023.01.02
+CHANGES IN THERIAK-DOMINO version 2023.03.06
 --------------------------------------------
+- A beta version of this release was previously released as
+2023.01.02 beta, with the changes listed below
 - Theriak-Domino source repository moved to Git Hub; added 
 GPLv3 license
+- introduced a few flags to control what iteration loop SEEDS are
+added to the minimization
 - implemented changes to allow significantly lower phase component
 proportions and site element fractions in complex ax models,
 that otherwise leads to minimization failures for some models at
-certain conditions.
+certain conditions
 - updates to identify and correct underflow and invalid exceptions
-in certain places (a few places still to clean up); updated 
+in certain places (a few instances still present); updated 
 parameters in theriak.ini for use with this version
 - updated HP11 thermo expressions for compatibility with tc350si;
-G's match to better than 1000'th of J.
+G's match to better than 1000'th of J
 - added DGC data line to database file format to mimic tc dqf
-better.
+better
 - added a CALC-FLAGS section to theriak.ini that can take
 additional parameters;  OUTFLAGS can be set to true to output
 active CALC-PARAMETERS used during calculation of dominograms;
 (other flags that can be set in the .ini file are found in the 
-flags source file but generally should not be changed)
+flags source file but hopefully should not need changed)
 - fixed svg output in guzzler/explot to display correctly in 
 web browser.
 - update makefiles
@@ -41,12 +45,12 @@ makefile (for e.g., can use nmake (visual studio) with ifort/ifx)
     - a CMake based build system is being worked on for the next 
 release
 - added additional dataset files (converted from THERMOCALC format to 
-Theriak-Domino format).
+Theriak-Domino format)
 - renamed and added new liquid models to fsol.f90, (attempting
 for consistent naming). The Tomlinson & Holland (2021) liquid
-model is not working 100% correctly yet so don't use it (can generally
-give a good idea of relative equilibrium assemblage sequence, but it 
-does not exactly match THERMOCALC results like the other models do)
+model is not working correctly yet so don't use it 
+- the above additions/changes for this release were contributed 
+by Doug Tinkham
 
 
 CHANGES IN THERIAK-DOMINO version 28.05.2022

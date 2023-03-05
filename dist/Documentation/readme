@@ -1,4 +1,4 @@
-C-----Version: 2023.01.02   of Theriak-Domino
+C-----Version: 2023.03.06   of Theriak-Domino
 
 Getting started: Short instruction for installation are given below.
 Examples and description of the programs are given in the document "TheriakDominoGuide".
@@ -34,10 +34,10 @@ In folder Documentation
 In folder working (working directory)
 
 	THERIN (user input file)
-	JUN92.bs (database)
-	tcdb55c2d (database)
-	tds62c (database)
-	sialca (database)
+	JUN92.bs (example database)
+	tcdb55c2d (example database)
+	tds62c (example database)
+	sialca (example database)
 	bash_profile (for MAC)
 	zshrc (for MAC)
 	start.bat (Batch file for PC)
@@ -62,6 +62,9 @@ calculation of partial melting equilibria for metapelites. Journal of Metamorphi
 (translated from tx-NCKFMASHTO.txt in tc330 download.)
 Older solution models are commented out.
 
+Note that updated versions of the Holland & Powell (1998) ds5.5 can be obtained from the associated
+Git Hub site https://github.com/Theriak-Domino/Databases.
+
 tcds62cid
 ---------
 Translation of tc-ds62.txt from http://www.metamorph.geo.uni-mainz.de/thermocalc/dataset6/index.html
@@ -70,6 +73,8 @@ note: iron is commented out, because it tends to become stable.
 You may have to comment out further phases if not desired: e.g. zoisite, stilpnomelane, microcline
 If not needed, comment out the F3-phases.
 
+Note that updated versions of the Holland & Powell (2011) ds62 and ds633 can be obtained from the associated Git Hub site https://github.com/Theriak-Domino/Databases.
+
 sialca
 ------
 This data is from from:
@@ -77,8 +82,8 @@ Berman R.G., Brown T.H. (1984): A thermodynamic model for multicomponent melts, 
 to the system CaO-Al2O3-SiO2. Geochim. Cosmochim. Acta 48:661-678
 
 -------------------------------------
-In folder programs (program directory) and src (source codes) and compiled versions
-of the main programs and their source code, respectively
+In folder Programs (program directory) and src (source codes) are compiled versions
+of the main Programs and their source code, respectively:
 	theriak.f90	(Calculates equilibrium assemblages)
 	domino.f90	(Calculates equilibrium assemblage phase diagrams)
 	therbin.f90	(Calculates binary phase diagrams)
@@ -140,9 +145,9 @@ additional files (added just to test the compilation)
 	guzzler.last
 	explot.last
 -----------------------------------------
-In folder TheriakExamples
+In folder Examples
 
-Content may vary. Each folder includes a database, a dat-file and a log-file where the input for
+Content may vary. Each folder includes an example database, a dat-file and a log-file where the input for
 the demo is stored. For testing, run the program for which a log-file exists and use the proposed input.
 
 trippt/				Triple point of AS. Very simple example to get started.
@@ -166,15 +171,19 @@ Unzip TheriakDominoMAC.zip (Intel and macos 11.0 or greater) or TheriakDominoMAC
 Silicon and macos 12.0 or greater). double-clicking should work, else donwload the free
 expander software from http://www.stuffit.com/mac/index.html.
 
-Prepare the Terminal application 
+Prepare the Terminal application: 
+We assume a very basic level of understanding of use of the Terminal application.
 The terminal application is usually located on the start-up disk in the Folder
 "Applications/Utilities"
-Put the Terminal application in the Dock.
+Drag the Terminal application to the Dock for easy subsequent access to the Terminal.
 In the menu "Terminal / Preferences" choose the shell and the appropriate settings
-(e.g. Text and background colours). Define the Dimensions with 133 Columns and 30 to 50 Rows.
+(e.g. Text and background colours). Define the Dimensions with 133 Columns and 30 to 50 Rows,
+or whatever your preferred size is.
 
-Copy the Folder "TheriakDominoMAC" or "TheriakDominoMACAS" to your Home Directory.
-(The name of the Home Directory is your user name.)
+Copy the unzipped folder "TheriakDominoMAC.2023.03.06" or "TheriakDominoMACAS.2023.03.06" to your 
+Home Directory or other directory of your choice. (The name of the Home Directory is your user
+name) You may rename this unzipped directory to your choosing (don't use spaces in the name), 
+and the instructions below assumes you rename it to TheriakDominoMAC. 
 
 In order to start the programs from a Terminal and to keep your input files
 separate from the programs, you need to set the THERDOM environment variable
@@ -183,25 +192,28 @@ executing programs.
 
 The folder "Working" contains the file "bash_profile" and “.zshrc”
 Copy "bash_profile" (for bash) or "zshrc" (for zsh) to your Home directory (if you already
-have one of these profiles in your home directory, you can read the provided profiles and
-make sure you have the commands that are needed add THERDOM to your path).
-Edit it to define the Program directory. (use e.g. BBEdit or TextEdit)
-Write the name of your Home directory instead of "capi"
-(If your user name contains blanks these have to be written as "\ " (backslash, blank))
+have one of these profiles in your home directory, you can read the provided profiles in a text
+editor and copy the commands that are needed to add THERDOM to your path to your existing user 
+profile). Edit the file in a text editor to define the location path to your Program directory, 
+using correct directory names for wherever you copied/moved the unzipped distribution directory to.
+Write the name of your Home directory instead of "capi" (if your user name contains blanks, 
+these blanks have to be escaped by writing as "\ " (backslash, blank)):
 
 	export THERDOM=/Users/capi/TheriakMAC/TheriakDomino
 change to 
 	export THERDOM=/Users/UserName/TheriakMAC/TheriakDomino
 
-Save the file as ".bash_profile" or ".zshrc" in the Home directory.(The first
-character is a dot, there is no extension (like .txt etc.). )
-Some editors refuse to save a name beginning with ".".
-If all fails, save without the dot, then start the Terminal and type:
+
+Save the file as ".bash_profile" or ".zshrc" in the Home directory. (The first
+character is a dot, there is no extension (like .txt etc.); more recent versions of macos
+use the zsh terminal, which reads .zshrc). Some editors refuse to save a name beginning with ".".
+If all fails, save without the dot, then start the Terminal, navigate to your home directory if
+not there (type: cd ~  and hit enter if you are not sure you are in your home directory) and type:
  "mv bash_profile .bash_profile", or "mv zshrc .zshrc"then quit the Terminal.
 
 Note: Because of the dot, the file ".bash_profile" becomes invisible.
 
-Note: the path+filenames should not exceed 250 characters.
+NOTE: the path+filenames should not exceed 250 characters.
 
 The following are my personal preferences, You may as well delete these lines.
 PS1="`whoami` \#>  (or PROMPT='%n %h %#>') 

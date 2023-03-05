@@ -1,7 +1,11 @@
-CHANGES IN THERIAK-DOMINO version 2023.01.02
+CHANGES IN THERIAK-DOMINO version 2023.03.06
 --------------------------------------------
+- A beta version of this release was previously released as
+2023.01.02 beta, with the changes listed below
 - Theriak-Domino source repository moved to Git Hub; added 
 GPLv3 license
+- introduced a few flags to control what iteration loop SEEDS are
+added to the minimization
 - implemented changes to allow significantly lower phase component
 proportions and site element fractions in complex ax models,
 that otherwise leads to minimization failures for some models at
