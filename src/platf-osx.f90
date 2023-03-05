@@ -1,4 +1,4 @@
-!platf-osx.f90  Version: 2023.01.02
+!platf-osx.f90  Version: 2023.03.06
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1984-2022  Christian de Capitani
 !

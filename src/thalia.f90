@@ -1,4 +1,4 @@
-!thalia.f90  Version: 2023.01.02
+!thalia.f90  Version: 2023.03.06
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1989-2022  Christian de Capitani
 !

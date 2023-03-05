@@ -1,4 +1,4 @@
-C-----Version: 28.05.2022
+C-----Version: 2023.03.06
 
 Format of file thhelp.txt (don't change the name of this file; it is hard-coded)
 --------------------------------------------------------------------------------
@@ -17,7 +17,7 @@ To be valid, the block-delimiting strings $BLOCKNAME and $END should begin at
 position 1 of the line. Significant lines are shown on screen just as they are 
 written here. For convenience of reading on screen, significant lines should 
 not be longer than 80 chars. Screen paging of lengthy blocks can be achived 
-by empty lines with character § at position 1. Such lines are not shown on 
+by empty lines with character ï¿½ at position 1. Such lines are not shown on 
 screen, but cause subroutine HelpMe to stop listing the block and ask the user to 
 
 'Hit any key to continue!' 
@@ -85,9 +85,9 @@ Help: define type of calculations ($THK-SPECIAL)
                  0 for x=0 and x=1) is written into the bin-file.
                  if s1 not zero (or blank): calculate only loop s1 (for testing purposes)
 
-    "check"      Used to test the subroutine ÒGETVALÓ. After equilibrium calculation you
+    "check"      Used to test the subroutine ï¿½GETVALï¿½. After equilibrium calculation you
                  can enter phase  var  (Phase name and variable name) repeatedly.
-                 (see program Òprtcal.f90Ó)
+                 (see program ï¿½prtcal.f90ï¿½)
 
     "loop"   : Prompts for new T and P values after each calculation.
 
@@ -95,7 +95,7 @@ Help: define type of calculations ($THK-SPECIAL)
                it is interpreted as the name of a drv-file. This file
                drives equilibria calculations, e. g., along a given PT-path. 
                It may contain the following directives:
-§
+ï¿½
     "REF" t1  p2         : defines the eqilibrium assemblage at the reference
                            t1, p2. This is the  "reference assemblage" adding
                            the variable "G_overstep" to the tab- and tcp-files. 
@@ -222,7 +222,7 @@ Help: database definition ($DOM-SCRIPT)
                           below.
                          
 NOTE: Depending of your operating system, input might be case sensitive !
-§
+ï¿½
 
 DOMINO-SCRIPTING
 ----------------
@@ -239,7 +239,7 @@ that DOMINO normally asks you. So, you may let DOMINO do its job unattended
 without you being present and answering the questions. The script files 
 may be executed by means of an executable BATCH JOB file. 
 
-§
+ï¿½
 
 Structure of the executable batch files
 ---------------------------------------
@@ -282,7 +282,7 @@ final result will be a PostScript file named myplot01.ps.
 
 NOTE: BATCH JOB files may be edited carefully with any text editor!
 
-§
+ï¿½
 
 Structure of SCRIPT files
 -------------------------
@@ -423,7 +423,7 @@ Examples:
             P  1000  10000
             LNA(Ab) 0.5  1.2
 -----------------------------------------------------------------------------------
-§
+ï¿½
 $END
 
 $DOM-ISO*
@@ -474,7 +474,7 @@ where
                    lower is numbered 2 and so on.
 
 Note: All input arguments must be delimited by at least 2 spaces.
-§
+ï¿½
 
 ISOPLETH KEYWORDS
 =================
@@ -514,7 +514,7 @@ ISOPLETH KEYWORDS
       Volume% of phase abc (% of solids)   : abc    "vol%"      Nr
 
 Note: abc and species are case sensitive names or abbreviations of phases and endmembers
-§
+ï¿½
 
 Summary
 =======
@@ -548,7 +548,7 @@ To plot Wt% of H2O in solids between 0 and 10 in steps of 0.5
            
                   %h2o.sol    0   10   0.5
 -----------------------------------------------------------------------------
-§
+ï¿½
 $END
 
 $DOM-ISO1
@@ -591,7 +591,7 @@ All input arguments must be delimited by at least two spaces.
 "prec"    is the precision in cm, (default=0.005). 
 "smooth"  is the smoothness in cm, (default=0.04).
 -----------------------------------------------------------------------------
-§
+ï¿½
 $END
 
 
@@ -677,7 +677,7 @@ room for a number near the line, it remains unlabeled.
 Generally, a reaction line shorter than 0.02 cm (=minimum length) is not 
 labeled.
 --------------------------------------------------------------------------------
-§
+ï¿½
 $END
 
 $GUZ-GLOBS
@@ -711,7 +711,7 @@ The options are:
     Short lines will not be labeled.
  4: Label all curves with either full text-labels or with numbers in line.
 --------------------------------------------------------------------------------
-§
+ï¿½
 $END
 
 $EXP-START
@@ -794,7 +794,7 @@ The following "standard" thermodynamic functions,
     LNK : for -G/RT  
     LOGK: for -G/(RT*ln10)
     K   : for exp(-G/RT) 
-§ 
+ï¿½ 
 or delta functions in respect to 25 C, 1 Bar,
     G-G0     V-V0     CP-CP0     H-H0     S-S0     
 
@@ -812,7 +812,7 @@ or contribution from volume-function,
                             
 or contribution from gas-function.
     G.GAS    V.GAS
-§
+ï¿½
 
 Input examples:
     G-G0
@@ -1121,7 +1121,7 @@ Help: start MAKEMAP ($MAP-KEY)
 
 NOTE: As usual, "key" must be separated from funtionNr by at least two blanks!
 -------------------------------------------------------------------------------
-§ 
+ï¿½ 
 $END
 
 $XY-START
@@ -1161,7 +1161,7 @@ $XY-AXES
                      For X: 1
                      For Y: 3, 5, 6+7, 8+9
  
-§                    
+ï¿½                    
 $END
 
 

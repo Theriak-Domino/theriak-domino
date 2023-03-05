@@ -1,4 +1,4 @@
-!theriag.f90  Version: 2023.01.02
+!theriag.f90  Version: 2023.03.06
 ! -----------------------------------------------------------------------
 ! Copyright (C) 2000-2022  Fred Gaidies
 !                          Christian de Capitani
