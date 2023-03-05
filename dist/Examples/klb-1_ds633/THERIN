@@ -5,7 +5,7 @@
 !       lines are needed that define the systems endmember compositions.
 !    1.0000    250    0.020000   0.1000000E-08   0.1000000E-06   0.1000000E+01 0.1000000E-04     25      15     100
     1000  20000
-0   NA(0.5)CA(2.821)K(0.02)FE(5.879)MG(50.51)AL(3.548)SI(38.451)TI(0.1)CR(0.218)O(?)O(0.096)   *   KLB-1 H-free tc-ig50 ex 
+1   NA(0.5)CA(2.821)K(0.02)FE(5.879)MG(50.51)AL(3.548)SI(38.451)TI(0.1)CR(0.218)O(?)O(0.096)   *   KLB-1 H-free tc-ig50 ex 
 
 0   NA(0.5)CA(2.821)K(0.02)FE(5.879)MG(50.51)AL(3.548)SI(38.451)TI(0.1)CR(0.218)H(0.1)O(?)O(0.096)   *   KLB-1 +H tc-ig50 ex 
 

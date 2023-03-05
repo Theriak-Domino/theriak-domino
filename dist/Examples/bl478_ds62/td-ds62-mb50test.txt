@@ -13,7 +13,7 @@
   Converted by D.K. Tinkham (tc2td.wl) to Theriak-Domino format from files tc-ds62.txt and 
   tc-mb50NCKFMASHTO.txt on Sat 24 Dec 2022 23:09:40.
 
-  Note 0: This database file can only be used with the 2023.01.02 or newer version of the
+  Note 0: This database file can only be used with the 2023.02.18 or newer version of the
         Theriak-Domino suite of programs.
   Note 1: This database file has the solution models that appear in the equivalent
         file on the HPxeos website (as of Dec 2022) and is for use with broadly metabasltic

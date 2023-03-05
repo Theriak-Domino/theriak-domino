@@ -1,6 +1,6 @@
 ! flags.f90  Version: 2023.03.06
 ! -----------------------------------------------------------------------
-! Copyright (C) 2022  Doug Tinkham
+! Copyright (C) 2022-2023  Doug Tinkham
 !
 ! This program is free software: you can redistribute it and/or modify
 ! it under the terms of the GNU General Public License as published by
