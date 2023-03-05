@@ -1,4 +1,4 @@
-! flags.f90  Version: 2023.01.02
+! flags.f90  Version: 2023.02.18
 ! -----------------------------------------------------------------------
 ! Copyright (C) 2022  Doug Tinkham
 !
@@ -55,8 +55,8 @@ MODULE FLAGS
     REAL(8), SAVE    :: RLOWEXP       = -706.0D0
     INTEGER(4), SAVE :: ILOWEXP       = -706
     LOGICAL, SAVE    :: DOEXTRAPPNSVA = .FALSE.
-    !LOO1 loop that seeds are added via sr newph
-    INTEGER(4), SAVE :: L1NEWSEED     = 5 
+    !LOO1 loop that seeds are added via sr newph. approx >= #sys comp seems ok
+    INTEGER(4), SAVE :: L1NEWSEED     = 12 
     !# loops to do seeds in sr addph; loops L1NEWSEED:L1NEWSEED+NLOOPDOSEED      
     INTEGER(4), SAVE :: NLOOPSDOSEED  = 1      
     !do addph on newph SEED
