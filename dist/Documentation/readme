@@ -1,26 +1,32 @@
 C-----Version: 2023.03.06   of Theriak-Domino
 
-Getting started: Short instruction for installation are given below.
-Examples and description of the programs are given in the document "TheriakDominoGuide".
+====================================================================================
+Getting started: Short instructions for installation are given below.
+====================================================================================
+
+CONTENTS:
+1. List of distributed files and folders
+2. Installation on Macintosh OS X 
+3. Installation on Windows
+
+
+Examples and a description of the programs are given in the document "TheriakDominoGuide.pdf".
 
 All programs provide some help with the "?" keyword in the input dialogues.
 
-------------------------------------------------------------------------------------------
-List of distributed files and folders
--------------------------------------
-In the Folder TheriakDominoMAC, TheriakDominoMACAS, TheriakDominoWIN or
-TheriakDominoLIN:
-(The difference between TheriakDominoMAC/MACAS/WIN/LIN versions are the 
-binaries/executables, the theriak.ini provided with the programs,
-and the line endings of text files. Mac/LIN:  <LF>, DOS:  <CR><LF>)
+====================================================================================
+1. List of distributed files and folders
+====================================================================================
+
+In the Folder TheriakDomino.2023.03.06
 
 Folders:
 	Documentation
+  Examples
+  Programs
+  src
 	Working
-	Programs
-	Examples
-	src
-
+	
 -------------------------------------
 In folder Documentation
 	readme
@@ -31,55 +37,61 @@ In folder Documentation
 	commented_domino.pdf	(commented run of domino)
 
 -----------------------------------------
-In folder working (working directory)
+In folder Working (an example of a working directory)
 
 	THERIN (user input file)
 	JUN92.bs (example database)
 	tcdb55c2d (example database)
 	tds62c (example database)
 	sialca (example database)
-	bash_profile (for MAC)
-	zshrc (for MAC)
-	start.bat (Batch file for PC)
+	bash_profile (for MAC Terminal bash shell)
+	zshrc (for MAC Terminal zsh shell)
+	start.bat (Batch file for Windows PC)
 	
-JUN92.bs
--------- 
-This database is identical (almost) to the one used by the "TWQ" software. See also:
-Berman R.G., Brown T.H., Greenwood H.J. (1985): An internally consistent thermodynamic
-database for minerals in the system Na2O-K2O-CaO-MgO-FeO-Fe2O3-Al2O3-SiO2-TiO2-H2O-CO2.
-Atomic Energy of Canada Ltd. Technical Report 377,62p.
-Perkins E.H., Brown T.H., Berman R.G. (1986): PTX-SYSTEM:three programs for calculation of
-pressure-temperature-composition phase diagrams. Computers & Geosciences, v. 12, p. 749-755
-Includes some new solution models for WHITE MICA (L. Keller, 2004) SPIN, OPX, CHL4 (P. Hunziker 2003)
+  File JUN92.bs
+  ------------- 
+  This database is identical (almost) to the one used by the "TWQ" software. See also:
+  Berman R.G., Brown T.H., Greenwood H.J. (1985): An internally consistent thermodynamic
+  database for minerals in the system Na2O-K2O-CaO-MgO-FeO-Fe2O3-Al2O3-SiO2-TiO2-H2O-CO2.
+  Atomic Energy of Canada Ltd. Technical Report 377,62p.
+  Perkins E.H., Brown T.H., Berman R.G. (1986): PTX-SYSTEM:three programs for calculation 
+  of pressure-temperature-composition phase diagrams. Computers & Geosciences, v. 12, 
+  p. 749-755 Includes some new solution models for WHITE MICA (L. Keller, 2004) SPIN, 
+  OPX, CHL4 (P. Hunziker 2003)
 
-tcdb55c2d
----------
-These are translations readable for Theriak and Domino of the THERMOCALC database
-tcds55.txt, personal communication of R. Powell, September 2004.
-(Some solution models. (e.g. Chlorite solution cannot be translated to the Theriak philosophy)
-Includes the solution models proposed in White, RW, Powell, R & Holland, TJB (2007): Progress relating to 
-calculation of partial melting equilibria for metapelites. Journal of Metamorphic Geology, 25, 511-527.
-(translated from tx-NCKFMASHTO.txt in tc330 download.)
-Older solution models are commented out.
+  File tcdb55c2d
+  --------------
+  These are translations readable for Theriak and Domino of the THERMOCALC database
+  tcds55.txt, personal communication of R. Powell, September 2004.
+  (Note that some solution models (e.g. Chlorite solution) cannot be exactly translated 
+  to the Theriak philosophy due to the well-known equipartitioning problems)
+  It includes the solution models proposed in White, RW, Powell, R & Holland, TJB (2007): 
+  Progress relating to calculation of partial melting equilibria for metapelites. 
+  Journal of Metamorphic Geology, 25, 511-527. (translated from tx-NCKFMASHTO.txt in 
+  tc330 download.)
+  Older solution models are commented out.
 
-Note that updated versions of the Holland & Powell (1998) ds5.5 can be obtained from the associated
-Git Hub site https://github.com/Theriak-Domino/Databases.
+  Note that updated versions of the Holland & Powell (1998) ds55 thermodynamic and 
+  ax files for use in Theriak-Domino can be obtained from the associated Git Hub 
+  site https://github.com/Theriak-Domino/Databases.
 
-tcds62cid
----------
-Translation of tc-ds62.txt from http://www.metamorph.geo.uni-mainz.de/thermocalc/dataset6/index.html
-last line: tc-ds62.txt produced at 20.08 on Mon 6 Feb,2012 (sigfit =  1.028)
-note: iron is commented out, because it tends to become stable.
-You may have to comment out further phases if not desired: e.g. zoisite, stilpnomelane, microcline
-If not needed, comment out the F3-phases.
+  File tcds62cid
+  --------------
+  Translation of tc-ds62.txt from http://www.metamorph.geo.uni-mainz.de/thermocalc/dataset6/index.html
+  last line: tc-ds62.txt produced at 20.08 on Mon 6 Feb,2012 (sigfit =  1.028)
+  note: iron is commented out, because it tends to become stable. You may have to comment out 
+  further phases if not desired: e.g. zoisite, stilpnomelane, microcline.
+  If not needed, comment out the F3-phases.
 
-Note that updated versions of the Holland & Powell (2011) ds62 and ds633 can be obtained from the associated Git Hub site https://github.com/Theriak-Domino/Databases.
+  Note that updated versions of the Holland & Powell (2011) ds62 and ds633 thermodynamic 
+  and ax files for use in Theriak-Domino can be obtained from the associated Git Hub 
+  site https://github.com/Theriak-Domino/Databases.
 
-sialca
-------
-This data is from from:
-Berman R.G., Brown T.H. (1984): A thermodynamic model for multicomponent melts, with application
-to the system CaO-Al2O3-SiO2. Geochim. Cosmochim. Acta 48:661-678
+  File sialca
+  -----------
+  This data is from from:
+  Berman R.G., Brown T.H. (1984): A thermodynamic model for multicomponent melts, with application
+  to the system CaO-Al2O3-SiO2. Geochim. Cosmochim. Acta 48:661-678
 
 -------------------------------------
 In folder Programs (program directory) and src (source codes) are compiled versions
@@ -144,72 +156,128 @@ additional files (added just to test the compilation)
 	domino.last
 	guzzler.last
 	explot.last
+
 -----------------------------------------
 In folder Examples
 
 Content may vary. Each folder includes an example database, a dat-file and a log-file where the input for
 the demo is stored. For testing, run the program for which a log-file exists and use the proposed input.
 
-trippt/				Triple point of AS. Very simple example to get started.
-afmfor/				Demonstration on how a "AFM-like" diagram may be produced by domino.
-anorthiteExample/		Simple Diagrams with Bulk=an-rich plagioclase [+ SiO2 + H2O]
-fo_qz_melt/			Fo-Qzt-melt example from Holland and Powell (2003)
-kelsey04_fig5/			Phase diagram example after Kelsey et al. (2004), Fig 5a.
-scripting/			Examples of scripts with diagrams in the System Si-Na-K-Al-O-H
-shawL55/			Phasediagram for metapelite Nr.55, composition from Shaw (1955)
-shawL62/			Phasediagram for metapelite Nr.62, composition from Shaw (1955)
-sialca_examples/		Example of Binary and Ternary phase diagrams with the database "sialca"
-parigi/				Example from Coggon and Holland (2002), Fig. 6. (with fixed H2O activity)
-bl478_ds62/			Example with a metabasite composition and the Holland & Powell dataset 6.2
-klb-1_ds633/			Example of an ultramafic comosition and the Holland & Powell dataset 6.3.3
+trippt/				Triple point of AS. Very simple example to get started. To test program domino.
+afmfor/				Demonstration on how a "AFM-like" diagram may be produced by domino. To test  program domino.
+anorthiteExample/		Simple Diagrams with Bulk=an-rich plagioclase [+ SiO2 + H2O] To test  program domino.
+fo_qz_melt/			Fo-Qzt-melt example from Holland and Powell (2003). To test  program therbin.
+kelsey04_fig5/			Phase diagram example after Kelsey et al. (2004), Fig 5a. To test  program domino.
+scripting/			Examples of scripts with diagrams in the System Si-Na-K-Al-O-H. To test  program domino.
+shawL55/			Phasediagram for metapelite Nr.55, composition from Shaw (1955). To test  program domino.
+shawL62/			Phasediagram for metapelite Nr.62, composition from Shaw (1955). To test  program domino.
+sialca_examples/		Example of Binary and Ternary phase diagrams with the database "sialca". To test  program domino.
+parigi/				Example from Coggon and Holland (2002), Fig. 6. (with fixed H2O activity). To test  program domino.
+bl478_ds62/			Example with a metabasite composition and the Holland & Powell dataset 6.2. To test  program domino.
+klb-1_ds633/			Example of an ultramafic comosition and the Holland & Powell dataset 6.3.3. To test  program domino.
 
 
 ====================================================================================
-Installation on Macintosh OS X (Is tested on OS X 3.7 - 10.15.4)
+2. Installation on Macintosh OS X (This release is tested on macos 11.x and 12.6.2)
 ====================================================================================
-Unzip TheriakDominoMAC.zip (Intel and macos 11.0 or greater) or TheriakDominoMACAS.zip (Apple 
-Silicon and macos 12.0 or greater). double-clicking should work, else donwload the free
-expander software from http://www.stuffit.com/mac/index.html.
 
-Prepare the Terminal application: 
+Quick Instructions for experienced users:
+-----------------------------------------
+1. Download the appropriate release package from the Git Hub site:
+  - TheriakDominoMACi.2023.03.06.zip: package for Intel macs.
+  - TheriakDominoMACas.2023.03.06.zip: package for Apple Silicon macs.
+2. Unzip the downloaded package, and copy the directory to your home directory or
+   other directory of your choice (avoid spaces in path). The unzipped distribution
+   will by default have the directory name TheriakDominoMAC. If you work with multiple
+   versions of the programs, my preference is to change the directory name to include 
+   the version number (TheriakDomino.2023.03.16).
+3. Update your .bash_profile file (if Terminal is set to use the bash shell) or .zshrc  
+   file (if Terminal is set to use the zsh shell) in your home directory to set the 
+   environment variable THERDOM, and to prepend the THERDOM environment variable to  
+   your PATH variable. The THERDOM variable should be set to the path containing the 
+   Programs subdirectory (the Programs folder within the unzipped distribution). Close  
+   and restart Terminal so the changed profile is read by the Terminal application. To 
+   ensure the variables are set correctly, enter/type "echo $THERDOM" to make sure the 
+   path to your Programs directory is listed correctly, and type/enter "echo $PATH" to   
+   make sure this path appears somewhere in the list of paths given for the PATH 
+   variable.
+4. You can now set up any working directory with a database/ax file and a THERIN file.
+   cd in the Terminal to your working directory, and you are ready to start using
+   the various programs (theriak, domino, etc.). Try to keep your working directory
+   path farily short (< 250 characters). If you receive errors about files not being
+   found when running, ensure your path is not too large (use a shorter path
+   location). NOTE: Run the programs by starting them from the Terminal command line
+   (or with a wrapper script), and not by double-clicking on the binary application 
+   file itself.
+
+Detailed Instructions for new users:
+------------------------------------
+1 and 2. Follow steps 1 and 2 in the Quick Instructions above to download, unzip, and 
+move the distribution directory/folder to your Home directory (and optionally rename). 
+(Note: The name of the Home Directory is your user name). 
+
+Double-clicking the downloaded zip should unzip it; if not right/2-finger click and 
+Open With one of the system-recommended unarchivers. If none are available, find a 
+freely available expander/unarchiver software to install and use.
+
+The instructions below assume you keep the default directory name of TheriakDominoMAC, 
+but if you rename the folder to a different name, all you need to do is substitute 
+that name below where TheriakDominoMAC appears. 
+
+3. Prepare the Terminal application for use: 
 We assume a very basic level of understanding of use of the Terminal application.
 The terminal application is usually located on the start-up disk in the Folder
-"Applications/Utilities"
-Drag the Terminal application to the Dock for easy subsequent access to the Terminal.
-In the menu "Terminal / Preferences" choose the shell and the appropriate settings
-(e.g. Text and background colours). Define the Dimensions with 133 Columns and 30 to 50 Rows,
-or whatever your preferred size is.
+"Applications/Utilities". It is recommended to drag the Terminal application to 
+the Dock for easy subsequent access to the Terminal. In the menu "Terminal / Preferences" 
+choose the shell and the appropriate settings (e.g. Text and background colours). 
+Define the Dimensions with 133 Columns and 30 to 50 Rows, or whatever your preferred 
+size is. Newer macs are recommending to use the zsh shell in Terminal, which can be 
+specified by finding a section in the Terminal Preferences that says "Shells open with" 
+or similar, and specifying the command /bin/zsh
 
-Copy the unzipped folder "TheriakDominoMAC.2023.03.06" or "TheriakDominoMACAS.2023.03.06" to your 
-Home Directory or other directory of your choice. (The name of the Home Directory is your user
-name) You may rename this unzipped directory to your choosing (don't use spaces in the name), 
-and the instructions below assumes you rename it to TheriakDominoMAC. 
+In order to start the programs from a Terminal and to keep your input files separate 
+from the programs, you need to set the THERDOM environment variable to the path where 
+the programs are stored and add this path to the searchpath for executing programs. 
+This is most easily achieved by making the changes described below in your 
+.bash_profile file (older macs, using the bash shell from Terminal) or .zshrc file 
+(newer macs or when using the zsh shell from Terminal); these files are located in 
+your Home directory.
 
-In order to start the programs from a Terminal and to keep your input files
-separate from the programs, you need to set the THERDOM environment variable
-to the path where the programs are stored and also to add this path to the searchpath for
-executing programs.
+The folder "Working" contains the text profile files "bash_profile" and “zshrc” to 
+illustrate what settings should be in your .bash_profile or .zshrc files. Copy 
+"bash_profile" (for bash) or "zshrc" (for zsh) to your Home directory (if you 
+already have one of these profiles in your home directory, you can read the provided 
+profiles in a text editor and copy the commands that are needed to add THERDOM to 
+your path in your existing user profile file). Edit the file in a text editor to 
+define the location path to your Programs directory, using correct directory names 
+for wherever you copied/moved the unzipped distribution directory to. Write the name 
+of your Home directory instead of "capi" as shown below. (If your user name contains 
+blanks, these blanks have to be escaped by writing as "\ " (backslash, blank)).
 
-The folder "Working" contains the file "bash_profile" and “.zshrc”
-Copy "bash_profile" (for bash) or "zshrc" (for zsh) to your Home directory (if you already
-have one of these profiles in your home directory, you can read the provided profiles in a text
-editor and copy the commands that are needed to add THERDOM to your path to your existing user 
-profile). Edit the file in a text editor to define the location path to your Program directory, 
-using correct directory names for wherever you copied/moved the unzipped distribution directory to.
-Write the name of your Home directory instead of "capi" (if your user name contains blanks, 
-these blanks have to be escaped by writing as "\ " (backslash, blank)):
+The minimum information that needs to be included in the .bash_profile or .zshrc file 
+are these 2 lines:
 
-	export THERDOM=/Users/capi/TheriakMAC/TheriakDomino
-change to 
-	export THERDOM=/Users/UserName/TheriakMAC/TheriakDomino
+	export THERDOM=/Users/capi/TheriakDominoMAC/Programs
+  export PATH="$PATH:$THERDOM"
 
+where you will change capi to your home directory name, and change TheriakDominoMAC if 
+you changed the unzipped directory name to something else:
+
+	export THERDOM=/Users/YourUserName/YourTheriakDominoDirectoryName/Programs
+  export PATH="$PATH:$THERDOM"
 
 Save the file as ".bash_profile" or ".zshrc" in the Home directory. (The first
-character is a dot, there is no extension (like .txt etc.); more recent versions of macos
-use the zsh terminal, which reads .zshrc). Some editors refuse to save a name beginning with ".".
-If all fails, save without the dot, then start the Terminal, navigate to your home directory if
-not there (type: cd ~  and hit enter if you are not sure you are in your home directory) and type:
- "mv bash_profile .bash_profile", or "mv zshrc .zshrc"then quit the Terminal.
+character is a dot, there is no extension (like .txt etc.). Some editors refuse to 
+save a name beginning with "."; If this happens, save without the dot, then start 
+the Terminal, navigate to your home directory if not there (type: cd  and hit enter 
+if you are not sure you are in your home directory) and type:
+
+  "mv bash_profile .bash_profile"
+  or 
+  "mv zshrc .zshrc"  
+
+then quit Terminal and restart Terminal so it will read your new or updated profile 
+file you just changed.
 
 Note: Because of the dot, the file ".bash_profile" becomes invisible.
 
@@ -223,9 +291,9 @@ alias ls="ls -aF"
 echo ~.bash_profile read  (confirms, that the .bash_profile file was read)
 echo pwd: $PWD (prints the path to the Home directory at login)
 
-Get ready to use THERIAK-DOMINO
+4. Get ready to use THERIAK-DOMINO:
 
-Open the Folder "Working", and place its window where it will not be completely hidden
+Open the Folder "Working" and place its window where it will not be completely hidden
 by the Terminal. All opening and editing of files is made from this window.
 The THERIAK-DOMINO programs are run from the Terminal.
 
@@ -248,13 +316,13 @@ exit            close the Terminal
 
 
 ============================================================================
-Installation on WIN
+3. Installation on WIN
 ============================================================================
-Unstuff TheriakDominoWIN/Programs.zip 
+Unstuff TheriakDominoWIN.2023.03.06.zip
 
-Copy the folder "TheriakDominoWin" to a folder of your choice, for example C:\ 
+Copy the resulting folder "TheriakDominoWIN" to a folder of your choice, for example C:\ 
 Note that in this case, the programs reside in the folder 
-C:\TheriakDominoWin\Programs
+C:\TheriakDominoWIN\Programs
 (if you put it somewhere else you have to edit the start.bat file and set
 THERDOM= to the path of the Programs folder)
 
