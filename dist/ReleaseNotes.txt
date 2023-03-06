@@ -1,16 +1,27 @@
-2022.01.02beta Release Notes
+2022.03.06 Release Notes
 
 The Theriak-Domino suite of programs are now released with the GNU GPLv3 
 open source license. This release focussed on getting programs theriak 
 and domino to work better with the Holland and Powell (2011) database
-update ds633 and the current set of metabasite and igneous activity
+updates  ds62, ds633, and the current set of metabasite and igneous activity
 composition models on the HPx-eos website (the mb50 and ig50 ax file models).
 
 A more complete list of changes are found in the CHANGELOG.md text file in 
-the root directory. Instructions for installation of programs and program
-use are in the Documentation directory. Basic instructions for building programs 
-from source using updated makefiles for Mac, Linux and Windows can be found on 
-the main page of the GitHub site: https://github.com/Theriak-Domino/theriak-domino
+the root directory, along with older release notes in Documentation/history. 
 
-Updated versions of databases and translations will be posted on the Databases 
-GitHub site: https://github.com/Theriak-Domino/Databases
+Instructions for installation of programs and program use are in the 
+Documentation/readme file. 
+
+Detailed explanations of the programs and their general use are in 
+Documentation/TheriakDominoGuide.pdf. 
+
+Basic instructions for building programs from source using updated makefiles 
+for Mac, Linux and Windows can be found on the main page of the GitHub site:
+https://github.com/Theriak-Domino/theriak-domino
+
+Updated versions of databases and ax model translations are and will continue 
+to be posted on the Databases GitHub site: https://github.com/Theriak-Domino/Databases
+
+
+Doug Tinkham & Christian de Capitani
+2023.03.06

@@ -251,47 +251,47 @@ SIO2(1)
       0   929  X =              0.8000 ,      1 REACTIONS:   18
       0   929  X =              0.9000 ,      1 REACTIONS:   18
       0   929  X =              1.0000 ,      1 REACTIONS:   18
- NUMBER OF LINES:   45    NUMBER OF POINTS:   129    max.ph.:   42
+ NUMBER OF LINES:   45    NUMBER OF POINTS:   129    max.ph.:   44
  LEVEL:  0   SQUARE: (  3 ,  5 ) LINE     1   REACTION    1: OPEN END              
      26   955  Y =              0.4500 ,      3 REACTIONS:   13    1   26
      10   965  X =              0.2500 ,      1 REACTIONS:   26
- NUMBER OF LINES:   45    NUMBER OF POINTS:   133    max.ph.:   61
+ NUMBER OF LINES:   45    NUMBER OF POINTS:   133    max.ph.:   53
  LEVEL:  0   SQUARE: (  4 ,  4 ) LINE     2   REACTION    2: OPEN END              
      18   983  Y =              0.3500 ,      2 REACTIONS:    2   24
      10   993  X =              0.3500 ,      1 REACTIONS:   24
- NUMBER OF LINES:   45    NUMBER OF POINTS:   136    max.ph.:   61
+ NUMBER OF LINES:   45    NUMBER OF POINTS:   136    max.ph.:   51
  LEVEL:  0   SQUARE: (  4 ,  3 ) LINE     3   REACTION    3: OPEN END              
      22  1015  Y =              0.2500 ,      3 REACTIONS:    3   14   15
      10  1025  X =              0.3500 ,      1 REACTIONS:    3
- NUMBER OF LINES:   45    NUMBER OF POINTS:   140    max.ph.:   42
+ NUMBER OF LINES:   45    NUMBER OF POINTS:   140    max.ph.:   40
  LEVEL:  0   SQUARE: (  4 ,  1 ) LINE     4   REACTION    4: OPEN END              
      22  1047  Y =              0.0500 ,      3 REACTIONS:   14   15    5
      23  1070  X =              0.3500 ,      3 REACTIONS:    5   15   14
- NUMBER OF LINES:   45    NUMBER OF POINTS:   146    max.ph.:   56
+ NUMBER OF LINES:   45    NUMBER OF POINTS:   146    max.ph.:   49
  LEVEL:  0   SQUARE: (  5 ,  3 ) LINE     5   REACTION    5: OPEN END              
      11  1081  Y =              0.2500 ,      1 REACTIONS:   41
      10  1091  X =              0.4500 ,      1 REACTIONS:   41
- NUMBER OF LINES:   45    NUMBER OF POINTS:   148    max.ph.:   46
+ NUMBER OF LINES:   45    NUMBER OF POINTS:   148    max.ph.:   43
  LEVEL:  0   SQUARE: (  5 ,  2 ) LINE     5   REACTION    5: BUMP                  
      11  1102  Y =              0.1500 ,      1 REACTIONS:    5
      10  1112  X =              0.4500 ,      1 REACTIONS:    5
- NUMBER OF LINES:   45    NUMBER OF POINTS:   150    max.ph.:   39
+ NUMBER OF LINES:   45    NUMBER OF POINTS:   150    max.ph.:   40
  LEVEL:  0   SQUARE: (  6 ,  3 ) LINE     6   REACTION    6: OPEN END              
      11  1123  Y =              0.2500 ,      1 REACTIONS:   19
      10  1133  X =              0.5500 ,      1 REACTIONS:   19
- NUMBER OF LINES:   45    NUMBER OF POINTS:   152    max.ph.:   43
+ NUMBER OF LINES:   45    NUMBER OF POINTS:   152    max.ph.:   41
  LEVEL:  0   SQUARE: (  6 ,  1 ) LINE     7   REACTION    7: OPEN END              
      26  1159  Y =              0.0500 ,      3 REACTIONS:    6    7    8
      10  1169  X =              0.5500 ,      1 REACTIONS:    7
- NUMBER OF LINES:   45    NUMBER OF POINTS:   156    max.ph.:   61
+ NUMBER OF LINES:   45    NUMBER OF POINTS:   156    max.ph.:   49
  LEVEL:  0   SQUARE: (  7 ,  2 ) LINE     9   REACTION    9: OPEN END              
      25  1194  Y =              0.1500 ,      3 REACTIONS:   28   21   22
      10  1204  X =              0.6500 ,      1 REACTIONS:   28
- NUMBER OF LINES:   45    NUMBER OF POINTS:   160    max.ph.:   59
+ NUMBER OF LINES:   45    NUMBER OF POINTS:   160    max.ph.:   50
  LEVEL:  0   SQUARE: (  7 ,  1 ) LINE     9   REACTION    9: TWO POINTS            
      11  1215  Y =              0.0500 ,      1 REACTIONS:    9
       2  1217  X =              0.6500 ,      0 REACTIONS:
- NUMBER OF LINES:   45    NUMBER OF POINTS:   161    max.ph.:   84
+ NUMBER OF LINES:   45    NUMBER OF POINTS:   161    max.ph.:   60
  LEVEL:  0   SQUARE: (  8 ,  3 ) LINE    11   REACTION   11: OPEN END              
       2  1219  Y =              0.2500 ,      1 REACTIONS:   25
  REACTION:  43  12  =  18
@@ -303,39 +303,39 @@ SIO2(1)
  LEVEL:  0   SQUARE: (  2 ,  7 ) LINE    12   REACTION   12: OPEN END              
      11  1239  Y =              0.6500 ,      1 REACTIONS:   34
      10  1249  X =              0.1500 ,      1 REACTIONS:   34
- NUMBER OF LINES:   46    NUMBER OF POINTS:   166    max.ph.:   60
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   166    max.ph.:   51
  LEVEL:  0   SQUARE: (  1 ,  2 ) LINE    13   REACTION   13: BUMP                  
      19  1268  Y =              0.1500 ,      2 REACTIONS:   12   13
      18  1286  X =              0.0500 ,      2 REACTIONS:   13   12
- NUMBER OF LINES:   46    NUMBER OF POINTS:   170    max.ph.:   44
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   170    max.ph.:   41
  LEVEL:  0   SQUARE: (  1 ,  1 ) LINE    13   REACTION   13: BUMP                  
      17  1303  Y =              0.0500 ,      2 REACTIONS:   12   13
       2  1305  X =              0.0500 ,      0 REACTIONS:
- NUMBER OF LINES:   46    NUMBER OF POINTS:   172    max.ph.:   34
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   172    max.ph.:   35
  LEVEL:  0   SQUARE: (  2 ,  3 ) LINE    13   REACTION   13: BUMP                  
      19  1324  Y =              0.2500 ,      2 REACTIONS:   13    1
       2  1326  X =              0.1500 ,      0 REACTIONS:
- NUMBER OF LINES:   46    NUMBER OF POINTS:   174    max.ph.:   34
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   174    max.ph.:   35
  LEVEL:  0   SQUARE: (  2 ,  4 ) LINE    13   REACTION   13: BUMP                  
      11  1337  Y =              0.3500 ,      1 REACTIONS:   13
      10  1347  X =              0.1500 ,      1 REACTIONS:   13
- NUMBER OF LINES:   46    NUMBER OF POINTS:   176    max.ph.:   44
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   176    max.ph.:   41
  LEVEL:  0   SQUARE: (  6 ,  2 ) LINE    16   REACTION   16: TWO POINTS            
      26  1373  Y =              0.1500 ,      3 REACTIONS:    6   16   17
      10  1383  X =              0.5500 ,      1 REACTIONS:   16
- NUMBER OF LINES:   46    NUMBER OF POINTS:   180    max.ph.:   59
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   180    max.ph.:   49
  LEVEL:  0   SQUARE: (  6 ,  4 ) LINE    19   REACTION   19: OPEN END              
      19  1402  Y =              0.3500 ,      2 REACTIONS:   19   20
      15  1417  X =              0.5500 ,      2 REACTIONS:   19   17
- NUMBER OF LINES:   46    NUMBER OF POINTS:   184    max.ph.:   60
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   184    max.ph.:   49
  LEVEL:  0   SQUARE: (  7 ,  3 ) LINE    20   REACTION   20: BUMP                  
      19  1436  Y =              0.2500 ,      2 REACTIONS:   20   21
      10  1446  X =              0.6500 ,      1 REACTIONS:   20
- NUMBER OF LINES:   46    NUMBER OF POINTS:   187    max.ph.:   60
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   187    max.ph.:   49
  LEVEL:  0   SQUARE: (  7 ,  4 ) LINE    20   REACTION   20: BUMP                  
       2  1448  Y =              0.3500 ,      1 REACTIONS:   29
       9  1457  X =              0.6500 ,      2 REACTIONS:   20   29
- NUMBER OF LINES:   46    NUMBER OF POINTS:   190    max.ph.:   61
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   190    max.ph.:   49
  LEVEL:  0   SQUARE: (  8 ,  2 ) LINE    22   REACTION   22: BUMP                  
      19  1476  Y =              0.1500 ,      2 REACTIONS:   23   11
       2  1478  X =              0.7500 ,      0 REACTIONS:
@@ -343,227 +343,227 @@ SIO2(1)
  LEVEL:  0   SQUARE: (  5 ,  4 ) LINE    25   REACTION   17: BUMP                  
      11  1489  Y =              0.3500 ,      1 REACTIONS:   17
      10  1499  X =              0.4500 ,      1 REACTIONS:   17
- NUMBER OF LINES:   46    NUMBER OF POINTS:   194    max.ph.:   62
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   194    max.ph.:   51
  LEVEL:  0   SQUARE: (  4 ,  5 ) LINE    28   REACTION   27: BUMP                  
      11  1510  Y =              0.4500 ,      1 REACTIONS:   27
       2  1512  X =              0.3500 ,      0 REACTIONS:
- NUMBER OF LINES:   46    NUMBER OF POINTS:   195    max.ph.:   85
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   195    max.ph.:   70
  LEVEL:  0   SQUARE: (  3 ,  6 ) LINE    28   REACTION   27: BUMP                  
      19  1531  Y =              0.5500 ,      2 REACTIONS:   30   27
      10  1541  X =              0.2500 ,      1 REACTIONS:   27
- NUMBER OF LINES:   46    NUMBER OF POINTS:   198    max.ph.:   79
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   198    max.ph.:   64
  LEVEL:  0   SQUARE: (  6 ,  5 ) LINE    29   REACTION   28: OPEN END              
      10  1551  Y =              0.4500 ,      2 REACTIONS:   31   32
       9  1560  X =              0.5500 ,      2 REACTIONS:   31   32
- NUMBER OF LINES:   46    NUMBER OF POINTS:   202    max.ph.:   83
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   202    max.ph.:   59
  LEVEL:  0   SQUARE: (  5 ,  6 ) LINE    32   REACTION   31: OPEN END              
      10  1570  Y =              0.5500 ,      2 REACTIONS:   31   32
       1  1571  X =              0.4500 ,      1 REACTIONS:   32
- NUMBER OF LINES:   46    NUMBER OF POINTS:   205    max.ph.:   64
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   205    max.ph.:   62
  LEVEL:  0   SQUARE: (  5 ,  5 ) LINE    32   REACTION   31: BUMP                  
       3  1574  Y =              0.4500 ,      0 REACTIONS:
      10  1584  X =              0.4500 ,      1 REACTIONS:   31
- NUMBER OF LINES:   46    NUMBER OF POINTS:   206    max.ph.:   60
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   206    max.ph.:   55
  LEVEL:  0   SQUARE: (  4 ,  7 ) LINE    34   REACTION   33: OPEN END              
      10  1594  Y =              0.6500 ,      2 REACTIONS:   35   36
       9  1603  X =              0.3500 ,      2 REACTIONS:   35   36
- NUMBER OF LINES:   46    NUMBER OF POINTS:   210    max.ph.:   80
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   210    max.ph.:   63
  LEVEL:  0   SQUARE: (  5 ,  7 ) LINE    34   REACTION   33: TWO POINTS            
       0  1603  Y =              0.6500 ,      0 REACTIONS:
       0  1603  X =              0.4500 ,      0 REACTIONS:
- NUMBER OF LINES:   46    NUMBER OF POINTS:   210    max.ph.:   80
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   210    max.ph.:   63
  LEVEL:  0   SQUARE: (  2 ,  8 ) LINE    36   REACTION   35: OPEN END              
      11  1614  Y =              0.7500 ,      1 REACTIONS:   35
      10  1624  X =              0.1500 ,      1 REACTIONS:   35
- NUMBER OF LINES:   46    NUMBER OF POINTS:   212    max.ph.:   78
+ NUMBER OF LINES:   46    NUMBER OF POINTS:   212    max.ph.:   58
  LEVEL:  0   SQUARE: (  1 , 10 ) LINE    37   REACTION   36: OPEN END              
      23  1647  Y =              0.9500 ,      4 REACTIONS:   35   39   39   36
       9  1656  X =              0.0500 ,      2 REACTIONS:   39   36
- NUMBER OF LINES:   47    NUMBER OF POINTS:   218    max.ph.:   62
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   218    max.ph.:   50
  LEVEL:  0   SQUARE: (  1 ,  9 ) LINE    38   REACTION   37: BUMP                  
      30  1686  Y =              0.8500 ,      4 REACTIONS:   34   37   38   39
      24  1710  X =              0.0500 ,      3 REACTIONS:   34   37   38
- NUMBER OF LINES:   47    NUMBER OF POINTS:   225    max.ph.:   70
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   225    max.ph.:   56
  LEVEL:  1   SQUARE: (  5 , 10 ) LINE     1   REACTION    1: OPEN END              
      16  1726  Y =              0.4750 ,      2 REACTIONS:   13    1
       9  1735  X =              0.2250 ,      1 REACTIONS:   13
- NUMBER OF LINES:   47    NUMBER OF POINTS:   228    max.ph.:   44
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   228    max.ph.:   41
  LEVEL:  1   SQUARE: (  7 ,  8 ) LINE     2   REACTION    2: OPEN END              
      17  1752  Y =              0.3750 ,      2 REACTIONS:    2   24
      15  1767  X =              0.3250 ,      2 REACTIONS:   24   27
- NUMBER OF LINES:   47    NUMBER OF POINTS:   232    max.ph.:   80
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   232    max.ph.:   58
  LEVEL:  1   SQUARE: (  8 ,  6 ) LINE     3   REACTION    3: OPEN END              
      20  1787  Y =              0.2750 ,      3 REACTIONS:    3   14   15
       9  1796  X =              0.3750 ,      1 REACTIONS:    3
- NUMBER OF LINES:   47    NUMBER OF POINTS:   236    max.ph.:   55
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   236    max.ph.:   49
  LEVEL:  1   SQUARE: (  7 ,  1 ) LINE     4   REACTION    4: OPEN END              
      11  1807  Y =              0.0250 ,      2 REACTIONS:   14   15
       2  1809  X =              0.3250 ,      0 REACTIONS:
- NUMBER OF LINES:   47    NUMBER OF POINTS:   238    max.ph.:   37
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   238    max.ph.:   41
  LEVEL:  1   SQUARE: ( 10 ,  5 ) LINE     5   REACTION    5: OPEN END              
      10  1819  Y =              0.2250 ,      1 REACTIONS:    5
       9  1828  X =              0.4750 ,      1 REACTIONS:    5
- NUMBER OF LINES:   47    NUMBER OF POINTS:   240    max.ph.:   39
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   240    max.ph.:   40
  LEVEL:  1   SQUARE: (  8 ,  2 ) LINE     5   REACTION    5: BUMP                  
      10  1838  Y =              0.0750 ,      1 REACTIONS:    5
       9  1847  X =              0.3750 ,      1 REACTIONS:    5
- NUMBER OF LINES:   47    NUMBER OF POINTS:   242    max.ph.:   39
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   242    max.ph.:   40
  LEVEL:  1   SQUARE: (  9 ,  3 ) LINE     5   REACTION    5: BUMP                  
      10  1857  Y =              0.1250 ,      1 REACTIONS:    5
       9  1866  X =              0.4250 ,      1 REACTIONS:    5
- NUMBER OF LINES:   47    NUMBER OF POINTS:   244    max.ph.:   39
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   244    max.ph.:   40
  LEVEL:  1   SQUARE: ( 11 ,  5 ) LINE     6   REACTION    6: OPEN END              
      22  1888  Y =              0.2250 ,      3 REACTIONS:    6   16   19
       9  1897  X =              0.5250 ,      1 REACTIONS:   19
- NUMBER OF LINES:   47    NUMBER OF POINTS:   248    max.ph.:   43
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   248    max.ph.:   41
  LEVEL:  1   SQUARE: ( 12 ,  2 ) LINE     7   REACTION    7: OPEN END              
      10  1907  Y =              0.0750 ,      1 REACTIONS:    8
       9  1916  X =              0.5750 ,      1 REACTIONS:    8
- NUMBER OF LINES:   47    NUMBER OF POINTS:   250    max.ph.:   60
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   250    max.ph.:   51
  LEVEL:  1   SQUARE: ( 14 ,  3 ) LINE     9   REACTION    9: OPEN END              
      11  1927  Y =              0.1250 ,      2 REACTIONS:   21   22
       9  1936  X =              0.6750 ,      1 REACTIONS:   28
- NUMBER OF LINES:   47    NUMBER OF POINTS:   253    max.ph.:   60
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   253    max.ph.:   52
  LEVEL:  1   SQUARE: ( 16 ,  5 ) LINE    11   REACTION   11: OPEN END              
       9  1945  Y =              0.2250 ,      2 REACTIONS:   11   18
       1  1946  X =              0.7750 ,      1 REACTIONS:   18
- NUMBER OF LINES:   47    NUMBER OF POINTS:   256    max.ph.:   35
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   256    max.ph.:   34
  LEVEL:  1   SQUARE: (  4 , 13 ) LINE    12   REACTION   12: OPEN END              
      16  1962  Y =              0.6250 ,      2 REACTIONS:   12   30
      16  1978  X =              0.1750 ,      2 REACTIONS:   30   27
- NUMBER OF LINES:   47    NUMBER OF POINTS:   260    max.ph.:   80
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   260    max.ph.:   61
  LEVEL:  1   SQUARE: (  1 ,  2 ) LINE    13   REACTION   13: BUMP                  
      17  1995  Y =              0.0750 ,      2 REACTIONS:   12   13
      16  2011  X =              0.0250 ,      2 REACTIONS:   13   12
- NUMBER OF LINES:   47    NUMBER OF POINTS:   264    max.ph.:   44
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   264    max.ph.:   41
  LEVEL:  1   SQUARE: (  1 ,  1 ) LINE    13   REACTION   13: BUMP                  
      15  2026  Y =              0.0250 ,      2 REACTIONS:   12   13
       2  2028  X =              0.0250 ,      0 REACTIONS:
- NUMBER OF LINES:   47    NUMBER OF POINTS:   266    max.ph.:   34
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   266    max.ph.:   35
  LEVEL:  1   SQUARE: (  2 ,  3 ) LINE    13   REACTION   13: BUMP                  
      10  2038  Y =              0.1250 ,      1 REACTIONS:   13
       2  2040  X =              0.0750 ,      0 REACTIONS:
- NUMBER OF LINES:   47    NUMBER OF POINTS:   267    max.ph.:   34
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   267    max.ph.:   35
  LEVEL:  1   SQUARE: (  2 ,  4 ) LINE    13   REACTION   13: BUMP                  
      10  2050  Y =              0.1750 ,      1 REACTIONS:   13
       9  2059  X =              0.0750 ,      1 REACTIONS:   13
- NUMBER OF LINES:   47    NUMBER OF POINTS:   269    max.ph.:   44
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   269    max.ph.:   41
  LEVEL:  1   SQUARE: (  3 ,  5 ) LINE    13   REACTION   13: BUMP                  
      10  2069  Y =              0.2250 ,      1 REACTIONS:   13
       2  2071  X =              0.1250 ,      0 REACTIONS:
- NUMBER OF LINES:   47    NUMBER OF POINTS:   270    max.ph.:   34
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   270    max.ph.:   35
  LEVEL:  1   SQUARE: (  3 ,  6 ) LINE    13   REACTION   13: BUMP                  
      10  2081  Y =              0.2750 ,      1 REACTIONS:   13
       9  2090  X =              0.1250 ,      1 REACTIONS:   13
- NUMBER OF LINES:   47    NUMBER OF POINTS:   272    max.ph.:   44
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   272    max.ph.:   41
  LEVEL:  1   SQUARE: (  4 ,  7 ) LINE    13   REACTION   13: BUMP                  
      10  2100  Y =              0.3250 ,      1 REACTIONS:   13
       2  2102  X =              0.1750 ,      0 REACTIONS:
- NUMBER OF LINES:   47    NUMBER OF POINTS:   273    max.ph.:   34
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   273    max.ph.:   35
  LEVEL:  1   SQUARE: (  4 ,  8 ) LINE    13   REACTION   13: BUMP                  
      10  2112  Y =              0.3750 ,      1 REACTIONS:   13
       9  2121  X =              0.1750 ,      1 REACTIONS:   13
- NUMBER OF LINES:   47    NUMBER OF POINTS:   275    max.ph.:   44
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   275    max.ph.:   41
  LEVEL:  1   SQUARE: (  5 ,  9 ) LINE    13   REACTION   13: BUMP                  
      17  2138  Y =              0.4250 ,      2 REACTIONS:   13    1
       2  2140  X =              0.2250 ,      0 REACTIONS:
- NUMBER OF LINES:   47    NUMBER OF POINTS:   277    max.ph.:   34
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   277    max.ph.:   35
  LEVEL:  1   SQUARE: ( 12 ,  4 ) LINE    17   REACTION   17: OPEN END              
      10  2150  Y =              0.1750 ,      1 REACTIONS:   17
       2  2152  X =              0.5750 ,      0 REACTIONS:
- NUMBER OF LINES:   47    NUMBER OF POINTS:   278    max.ph.:   59
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   278    max.ph.:   49
  LEVEL:  1   SQUARE: ( 12 ,  3 ) LINE    17   REACTION   17: BUMP                  
      17  2169  Y =              0.1250 ,      2 REACTIONS:   16   17
       9  2178  X =              0.5750 ,      1 REACTIONS:   17
- NUMBER OF LINES:   47    NUMBER OF POINTS:   281    max.ph.:   62
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   281    max.ph.:   50
  LEVEL:  1   SQUARE: ( 12 ,  8 ) LINE    19   REACTION   19: OPEN END              
      10  2188  Y =              0.3750 ,      1 REACTIONS:   28
       9  2197  X =              0.5750 ,      1 REACTIONS:   20
- NUMBER OF LINES:   47    NUMBER OF POINTS:   283    max.ph.:   40
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   283    max.ph.:   41
  LEVEL:  1   SQUARE: ( 11 ,  6 ) LINE    19   REACTION   19: BUMP                  
      10  2207  Y =              0.2750 ,      1 REACTIONS:   19
       2  2209  X =              0.5250 ,      0 REACTIONS:
- NUMBER OF LINES:   47    NUMBER OF POINTS:   284    max.ph.:   40
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   284    max.ph.:   43
  LEVEL:  1   SQUARE: ( 14 ,  7 ) LINE    20   REACTION   20: BUMP                  
      13  2222  Y =              0.3250 ,      3 REACTIONS:   20   21   25
       1  2223  X =              0.6750 ,      1 REACTIONS:   25
- NUMBER OF LINES:   47    NUMBER OF POINTS:   288    max.ph.:   42
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   288    max.ph.:   44
  LEVEL:  1   SQUARE: ( 13 ,  7 ) LINE    20   REACTION   20: BUMP                  
       3  2226  Y =              0.3250 ,      0 REACTIONS:
       9  2235  X =              0.6250 ,      1 REACTIONS:   20
- NUMBER OF LINES:   47    NUMBER OF POINTS:   289    max.ph.:   40
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   289    max.ph.:   41
  LEVEL:  1   SQUARE: ( 15 ,  5 ) LINE    22   REACTION   22: OPEN END              
      13  2248  Y =              0.2250 ,      2 REACTIONS:   22   23
       2  2250  X =              0.7250 ,      0 REACTIONS:
- NUMBER OF LINES:   47    NUMBER OF POINTS:   291    max.ph.:   40
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   291    max.ph.:   42
  LEVEL:  1   SQUARE: ( 15 ,  4 ) LINE    22   REACTION   22: BUMP                  
      15  2265  Y =              0.1750 ,      2 REACTIONS:   22   23
      15  2280  X =              0.7250 ,      2 REACTIONS:   23   22
- NUMBER OF LINES:   47    NUMBER OF POINTS:   295    max.ph.:   40
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   295    max.ph.:   43
  LEVEL:  1   SQUARE: (  8 ,  7 ) LINE    25   REACTION   17: BUMP                  
      17  2297  Y =              0.3250 ,      2 REACTIONS:   24   17
       9  2306  X =              0.3750 ,      1 REACTIONS:   24
- NUMBER OF LINES:   47    NUMBER OF POINTS:   298    max.ph.:   61
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   298    max.ph.:   49
  LEVEL:  1   SQUARE: (  9 ,  8 ) LINE    25   REACTION   17: BUMP                  
      10  2316  Y =              0.3750 ,      1 REACTIONS:   17
       9  2325  X =              0.4250 ,      1 REACTIONS:   17
- NUMBER OF LINES:   47    NUMBER OF POINTS:   300    max.ph.:   72
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   300    max.ph.:   53
  LEVEL:  1   SQUARE: ( 10 ,  8 ) LINE    25   REACTION   17: BUMP                  
       3  2328  Y =              0.3750 ,      0 REACTIONS:
       9  2337  X =              0.4750 ,      1 REACTIONS:   17
- NUMBER OF LINES:   47    NUMBER OF POINTS:   301    max.ph.:   62
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   301    max.ph.:   52
  LEVEL:  1   SQUARE: ( 11 ,  8 ) LINE    25   REACTION   17: BUMP                  
      10  2347  Y =              0.3750 ,      1 REACTIONS:   17
       9  2356  X =              0.5250 ,      1 REACTIONS:   17
- NUMBER OF LINES:   47    NUMBER OF POINTS:   303    max.ph.:   79
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   303    max.ph.:   56
  LEVEL:  1   SQUARE: (  7 ,  9 ) LINE    28   REACTION   27: BUMP                  
      10  2366  Y =              0.4250 ,      1 REACTIONS:   27
       2  2368  X =              0.3250 ,      0 REACTIONS:
- NUMBER OF LINES:   47    NUMBER OF POINTS:   304    max.ph.:   62
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   304    max.ph.:   53
  LEVEL:  1   SQUARE: (  7 , 10 ) LINE    28   REACTION   27: BUMP                  
      10  2378  Y =              0.4750 ,      1 REACTIONS:   27
       2  2380  X =              0.3250 ,      0 REACTIONS:
- NUMBER OF LINES:   47    NUMBER OF POINTS:   305    max.ph.:   61
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   305    max.ph.:   55
  LEVEL:  0   SQUARE: (  4 ,  6 ) LINE    28   REACTION   27: BUMP                  
       3  2383  Y =              0.5500 ,      0 REACTIONS:
       2  2385  X =              0.3500 ,      0 REACTIONS:
- NUMBER OF LINES:   47    NUMBER OF POINTS:   305    max.ph.:   85
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   305    max.ph.:   69
  LEVEL:  1   SQUARE: (  7 , 11 ) LINE    28   REACTION   27: BUMP                  
      10  2395  Y =              0.5250 ,      1 REACTIONS:   27
       9  2404  X =              0.3250 ,      1 REACTIONS:   27
- NUMBER OF LINES:   47    NUMBER OF POINTS:   307    max.ph.:   77
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   307    max.ph.:   60
  LEVEL:  0   SQUARE: (  3 ,  7 ) LINE    28   REACTION   27: BUMP                  
       3  2407  Y =              0.6500 ,      0 REACTIONS:
      10  2417  X =              0.2500 ,      1 REACTIONS:   35
- NUMBER OF LINES:   47    NUMBER OF POINTS:   308    max.ph.:   61
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   308    max.ph.:   52
  LEVEL:  1   SQUARE: (  5 , 13 ) LINE    28   REACTION   27: BUMP                  
      10  2427  Y =              0.6250 ,      1 REACTIONS:   27
       9  2436  X =              0.2250 ,      1 REACTIONS:   27
- NUMBER OF LINES:   47    NUMBER OF POINTS:   310    max.ph.:   75
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   310    max.ph.:   56
  LEVEL:  1   SQUARE: ( 12 ,  9 ) LINE    29   REACTION   28: OPEN END              
       9  2445  Y =              0.4250 ,      2 REACTIONS:   28   29
       1  2446  X =              0.5750 ,      1 REACTIONS:   29
- NUMBER OF LINES:   47    NUMBER OF POINTS:   313    max.ph.:   61
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   313    max.ph.:   51
  LEVEL:  1   SQUARE: (  9 , 12 ) LINE    32   REACTION   31: OPEN END              
       2  2448  Y =              0.5750 ,      1 REACTIONS:   33
       8  2456  X =              0.4250 ,      2 REACTIONS:   31   33
- NUMBER OF LINES:   47    NUMBER OF POINTS:   316    max.ph.:   61
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   316    max.ph.:   57
  LEVEL:  1   SQUARE: ( 10 , 10 ) LINE    32   REACTION   31: BUMP                  
      10  2466  Y =              0.4750 ,      1 REACTIONS:   31
       9  2475  X =              0.4750 ,      1 REACTIONS:   31
- NUMBER OF LINES:   47    NUMBER OF POINTS:   318    max.ph.:   76
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   318    max.ph.:   63
  LEVEL:  1   SQUARE: (  9 , 11 ) LINE    32   REACTION   31: BUMP                  
      10  2485  Y =              0.5250 ,      1 REACTIONS:   31
       9  2494  X =              0.4250 ,      1 REACTIONS:   31
- NUMBER OF LINES:   47    NUMBER OF POINTS:   320    max.ph.:   64
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   320    max.ph.:   58
  LEVEL:  1   SQUARE: (  8 , 13 ) LINE    34   REACTION   33: OPEN END              
       2  2496  Y =              0.6250 ,      1 REACTIONS:   33
       1  2497  X =              0.3750 ,      1 REACTIONS:   33
- NUMBER OF LINES:   47    NUMBER OF POINTS:   322    max.ph.:   84
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   322    max.ph.:   68
  LEVEL:  1   SQUARE: (  3 , 16 ) LINE    36   REACTION   35: OPEN END              
      10  2507  Y =              0.7750 ,      1 REACTIONS:   35
       9  2516  X =              0.1250 ,      1 REACTIONS:   35
- NUMBER OF LINES:   47    NUMBER OF POINTS:   324    max.ph.:   74
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   324    max.ph.:   53
  LEVEL:  1   SQUARE: (  1 , 20 ) LINE    37   REACTION   36: OPEN END              
       2  2518  Y =              0.9750 ,      1 REACTIONS:   36
       8  2526  X =              0.0250 ,      2 REACTIONS:   39   36
@@ -571,47 +571,47 @@ SIO2(1)
  LEVEL:  1   SQUARE: (  1 , 19 ) LINE    38   REACTION   37: OPEN END              
      20  2546  Y =              0.9250 ,      3 REACTIONS:   37   38   39
      14  2560  X =              0.0250 ,      2 REACTIONS:   37   38
- NUMBER OF LINES:   47    NUMBER OF POINTS:   332    max.ph.:   77
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   332    max.ph.:   55
  LEVEL:  1   SQUARE: (  2 , 17 ) LINE    38   REACTION   37: BUMP                  
      28  2588  Y =              0.8250 ,      4 REACTIONS:   34   37   38   39
       9  2597  X =              0.0750 ,      1 REACTIONS:   37
- NUMBER OF LINES:   47    NUMBER OF POINTS:   337    max.ph.:   86
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   337    max.ph.:   62
  LEVEL:  1   SQUARE: ( 13 ,  4 ) LINE    46   REACTION   28: BUMP                  
      10  2607  Y =              0.1750 ,      1 REACTIONS:   28
       2  2609  X =              0.6250 ,      0 REACTIONS:
- NUMBER OF LINES:   47    NUMBER OF POINTS:   338    max.ph.:   60
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   338    max.ph.:   52
  LEVEL:  1   SQUARE: ( 13 ,  3 ) LINE    46   REACTION   28: BUMP                  
      10  2619  Y =              0.1250 ,      1 REACTIONS:   28
       9  2628  X =              0.6250 ,      1 REACTIONS:   28
- NUMBER OF LINES:   47    NUMBER OF POINTS:   340    max.ph.:   61
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   340    max.ph.:   50
  LEVEL:  2   SQUARE: ( 10 , 20 ) LINE     1   REACTION    1: OPEN END              
      14  2642  Y =              0.4875 ,      2 REACTIONS:   13    1
       8  2650  X =              0.2375 ,      1 REACTIONS:   13
- NUMBER OF LINES:   47    NUMBER OF POINTS:   343    max.ph.:   44
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   343    max.ph.:   41
  LEVEL:  2   SQUARE: ( 13 , 16 ) LINE     2   REACTION    2: OPEN END              
      13  2663  Y =              0.3875 ,      2 REACTIONS:   26   27
       8  2671  X =              0.3125 ,      1 REACTIONS:   26
- NUMBER OF LINES:   47    NUMBER OF POINTS:   346    max.ph.:   62
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   346    max.ph.:   51
  LEVEL:  2   SQUARE: ( 16 , 12 ) LINE     3   REACTION    3: OPEN END              
      13  2684  Y =              0.2875 ,      2 REACTIONS:   24   17
       8  2692  X =              0.3875 ,      1 REACTIONS:   41
- NUMBER OF LINES:   47    NUMBER OF POINTS:   349    max.ph.:   46
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   349    max.ph.:   43
  LEVEL:  2   SQUARE: ( 14 ,  1 ) LINE     4   REACTION    4: OPEN END              
      16  2708  Y =              0.0125 ,      3 REACTIONS:   14   15    5
      17  2725  X =              0.3375 ,      3 REACTIONS:    5   15   14
- NUMBER OF LINES:   47    NUMBER OF POINTS:   355    max.ph.:   55
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   355    max.ph.:   49
  LEVEL:  2   SQUARE: ( 20 , 10 ) LINE     5   REACTION    5: OPEN END              
       9  2734  Y =              0.2375 ,      1 REACTIONS:    5
       8  2742  X =              0.4875 ,      1 REACTIONS:    5
- NUMBER OF LINES:   47    NUMBER OF POINTS:   357    max.ph.:   39
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   357    max.ph.:   40
  LEVEL:  2   SQUARE: ( 21 , 10 ) LINE     6   REACTION    6: OPEN END              
      19  2761  Y =              0.2375 ,      3 REACTIONS:    6   16   19
       8  2769  X =              0.5125 ,      1 REACTIONS:   19
- NUMBER OF LINES:   47    NUMBER OF POINTS:   361    max.ph.:   43
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   361    max.ph.:   41
  LEVEL:  2   SQUARE: ( 23 ,  4 ) LINE     7   REACTION    7: OPEN END              
      15  2784  Y =              0.0875 ,      2 REACTIONS:    7    8
      10  2794  X =              0.5625 ,      2 REACTIONS:    8   17
- NUMBER OF LINES:   47    NUMBER OF POINTS:   365    max.ph.:   75
+ NUMBER OF LINES:   47    NUMBER OF POINTS:   365    max.ph.:   53
  LEVEL:  2   SQUARE: ( 28 ,  5 ) LINE     9   REACTION    9: OPEN END              
  REACTION:  44  11  =  20
  position:      6.88867E-01   1.12500E-01      6.89063E-01   1.12500E-01
@@ -619,490 +619,502 @@ SIO2(1)
  REACTION: *LIQUID = *LIQUID 3Ca1Si
      14  2808  Y =              0.1125 ,      2 REACTIONS:   44   23
       8  2816  X =              0.6875 ,      1 REACTIONS:   44
- NUMBER OF LINES:   48    NUMBER OF POINTS:   368    max.ph.:   78
+ NUMBER OF LINES:   48    NUMBER OF POINTS:   368    max.ph.:   54
  LEVEL:  2   SQUARE: ( 31 , 10 ) LINE    11   REACTION   11: OPEN END              
       8  2824  Y =              0.2375 ,      2 REACTIONS:   11   18
       1  2825  X =              0.7625 ,      1 REACTIONS:   18
- NUMBER OF LINES:   48    NUMBER OF POINTS:   371    max.ph.:   35
+ NUMBER OF LINES:   48    NUMBER OF POINTS:   371    max.ph.:   34
  LEVEL:  2   SQUARE: (  7 , 26 ) LINE    12   REACTION   12: OPEN END              
      15  2840  Y =              0.6375 ,      2 REACTIONS:   12   30
      11  2851  X =              0.1625 ,      2 REACTIONS:   30   27
- NUMBER OF LINES:   48    NUMBER OF POINTS:   375    max.ph.:   78
+ NUMBER OF LINES:   48    NUMBER OF POINTS:   375    max.ph.:   63
  LEVEL:  2   SQUARE: ( 24 ,  8 ) LINE    17   REACTION   17: OPEN END              
       9  2860  Y =              0.1875 ,      1 REACTIONS:   17
       2  2862  X =              0.5875 ,      0 REACTIONS:
- NUMBER OF LINES:   48    NUMBER OF POINTS:   376    max.ph.:   58
+ NUMBER OF LINES:   48    NUMBER OF POINTS:   376    max.ph.:   49
  LEVEL:  2   SQUARE: ( 23 , 15 ) LINE    19   REACTION   19: OPEN END              
       9  2871  Y =              0.3625 ,      1 REACTIONS:   28
       8  2879  X =              0.5625 ,      1 REACTIONS:   20
- NUMBER OF LINES:   48    NUMBER OF POINTS:   378    max.ph.:   40
+ NUMBER OF LINES:   48    NUMBER OF POINTS:   378    max.ph.:   43
  LEVEL:  2   SQUARE: ( 21 , 11 ) LINE    19   REACTION   19: BUMP                  
       9  2888  Y =              0.2625 ,      1 REACTIONS:   19
       2  2890  X =              0.5125 ,      0 REACTIONS:
- NUMBER OF LINES:   48    NUMBER OF POINTS:   379    max.ph.:   40
+ NUMBER OF LINES:   48    NUMBER OF POINTS:   379    max.ph.:   43
  LEVEL:  2   SQUARE: ( 27 , 13 ) LINE    20   REACTION   20: BUMP                  
      15  2905  Y =              0.3125 ,      2 REACTIONS:   20   21
       8  2913  X =              0.6625 ,      1 REACTIONS:   20
- NUMBER OF LINES:   48    NUMBER OF POINTS:   382    max.ph.:   60
+ NUMBER OF LINES:   48    NUMBER OF POINTS:   382    max.ph.:   49
  LEVEL:  2   SQUARE: ( 27 , 14 ) LINE    20   REACTION   20: BUMP                  
       2  2915  Y =              0.3375 ,      1 REACTIONS:   29
       7  2922  X =              0.6625 ,      2 REACTIONS:   20   29
- NUMBER OF LINES:   48    NUMBER OF POINTS:   385    max.ph.:   40
+ NUMBER OF LINES:   48    NUMBER OF POINTS:   385    max.ph.:   41
  LEVEL:  2   SQUARE: ( 30 , 10 ) LINE    22   REACTION   22: OPEN END              
      12  2934  Y =              0.2375 ,      2 REACTIONS:   22   23
       2  2936  X =              0.7375 ,      0 REACTIONS:
- NUMBER OF LINES:   48    NUMBER OF POINTS:   387    max.ph.:   40
- LEVEL:  2   SQUARE: ( 17 , 15 ) LINE    25   REACTION   17: BUMP                  
-      9  2945  Y =              0.3625 ,      1 REACTIONS:   17
-      8  2953  X =              0.4125 ,      1 REACTIONS:   17
- NUMBER OF LINES:   48    NUMBER OF POINTS:   389    max.ph.:   62
+ NUMBER OF LINES:   48    NUMBER OF POINTS:   387    max.ph.:   42
  LEVEL:  2   SQUARE: ( 18 , 16 ) LINE    25   REACTION   17: BUMP                  
-      3  2956  Y =              0.3875 ,      0 REACTIONS:
-      8  2964  X =              0.4375 ,      1 REACTIONS:   17
- NUMBER OF LINES:   48    NUMBER OF POINTS:   390    max.ph.:   62
+      3  2939  Y =              0.3875 ,      0 REACTIONS:
+      8  2947  X =              0.4375 ,      1 REACTIONS:   17
+ NUMBER OF LINES:   48    NUMBER OF POINTS:   388    max.ph.:   52
  LEVEL:  2   SQUARE: ( 14 , 17 ) LINE    28   REACTION   27: BUMP                  
-      9  2973  Y =              0.4125 ,      1 REACTIONS:   27
-      8  2981  X =              0.3375 ,      1 REACTIONS:   27
- NUMBER OF LINES:   48    NUMBER OF POINTS:   392    max.ph.:   76
+      9  2956  Y =              0.4125 ,      1 REACTIONS:   27
+      8  2964  X =              0.3375 ,      1 REACTIONS:   27
+ NUMBER OF LINES:   48    NUMBER OF POINTS:   390    max.ph.:   60
  LEVEL:  2   SQUARE: ( 14 , 19 ) LINE    28   REACTION   27: BUMP                  
-      9  2990  Y =              0.4625 ,      1 REACTIONS:   27
-      8  2998  X =              0.3375 ,      1 REACTIONS:   27
- NUMBER OF LINES:   48    NUMBER OF POINTS:   394    max.ph.:   61
+      9  2973  Y =              0.4625 ,      1 REACTIONS:   27
+      8  2981  X =              0.3375 ,      1 REACTIONS:   27
+ NUMBER OF LINES:   48    NUMBER OF POINTS:   392    max.ph.:   54
  LEVEL:  2   SQUARE: (  8 , 26 ) LINE    28   REACTION   27: BUMP                  
-      9  3007  Y =              0.6375 ,      1 REACTIONS:   27
-      8  3015  X =              0.1875 ,      1 REACTIONS:   27
- NUMBER OF LINES:   48    NUMBER OF POINTS:   396    max.ph.:   62
+      9  2990  Y =              0.6375 ,      1 REACTIONS:   27
+      8  2998  X =              0.1875 ,      1 REACTIONS:   27
+ NUMBER OF LINES:   48    NUMBER OF POINTS:   394    max.ph.:   53
  LEVEL:  2   SQUARE: ( 23 , 18 ) LINE    29   REACTION   28: OPEN END              
-      2  3017  Y =              0.4375 ,      1 REACTIONS:   33
-      1  3018  X =              0.5625 ,      1 REACTIONS:   33
- NUMBER OF LINES:   49    NUMBER OF POINTS:   398    max.ph.:   82
+      2  3000  Y =              0.4375 ,      1 REACTIONS:   33
+      1  3001  X =              0.5625 ,      1 REACTIONS:   33
+ NUMBER OF LINES:   49    NUMBER OF POINTS:   396    max.ph.:   59
  LEVEL:  2   SQUARE: ( 23 , 17 ) LINE    29   REACTION   28: BUMP                  
-      9  3027  Y =              0.4125 ,      1 REACTIONS:   28
-      8  3035  X =              0.5625 ,      1 REACTIONS:   28
- NUMBER OF LINES:   49    NUMBER OF POINTS:   400    max.ph.:   62
+      9  3010  Y =              0.4125 ,      1 REACTIONS:   28
+      8  3018  X =              0.5625 ,      1 REACTIONS:   28
+ NUMBER OF LINES:   49    NUMBER OF POINTS:   398    max.ph.:   52
  LEVEL:  2   SQUARE: ( 18 , 23 ) LINE    32   REACTION   31: OPEN END              
-      2  3037  Y =              0.5625 ,      1 REACTIONS:   32
-      1  3038  X =              0.4375 ,      1 REACTIONS:   32
- NUMBER OF LINES:   49    NUMBER OF POINTS:   402    max.ph.:   61
+      2  3020  Y =              0.5625 ,      1 REACTIONS:   32
+      1  3021  X =              0.4375 ,      1 REACTIONS:   32
+ NUMBER OF LINES:   49    NUMBER OF POINTS:   400    max.ph.:   54
  LEVEL:  2   SQUARE: ( 15 , 26 ) LINE    34   REACTION   33: OPEN END              
-      8  3046  Y =              0.6375 ,      2 REACTIONS:   35   36
-      7  3053  X =              0.3625 ,      2 REACTIONS:   35   36
- NUMBER OF LINES:   49    NUMBER OF POINTS:   406    max.ph.:   64
+      8  3029  Y =              0.6375 ,      2 REACTIONS:   35   36
+      7  3036  X =              0.3625 ,      2 REACTIONS:   35   36
+ NUMBER OF LINES:   49    NUMBER OF POINTS:   404    max.ph.:   53
  LEVEL:  2   SQUARE: (  5 , 32 ) LINE    36   REACTION   35: OPEN END              
-     14  3067  Y =              0.7875 ,      3 REACTIONS:   37   38   39
-     13  3080  X =              0.1125 ,      2 REACTIONS:   37   38
- NUMBER OF LINES:   49    NUMBER OF POINTS:   411    max.ph.:   70
+ REACTION:  45  24  =  23
+ position:      1.19141E-01   7.87500E-01      1.19336E-01   7.87500E-01
+ LABELED WITH ASSEMBLAGES
+ REACTION: (2)*LIQUID = *LIQUID b-Crist
+     14  3050  Y =              0.7875 ,      2 REACTIONS:   37   45
+     13  3063  X =              0.1125 ,      2 REACTIONS:   37   38
+ NUMBER OF LINES:   50    NUMBER OF POINTS:   408    max.ph.:   57
  LEVEL:  2   SQUARE: (  1 , 40 ) LINE    37   REACTION   36: OPEN END              
-      2  3082  Y =              0.9875 ,      1 REACTIONS:   36
-      7  3089  X =              0.0125 ,      2 REACTIONS:   39   36
- NUMBER OF LINES:   50    NUMBER OF POINTS:   414    max.ph.:   51
+      2  3065  Y =              0.9875 ,      1 REACTIONS:   36
+      7  3072  X =              0.0125 ,      2 REACTIONS:   39   36
+ NUMBER OF LINES:   51    NUMBER OF POINTS:   411    max.ph.:   51
  LEVEL:  2   SQUARE: (  1 , 38 ) LINE    38   REACTION   37: OPEN END              
-     13  3102  Y =              0.9375 ,      2 REACTIONS:   35   39
-      8  3110  X =              0.0125 ,      1 REACTIONS:   35
- NUMBER OF LINES:   50    NUMBER OF POINTS:   417    max.ph.:   60
+     13  3085  Y =              0.9375 ,      2 REACTIONS:   35   39
+      8  3093  X =              0.0125 ,      1 REACTIONS:   35
+ NUMBER OF LINES:   51    NUMBER OF POINTS:   414    max.ph.:   54
  LEVEL:  2   SQUARE: (  1 , 39 ) LINE    40   REACTION   39: BUMP                  
-     15  3125  Y =              0.9625 ,      2 REACTIONS:   39   39
-      8  3133  X =              0.0125 ,      1 REACTIONS:   39
- NUMBER OF LINES:   51    NUMBER OF POINTS:   420    max.ph.:   64
+     15  3108  Y =              0.9625 ,      2 REACTIONS:   39   39
+      8  3116  X =              0.0125 ,      1 REACTIONS:   39
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   417    max.ph.:   53
  LEVEL:  3   SQUARE: ( 20 , 40 ) LINE     1   REACTION    1: OPEN END              
-     12  3145  Y =              0.4938 ,      2 REACTIONS:   13    1
-      7  3152  X =              0.2438 ,      1 REACTIONS:   13
- NUMBER OF LINES:   51    NUMBER OF POINTS:   423    max.ph.:   44
+     12  3128  Y =              0.4938 ,      2 REACTIONS:   13    1
+      7  3135  X =              0.2438 ,      1 REACTIONS:   13
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   420    max.ph.:   41
  LEVEL:  3   SQUARE: ( 26 , 31 ) LINE     2   REACTION    2: OPEN END              
-     12  3164  Y =              0.3813 ,      2 REACTIONS:    2   24
-      7  3171  X =              0.3188 ,      1 REACTIONS:    2
- NUMBER OF LINES:   51    NUMBER OF POINTS:   426    max.ph.:   43
+     12  3147  Y =              0.3813 ,      2 REACTIONS:    2   24
+      7  3154  X =              0.3188 ,      1 REACTIONS:    2
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   423    max.ph.:   43
  LEVEL:  3   SQUARE: ( 31 , 23 ) LINE     3   REACTION    3: OPEN END              
-     17  3188  Y =              0.2812 ,      3 REACTIONS:    3   14   15
-      7  3195  X =              0.3813 ,      1 REACTIONS:    3
- NUMBER OF LINES:   51    NUMBER OF POINTS:   430    max.ph.:   59
+     17  3171  Y =              0.2812 ,      3 REACTIONS:    3   14   15
+      7  3178  X =              0.3813 ,      1 REACTIONS:    3
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   427    max.ph.:   48
  LEVEL:  3   SQUARE: ( 27 ,  1 ) LINE     4   REACTION    4: OPEN END              
-      8  3203  Y =              0.0063 ,      1 REACTIONS:    4
-      2  3205  X =              0.3313 ,      0 REACTIONS:
- NUMBER OF LINES:   51    NUMBER OF POINTS:   431    max.ph.:   37
+      8  3186  Y =              0.0063 ,      1 REACTIONS:    4
+      2  3188  X =              0.3313 ,      0 REACTIONS:
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   428    max.ph.:   41
  LEVEL:  3   SQUARE: ( 40 , 20 ) LINE     5   REACTION    5: OPEN END              
-      8  3213  Y =              0.2438 ,      1 REACTIONS:    5
-      7  3220  X =              0.4938 ,      1 REACTIONS:    5
- NUMBER OF LINES:   51    NUMBER OF POINTS:   433    max.ph.:   39
+      8  3196  Y =              0.2438 ,      1 REACTIONS:    5
+      7  3203  X =              0.4938 ,      1 REACTIONS:    5
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   430    max.ph.:   40
  LEVEL:  3   SQUARE: ( 41 , 20 ) LINE     6   REACTION    6: OPEN END              
-     16  3236  Y =              0.2438 ,      3 REACTIONS:    6   16   19
-      7  3243  X =              0.5062 ,      1 REACTIONS:   19
- NUMBER OF LINES:   51    NUMBER OF POINTS:   437    max.ph.:   43
+     16  3219  Y =              0.2438 ,      3 REACTIONS:    6   16   19
+      7  3226  X =              0.5062 ,      1 REACTIONS:   19
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   434    max.ph.:   41
  LEVEL:  3   SQUARE: ( 45 ,  8 ) LINE     7   REACTION    7: OPEN END              
-      8  3251  Y =              0.0938 ,      1 REACTIONS:    7
-      7  3258  X =              0.5563 ,      1 REACTIONS:    7
- NUMBER OF LINES:   51    NUMBER OF POINTS:   439    max.ph.:   54
+      8  3234  Y =              0.0938 ,      1 REACTIONS:    7
+      7  3241  X =              0.5563 ,      1 REACTIONS:    7
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   436    max.ph.:   49
  LEVEL:  3   SQUARE: ( 56 ,  9 ) LINE     9   REACTION    9: OPEN END              
-     12  3270  Y =              0.1063 ,      2 REACTIONS:   44   23
-      7  3277  X =              0.6938 ,      1 REACTIONS:   23
- NUMBER OF LINES:   51    NUMBER OF POINTS:   442    max.ph.:   62
+     12  3253  Y =              0.1063 ,      2 REACTIONS:   44   23
+      7  3260  X =              0.6938 ,      1 REACTIONS:   23
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   439    max.ph.:   49
  LEVEL:  3   SQUARE: ( 61 , 20 ) LINE    11   REACTION   11: OPEN END              
-      7  3284  Y =              0.2438 ,      2 REACTIONS:   11   18
-      1  3285  X =              0.7563 ,      1 REACTIONS:   18
- NUMBER OF LINES:   51    NUMBER OF POINTS:   445    max.ph.:   35
+      7  3267  Y =              0.2438 ,      2 REACTIONS:   11   18
+      1  3268  X =              0.7563 ,      1 REACTIONS:   18
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   442    max.ph.:   34
  LEVEL:  3   SQUARE: ( 13 , 52 ) LINE    12   REACTION   12: OPEN END              
-      8  3293  Y =              0.6438 ,      1 REACTIONS:   34
-      7  3300  X =              0.1562 ,      1 REACTIONS:   34
- NUMBER OF LINES:   51    NUMBER OF POINTS:   447    max.ph.:   60
+      8  3276  Y =              0.6438 ,      1 REACTIONS:   34
+      7  3283  X =              0.1562 ,      1 REACTIONS:   34
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   444    max.ph.:   51
  LEVEL:  3   SQUARE: ( 48 , 16 ) LINE    17   REACTION   17: OPEN END              
-     10  3310  Y =              0.1938 ,      2 REACTIONS:   17   28
-      7  3317  X =              0.5938 ,      1 REACTIONS:   19
- NUMBER OF LINES:   51    NUMBER OF POINTS:   450    max.ph.:   43
+     10  3293  Y =              0.1938 ,      2 REACTIONS:   17   28
+      7  3300  X =              0.5938 ,      1 REACTIONS:   19
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   447    max.ph.:   41
  LEVEL:  3   SQUARE: ( 45 , 29 ) LINE    19   REACTION   19: OPEN END              
-     11  3328  Y =              0.3563 ,      2 REACTIONS:   17   28
-      7  3335  X =              0.5563 ,      1 REACTIONS:   20
- NUMBER OF LINES:   51    NUMBER OF POINTS:   453    max.ph.:   40
+     11  3311  Y =              0.3563 ,      2 REACTIONS:   17   28
+      7  3318  X =              0.5563 ,      1 REACTIONS:   20
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   450    max.ph.:   43
  LEVEL:  3   SQUARE: ( 41 , 21 ) LINE    19   REACTION   19: BUMP                  
-      8  3343  Y =              0.2563 ,      1 REACTIONS:   19
-      7  3350  X =              0.5062 ,      1 REACTIONS:   19
- NUMBER OF LINES:   51    NUMBER OF POINTS:   455    max.ph.:   58
+      8  3326  Y =              0.2563 ,      1 REACTIONS:   19
+      7  3333  X =              0.5062 ,      1 REACTIONS:   19
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   452    max.ph.:   50
  LEVEL:  3   SQUARE: ( 53 , 27 ) LINE    20   REACTION   20: BUMP                  
-      3  3353  Y =              0.3313 ,      0 REACTIONS:
-      7  3360  X =              0.6562 ,      1 REACTIONS:   20
- NUMBER OF LINES:   51    NUMBER OF POINTS:   456    max.ph.:   60
+      3  3336  Y =              0.3313 ,      0 REACTIONS:
+      7  3343  X =              0.6562 ,      1 REACTIONS:   20
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   453    max.ph.:   49
  LEVEL:  3   SQUARE: ( 54 , 27 ) LINE    20   REACTION   20: BUMP                  
-      9  3369  Y =              0.3313 ,      3 REACTIONS:   20   21   25
-      1  3370  X =              0.6688 ,      1 REACTIONS:   25
- NUMBER OF LINES:   51    NUMBER OF POINTS:   460    max.ph.:   42
+      9  3352  Y =              0.3313 ,      3 REACTIONS:   20   21   25
+      1  3353  X =              0.6688 ,      1 REACTIONS:   25
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   457    max.ph.:   44
  LEVEL:  3   SQUARE: ( 55 , 10 ) LINE    21   REACTION   21: OPEN END              
-      8  3378  Y =              0.1188 ,      1 REACTIONS:   28
-      7  3385  X =              0.6813 ,      1 REACTIONS:   28
- NUMBER OF LINES:   51    NUMBER OF POINTS:   462    max.ph.:   78
+      8  3361  Y =              0.1188 ,      1 REACTIONS:   28
+      7  3368  X =              0.6813 ,      1 REACTIONS:   28
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   459    max.ph.:   52
  LEVEL:  3   SQUARE: ( 60 , 20 ) LINE    22   REACTION   22: OPEN END              
-     10  3395  Y =              0.2438 ,      2 REACTIONS:   22   23
-      2  3397  X =              0.7438 ,      0 REACTIONS:
- NUMBER OF LINES:   51    NUMBER OF POINTS:   464    max.ph.:   40
+     10  3378  Y =              0.2438 ,      2 REACTIONS:   22   23
+      2  3380  X =              0.7438 ,      0 REACTIONS:
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   461    max.ph.:   42
  LEVEL:  3   SQUARE: ( 14 , 52 ) LINE    28   REACTION   27: BUMP                  
-      8  3405  Y =              0.6438 ,      1 REACTIONS:   27
-      7  3412  X =              0.1688 ,      1 REACTIONS:   27
- NUMBER OF LINES:   51    NUMBER OF POINTS:   466    max.ph.:   60
+      8  3388  Y =              0.6438 ,      1 REACTIONS:   27
+      7  3395  X =              0.1688 ,      1 REACTIONS:   27
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   463    max.ph.:   53
  LEVEL:  3   SQUARE: ( 46 , 35 ) LINE    29   REACTION   28: OPEN END              
-      2  3414  Y =              0.4313 ,      1 REACTIONS:   33
-      6  3420  X =              0.5687 ,      2 REACTIONS:   28   33
- NUMBER OF LINES:   51    NUMBER OF POINTS:   469    max.ph.:   77
+      2  3397  Y =              0.4313 ,      1 REACTIONS:   33
+      6  3403  X =              0.5687 ,      2 REACTIONS:   28   33
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   466    max.ph.:   59
  LEVEL:  3   SQUARE: ( 45 , 36 ) LINE    32   REACTION   31: OPEN END              
-      2  3422  Y =              0.4438 ,      1 REACTIONS:   32
-      6  3428  X =              0.5563 ,      2 REACTIONS:   31   32
- NUMBER OF LINES:   51    NUMBER OF POINTS:   472    max.ph.:   62
+      2  3405  Y =              0.4438 ,      1 REACTIONS:   32
+      6  3411  X =              0.5563 ,      2 REACTIONS:   31   32
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   469    max.ph.:   54
  LEVEL:  3   SQUARE: ( 35 , 46 ) LINE    32   REACTION   31: OPEN END              
-      7  3435  Y =              0.5687 ,      2 REACTIONS:   31   32
-      1  3436  X =              0.4313 ,      1 REACTIONS:   32
- NUMBER OF LINES:   51    NUMBER OF POINTS:   475    max.ph.:   61
+      7  3418  Y =              0.5687 ,      2 REACTIONS:   31   32
+      1  3419  X =              0.4313 ,      1 REACTIONS:   32
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   472    max.ph.:   55
  LEVEL:  3   SQUARE: ( 30 , 51 ) LINE    34   REACTION   33: OPEN END              
-      2  3438  Y =              0.6313 ,      1 REACTIONS:   33
-      1  3439  X =              0.3688 ,      1 REACTIONS:   33
- NUMBER OF LINES:   51    NUMBER OF POINTS:   477    max.ph.:   86
+      2  3421  Y =              0.6313 ,      1 REACTIONS:   33
+      1  3422  X =              0.3688 ,      1 REACTIONS:   33
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   474    max.ph.:   68
  LEVEL:  3   SQUARE: ( 10 , 63 ) LINE    36   REACTION   35: OPEN END              
-      8  3447  Y =              0.7812 ,      1 REACTIONS:   35
-      7  3454  X =              0.1188 ,      1 REACTIONS:   37
- NUMBER OF LINES:   51    NUMBER OF POINTS:   479    max.ph.:   80
+      8  3430  Y =              0.7812 ,      1 REACTIONS:   35
+      7  3437  X =              0.1188 ,      1 REACTIONS:   37
+ NUMBER OF LINES:   52    NUMBER OF POINTS:   476    max.ph.:   64
  LEVEL:  3   SQUARE: (  1 , 80 ) LINE    37   REACTION   36: OPEN END              
-      2  3456  Y =              0.9938 ,      1 REACTIONS:   36
-      6  3462  X =              0.0063 ,      2 REACTIONS:   39   36
- NUMBER OF LINES:   52    NUMBER OF POINTS:   482    max.ph.:   51
+      2  3439  Y =              0.9938 ,      1 REACTIONS:   36
+      6  3445  X =              0.0063 ,      2 REACTIONS:   39   36
+ NUMBER OF LINES:   53    NUMBER OF POINTS:   479    max.ph.:   50
  LEVEL:  3   SQUARE: (  2 , 75 ) LINE    38   REACTION   37: OPEN END              
-     10  3472  Y =              0.9313 ,      2 REACTIONS:   35   39
-     11  3483  X =              0.0188 ,      2 REACTIONS:   35   39
- NUMBER OF LINES:   52    NUMBER OF POINTS:   486    max.ph.:   63
+     10  3455  Y =              0.9313 ,      2 REACTIONS:   35   39
+     11  3466  X =              0.0188 ,      2 REACTIONS:   35   39
+ NUMBER OF LINES:   53    NUMBER OF POINTS:   483    max.ph.:   51
+ LEVEL:  3   SQUARE: ( 10 , 64 ) LINE    39   REACTION   38: OPEN END              
+     12  3478  Y =              0.7938 ,      2 REACTIONS:   38   39
+      9  3487  X =              0.1188 ,      2 REACTIONS:   38   39
+ NUMBER OF LINES:   53    NUMBER OF POINTS:   487    max.ph.:   54
  LEVEL:  3   SQUARE: (  2 , 77 ) LINE    40   REACTION   39: BUMP                  
-     13  3496  Y =              0.9563 ,      2 REACTIONS:   39   39
-      2  3498  X =              0.0188 ,      0 REACTIONS:
- NUMBER OF LINES:   52    NUMBER OF POINTS:   488    max.ph.:   51
+     13  3500  Y =              0.9563 ,      2 REACTIONS:   39   39
+      2  3502  X =              0.0188 ,      0 REACTIONS:
+ NUMBER OF LINES:   53    NUMBER OF POINTS:   489    max.ph.:   51
  LEVEL:  3   SQUARE: (  2 , 78 ) LINE    40   REACTION   39: OPEN END              
-      8  3506  Y =              0.9688 ,      1 REACTIONS:   39
-      7  3513  X =              0.0188 ,      1 REACTIONS:   39
- NUMBER OF LINES:   52    NUMBER OF POINTS:   490    max.ph.:   63
+      8  3510  Y =              0.9688 ,      1 REACTIONS:   39
+      7  3517  X =              0.0188 ,      1 REACTIONS:   39
+ NUMBER OF LINES:   53    NUMBER OF POINTS:   491    max.ph.:   51
  LEVEL:  3   SQUARE: (  1 , 78 ) LINE    41   REACTION   39: OPEN END              
-      8  3521  Y =              0.9688 ,      1 REACTIONS:   39
-      2  3523  X =              0.0063 ,      0 REACTIONS:
- NUMBER OF LINES:   52    NUMBER OF POINTS:   491    max.ph.:   61
+      8  3525  Y =              0.9688 ,      1 REACTIONS:   39
+      2  3527  X =              0.0063 ,      0 REACTIONS:
+ NUMBER OF LINES:   53    NUMBER OF POINTS:   492    max.ph.:   56
  LEVEL:  2   SQUARE: ( 27 ,  5 ) LINE    47   REACTION   28: BUMP                  
-      3  3526  Y =              0.1125 ,      0 REACTIONS:
-      8  3534  X =              0.6625 ,      1 REACTIONS:   28
- NUMBER OF LINES:   52    NUMBER OF POINTS:   492    max.ph.:   61
+      3  3530  Y =              0.1125 ,      0 REACTIONS:
+      8  3538  X =              0.6625 ,      1 REACTIONS:   28
+ NUMBER OF LINES:   53    NUMBER OF POINTS:   493    max.ph.:   50
  LEVEL:  3   SQUARE: ( 53 , 10 ) LINE    47   REACTION   28: BUMP                  
-      8  3542  Y =              0.1188 ,      1 REACTIONS:   28
-      7  3549  X =              0.6562 ,      1 REACTIONS:   28
- NUMBER OF LINES:   52    NUMBER OF POINTS:   494    max.ph.:   62
- LEVEL:  3   SQUARE: (  1 , 79 ) LINE    51   REACTION   39: OPEN END              
-     13  3562  Y =              0.9813 ,      2 REACTIONS:   39   39
-      7  3569  X =              0.0063 ,      1 REACTIONS:   39
- NUMBER OF LINES:   53    NUMBER OF POINTS:   497    max.ph.:   52
- LEVEL:  3   SQUARE: (  2 , 79 ) LINE    51   REACTION   39: OPEN END              
-      2  3571  Y =              0.9813 ,      1 REACTIONS:   36
-      1  3572  X =              0.0188 ,      1 REACTIONS:   36
- NUMBER OF LINES:   53    NUMBER OF POINTS:   499    max.ph.:   62
+      8  3546  Y =              0.1188 ,      1 REACTIONS:   28
+      7  3553  X =              0.6562 ,      1 REACTIONS:   28
+ NUMBER OF LINES:   53    NUMBER OF POINTS:   495    max.ph.:   54
+ LEVEL:  3   SQUARE: (  1 , 79 ) LINE    52   REACTION   39: OPEN END              
+     13  3566  Y =              0.9813 ,      2 REACTIONS:   39   39
+      7  3573  X =              0.0063 ,      1 REACTIONS:   39
+ NUMBER OF LINES:   54    NUMBER OF POINTS:   498    max.ph.:   51
+ LEVEL:  3   SQUARE: (  2 , 79 ) LINE    52   REACTION   39: OPEN END              
+      2  3575  Y =              0.9813 ,      1 REACTIONS:   36
+      1  3576  X =              0.0188 ,      1 REACTIONS:   36
+ NUMBER OF LINES:   54    NUMBER OF POINTS:   500    max.ph.:   53
  LEVEL:  4   SQUARE: ( 40 , 80 ) LINE     1   REACTION    1: OPEN END              
-     10  3582  Y =              0.4969 ,      2 REACTIONS:   13    1
-      6  3588  X =              0.2469 ,      1 REACTIONS:   13
- NUMBER OF LINES:   53    NUMBER OF POINTS:   502    max.ph.:   44
+     10  3586  Y =              0.4969 ,      2 REACTIONS:   13    1
+      6  3592  X =              0.2469 ,      1 REACTIONS:   13
+ NUMBER OF LINES:   54    NUMBER OF POINTS:   503    max.ph.:   41
  LEVEL:  4   SQUARE: ( 52 , 62 ) LINE     2   REACTION    2: OPEN END              
-      8  3596  Y =              0.3844 ,      2 REACTIONS:    2   24
-     10  3606  X =              0.3219 ,      2 REACTIONS:   24   27
- NUMBER OF LINES:   53    NUMBER OF POINTS:   506    max.ph.:   79
+      8  3600  Y =              0.3844 ,      2 REACTIONS:    2   24
+     10  3610  X =              0.3219 ,      2 REACTIONS:   24   27
+ NUMBER OF LINES:   54    NUMBER OF POINTS:   507    max.ph.:   59
  LEVEL:  4   SQUARE: ( 62 , 46 ) LINE     3   REACTION    3: OPEN END              
-     11  3617  Y =              0.2844 ,      2 REACTIONS:   14   15
- REACTION:  45  15  =  11
+     11  3621  Y =              0.2844 ,      2 REACTIONS:   14   15
+ REACTION:  46  15  =  11
  position:      3.84375E-01   2.86719E-01      3.84375E-01   2.86914E-01
  LABELED WITH ASSEMBLAGES
  REACTION: *LIQUID 1Ca2Al = *LIQUID
-      6  3623  X =              0.3844 ,      1 REACTIONS:   45
- NUMBER OF LINES:   54    NUMBER OF POINTS:   509    max.ph.:   78
+      6  3627  X =              0.3844 ,      1 REACTIONS:   46
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   510    max.ph.:   54
  LEVEL:  4   SQUARE: ( 54 ,  2 ) LINE     4   REACTION    4: OPEN END              
-      7  3630  Y =              0.0094 ,      1 REACTIONS:    4
-      2  3632  X =              0.3344 ,      0 REACTIONS:
- NUMBER OF LINES:   54    NUMBER OF POINTS:   510    max.ph.:   37
+      7  3634  Y =              0.0094 ,      1 REACTIONS:    4
+      2  3636  X =              0.3344 ,      0 REACTIONS:
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   511    max.ph.:   41
  LEVEL:  4   SQUARE: ( 80 , 40 ) LINE     5   REACTION    5: OPEN END              
-      7  3639  Y =              0.2469 ,      1 REACTIONS:    5
-      6  3645  X =              0.4969 ,      1 REACTIONS:    5
- NUMBER OF LINES:   54    NUMBER OF POINTS:   512    max.ph.:   39
+      7  3643  Y =              0.2469 ,      1 REACTIONS:    5
+      6  3649  X =              0.4969 ,      1 REACTIONS:    5
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   513    max.ph.:   40
  LEVEL:  4   SQUARE: ( 81 , 40 ) LINE     6   REACTION    6: OPEN END              
-     13  3658  Y =              0.2469 ,      3 REACTIONS:    6   16   19
-      6  3664  X =              0.5031 ,      1 REACTIONS:   19
- NUMBER OF LINES:   54    NUMBER OF POINTS:   516    max.ph.:   60
+     13  3662  Y =              0.2469 ,      3 REACTIONS:    6   16   19
+      6  3668  X =              0.5031 ,      1 REACTIONS:   19
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   517    max.ph.:   49
  LEVEL:  4   SQUARE: ( 90 , 16 ) LINE     7   REACTION    7: OPEN END              
-      7  3671  Y =              0.0969 ,      1 REACTIONS:    7
-      6  3677  X =              0.5594 ,      1 REACTIONS:    7
- NUMBER OF LINES:   54    NUMBER OF POINTS:   518    max.ph.:   46
+      7  3675  Y =              0.0969 ,      1 REACTIONS:    7
+      6  3681  X =              0.5594 ,      1 REACTIONS:    7
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   519    max.ph.:   45
  LEVEL:  4   SQUARE: (111 , 17 ) LINE     9   REACTION    9: OPEN END              
-      9  3686  Y =              0.1031 ,      2 REACTIONS:   44   23
-      6  3692  X =              0.6906 ,      1 REACTIONS:   44
- NUMBER OF LINES:   54    NUMBER OF POINTS:   521    max.ph.:   60
+      9  3690  Y =              0.1031 ,      2 REACTIONS:   44   23
+      6  3696  X =              0.6906 ,      1 REACTIONS:   44
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   522    max.ph.:   49
  LEVEL:  4   SQUARE: (121 , 40 ) LINE    11   REACTION   11: OPEN END              
-      6  3698  Y =              0.2469 ,      2 REACTIONS:   11   18
-      1  3699  X =              0.7531 ,      1 REACTIONS:   18
- NUMBER OF LINES:   54    NUMBER OF POINTS:   524    max.ph.:   35
+      6  3702  Y =              0.2469 ,      2 REACTIONS:   11   18
+      1  3703  X =              0.7531 ,      1 REACTIONS:   18
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   525    max.ph.:   34
  LEVEL:  4   SQUARE: ( 26 ,103 ) LINE    12   REACTION   12: OPEN END              
-      7  3706  Y =              0.6406 ,      1 REACTIONS:   34
-      6  3712  X =              0.1594 ,      1 REACTIONS:   34
- NUMBER OF LINES:   54    NUMBER OF POINTS:   526    max.ph.:   76
+      7  3710  Y =              0.6406 ,      1 REACTIONS:   34
+      6  3716  X =              0.1594 ,      1 REACTIONS:   34
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   527    max.ph.:   57
  LEVEL:  4   SQUARE: ( 96 , 32 ) LINE    17   REACTION   17: OPEN END              
-     11  3723  Y =              0.1969 ,      2 REACTIONS:   19   20
-      6  3729  X =              0.5969 ,      1 REACTIONS:   19
- NUMBER OF LINES:   54    NUMBER OF POINTS:   529    max.ph.:   52
+     11  3727  Y =              0.1969 ,      2 REACTIONS:   19   20
+      6  3733  X =              0.5969 ,      1 REACTIONS:   19
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   530    max.ph.:   48
  LEVEL:  4   SQUARE: ( 89 , 57 ) LINE    19   REACTION   19: OPEN END              
-      7  3736  Y =              0.3531 ,      1 REACTIONS:   19
-      6  3742  X =              0.5531 ,      1 REACTIONS:   20
- NUMBER OF LINES:   54    NUMBER OF POINTS:   531    max.ph.:   59
+      7  3740  Y =              0.3531 ,      1 REACTIONS:   19
+      6  3746  X =              0.5531 ,      1 REACTIONS:   20
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   532    max.ph.:   49
  LEVEL:  4   SQUARE: ( 81 , 41 ) LINE    19   REACTION   19: BUMP                  
-      7  3749  Y =              0.2531 ,      1 REACTIONS:   19
-      6  3755  X =              0.5031 ,      1 REACTIONS:   19
- NUMBER OF LINES:   54    NUMBER OF POINTS:   533    max.ph.:   59
+      7  3753  Y =              0.2531 ,      1 REACTIONS:   19
+      6  3759  X =              0.5031 ,      1 REACTIONS:   19
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   534    max.ph.:   50
  LEVEL:  4   SQUARE: (107 , 53 ) LINE    20   REACTION   20: BUMP                  
-     11  3766  Y =              0.3281 ,      2 REACTIONS:   20   21
-      6  3772  X =              0.6656 ,      1 REACTIONS:   20
- NUMBER OF LINES:   54    NUMBER OF POINTS:   536    max.ph.:   43
+     11  3770  Y =              0.3281 ,      2 REACTIONS:   20   21
+      6  3776  X =              0.6656 ,      1 REACTIONS:   20
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   537    max.ph.:   41
  LEVEL:  4   SQUARE: (110 , 20 ) LINE    21   REACTION   21: OPEN END              
-     10  3782  Y =              0.1219 ,      2 REACTIONS:   28   44
-      6  3788  X =              0.6844 ,      1 REACTIONS:   28
- NUMBER OF LINES:   54    NUMBER OF POINTS:   539    max.ph.:   78
+     10  3786  Y =              0.1219 ,      2 REACTIONS:   28   44
+      6  3792  X =              0.6844 ,      1 REACTIONS:   28
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   540    max.ph.:   54
  LEVEL:  4   SQUARE: (107 , 54 ) LINE    21   REACTION   21: OPEN END              
-      2  3790  Y =              0.3344 ,      1 REACTIONS:   29
-      5  3795  X =              0.6656 ,      2 REACTIONS:   20   29
- NUMBER OF LINES:   54    NUMBER OF POINTS:   542    max.ph.:   61
+      2  3794  Y =              0.3344 ,      1 REACTIONS:   29
+      5  3799  X =              0.6656 ,      2 REACTIONS:   20   29
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   543    max.ph.:   50
  LEVEL:  4   SQUARE: (120 , 40 ) LINE    22   REACTION   22: OPEN END              
-      7  3802  Y =              0.2469 ,      2 REACTIONS:   22   23
-      2  3804  X =              0.7469 ,      0 REACTIONS:
- NUMBER OF LINES:   54    NUMBER OF POINTS:   544    max.ph.:   40
+      7  3806  Y =              0.2469 ,      2 REACTIONS:   22   23
+      2  3808  X =              0.7469 ,      0 REACTIONS:
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   545    max.ph.:   42
  LEVEL:  4   SQUARE: ( 92 , 69 ) LINE    29   REACTION   28: OPEN END              
-      6  3810  Y =              0.4281 ,      2 REACTIONS:   28   29
-      1  3811  X =              0.5719 ,      1 REACTIONS:   29
- NUMBER OF LINES:   54    NUMBER OF POINTS:   547    max.ph.:   62
+      6  3814  Y =              0.4281 ,      2 REACTIONS:   28   29
+      1  3815  X =              0.5719 ,      1 REACTIONS:   29
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   548    max.ph.:   53
  LEVEL:  4   SQUARE: ( 90 , 71 ) LINE    32   REACTION   31: OPEN END              
-      2  3813  Y =              0.4406 ,      1 REACTIONS:   33
-      1  3814  X =              0.5594 ,      1 REACTIONS:   33
- NUMBER OF LINES:   54    NUMBER OF POINTS:   549    max.ph.:   83
+      2  3817  Y =              0.4406 ,      1 REACTIONS:   33
+      1  3818  X =              0.5594 ,      1 REACTIONS:   33
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   550    max.ph.:   61
  LEVEL:  4   SQUARE: ( 69 , 92 ) LINE    32   REACTION   31: OPEN END              
-      2  3816  Y =              0.5719 ,      1 REACTIONS:   33
-      1  3817  X =              0.4281 ,      1 REACTIONS:   33
- NUMBER OF LINES:   54    NUMBER OF POINTS:   551    max.ph.:   79
+      2  3820  Y =              0.5719 ,      1 REACTIONS:   33
+      1  3821  X =              0.4281 ,      1 REACTIONS:   33
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   552    max.ph.:   63
  LEVEL:  4   SQUARE: ( 59 ,102 ) LINE    34   REACTION   33: OPEN END              
-      6  3823  Y =              0.6344 ,      2 REACTIONS:   35   36
-      5  3828  X =              0.3656 ,      2 REACTIONS:   35   36
- NUMBER OF LINES:   54    NUMBER OF POINTS:   555    max.ph.:   62
+      6  3827  Y =              0.6344 ,      2 REACTIONS:   35   36
+      5  3832  X =              0.3656 ,      2 REACTIONS:   35   36
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   556    max.ph.:   54
  LEVEL:  4   SQUARE: ( 20 ,126 ) LINE    36   REACTION   35: OPEN END              
-      7  3835  Y =              0.7844 ,      1 REACTIONS:   35
-      6  3841  X =              0.1219 ,      1 REACTIONS:   35
- NUMBER OF LINES:   54    NUMBER OF POINTS:   557    max.ph.:   63
+      7  3839  Y =              0.7844 ,      1 REACTIONS:   35
+      6  3845  X =              0.1219 ,      1 REACTIONS:   35
+ NUMBER OF LINES:   55    NUMBER OF POINTS:   558    max.ph.:   53
  LEVEL:  4   SQUARE: (  1 ,160 ) LINE    37   REACTION   36: OPEN END              
-      2  3843  Y =              0.9969 ,      1 REACTIONS:   36
-      5  3848  X =              0.0031 ,      2 REACTIONS:   39   36
- NUMBER OF LINES:   55    NUMBER OF POINTS:   560    max.ph.:   61
+      2  3847  Y =              0.9969 ,      1 REACTIONS:   36
+      5  3852  X =              0.0031 ,      2 REACTIONS:   39   36
+ NUMBER OF LINES:   56    NUMBER OF POINTS:   561    max.ph.:   53
  LEVEL:  4   SQUARE: (  4 ,149 ) LINE    38   REACTION   37: OPEN END              
-      7  3855  Y =              0.9281 ,      2 REACTIONS:   37   38
-      9  3864  X =              0.0219 ,      2 REACTIONS:   37   38
- NUMBER OF LINES:   55    NUMBER OF POINTS:   564    max.ph.:   52
+      7  3859  Y =              0.9281 ,      2 REACTIONS:   37   38
+      9  3868  X =              0.0219 ,      2 REACTIONS:   37   38
+ NUMBER OF LINES:   56    NUMBER OF POINTS:   565    max.ph.:   51
+ LEVEL:  4   SQUARE: ( 20 ,127 ) LINE    39   REACTION   38: OPEN END              
+      3  3871  Y =              0.7906 ,      0 REACTIONS:
+      2  3873  X =              0.1219 ,      0 REACTIONS:
+ NUMBER OF LINES:   56    NUMBER OF POINTS:   565    max.ph.:   54
  LEVEL:  4   SQUARE: (  3 ,156 ) LINE    40   REACTION   39: OPEN END              
-      7  3871  Y =              0.9719 ,      1 REACTIONS:   39
-      6  3877  X =              0.0156 ,      1 REACTIONS:   39
- NUMBER OF LINES:   55    NUMBER OF POINTS:   566    max.ph.:   62
+      7  3880  Y =              0.9719 ,      1 REACTIONS:   39
+      6  3886  X =              0.0156 ,      1 REACTIONS:   39
+ NUMBER OF LINES:   56    NUMBER OF POINTS:   567    max.ph.:   51
  LEVEL:  4   SQUARE: (  2 ,156 ) LINE    41   REACTION   39: OPEN END              
-      7  3884  Y =              0.9719 ,      1 REACTIONS:   39
-      2  3886  X =              0.0094 ,      0 REACTIONS:
- NUMBER OF LINES:   55    NUMBER OF POINTS:   567    max.ph.:   48
- LEVEL:  4   SQUARE: (  2 ,158 ) LINE    51   REACTION   39: OPEN END              
-      7  3893  Y =              0.9844 ,      1 REACTIONS:   39
-      6  3899  X =              0.0094 ,      1 REACTIONS:   39
- NUMBER OF LINES:   55    NUMBER OF POINTS:   569    max.ph.:   51
- LEVEL:  4   SQUARE: (  3 ,157 ) LINE    51   REACTION   39: OPEN END              
-      3  3902  Y =              0.9781 ,      0 REACTIONS:
-      2  3904  X =              0.0156 ,      0 REACTIONS:
- NUMBER OF LINES:   55    NUMBER OF POINTS:   569    max.ph.:   61
- LEVEL:  4   SQUARE: (  1 ,159 ) LINE    52   REACTION   39: OPEN END              
-     11  3915  Y =              0.9906 ,      2 REACTIONS:   39   39
-      6  3921  X =              0.0031 ,      1 REACTIONS:   39
- NUMBER OF LINES:   56    NUMBER OF POINTS:   572    max.ph.:   52
- LEVEL:  4   SQUARE: (  2 ,159 ) LINE    52   REACTION   39: OPEN END              
-      2  3923  Y =              0.9906 ,      1 REACTIONS:   36
-      1  3924  X =              0.0094 ,      1 REACTIONS:   36
- NUMBER OF LINES:   56    NUMBER OF POINTS:   574    max.ph.:   61
- LEVEL:  4   SQUARE: (  2 ,157 ) LINE    53   REACTION   39: OPEN END              
-     11  3935  Y =              0.9781 ,      2 REACTIONS:   39   39
-      2  3937  X =              0.0094 ,      0 REACTIONS:
- NUMBER OF LINES:   56    NUMBER OF POINTS:   576    max.ph.:   51
- LEVEL:  4   SQUARE: (  1 ,158 ) LINE    53   REACTION   39: OPEN END              
-      7  3944  Y =              0.9844 ,      1 REACTIONS:   39
-      2  3946  X =              0.0031 ,      0 REACTIONS:
- NUMBER OF LINES:   56    NUMBER OF POINTS:   577    max.ph.:   62
+      7  3893  Y =              0.9719 ,      1 REACTIONS:   39
+      2  3895  X =              0.0094 ,      0 REACTIONS:
+ NUMBER OF LINES:   56    NUMBER OF POINTS:   568    max.ph.:   51
+ LEVEL:  4   SQUARE: (  2 ,158 ) LINE    52   REACTION   39: OPEN END              
+      7  3902  Y =              0.9844 ,      1 REACTIONS:   39
+      6  3908  X =              0.0094 ,      1 REACTIONS:   39
+ NUMBER OF LINES:   56    NUMBER OF POINTS:   570    max.ph.:   50
+ LEVEL:  4   SQUARE: (  3 ,157 ) LINE    52   REACTION   39: OPEN END              
+      3  3911  Y =              0.9781 ,      0 REACTIONS:
+      2  3913  X =              0.0156 ,      0 REACTIONS:
+ NUMBER OF LINES:   56    NUMBER OF POINTS:   570    max.ph.:   50
+ LEVEL:  4   SQUARE: (  1 ,159 ) LINE    53   REACTION   39: OPEN END              
+     11  3924  Y =              0.9906 ,      2 REACTIONS:   39   39
+      6  3930  X =              0.0031 ,      1 REACTIONS:   39
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   573    max.ph.:   51
+ LEVEL:  4   SQUARE: (  2 ,159 ) LINE    53   REACTION   39: OPEN END              
+      2  3932  Y =              0.9906 ,      1 REACTIONS:   36
+      1  3933  X =              0.0094 ,      1 REACTIONS:   36
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   575    max.ph.:   51
+ LEVEL:  4   SQUARE: (  2 ,157 ) LINE    54   REACTION   39: OPEN END              
+     11  3944  Y =              0.9781 ,      2 REACTIONS:   39   39
+      2  3946  X =              0.0094 ,      0 REACTIONS:
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   577    max.ph.:   51
+ LEVEL:  4   SQUARE: (  1 ,158 ) LINE    54   REACTION   39: OPEN END              
+      7  3953  Y =              0.9844 ,      1 REACTIONS:   39
+      2  3955  X =              0.0031 ,      0 REACTIONS:
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   578    max.ph.:   54
  LEVEL:  5   SQUARE: ( 80 ,160 ) LINE     1   REACTION    1: OPEN END              
-      8  3954  Y =              0.4984 ,      2 REACTIONS:   13    1
-      5  3959  X =              0.2484 ,      1 REACTIONS:   13
- NUMBER OF LINES:   56    NUMBER OF POINTS:   580    max.ph.:   44
+      8  3963  Y =              0.4984 ,      2 REACTIONS:   13    1
+      5  3968  X =              0.2484 ,      1 REACTIONS:   13
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   581    max.ph.:   41
  LEVEL:  5   SQUARE: (103 ,124 ) LINE     2   REACTION    2: OPEN END              
-      9  3968  Y =              0.3859 ,      2 REACTIONS:   26   27
-      5  3973  X =              0.3203 ,      1 REACTIONS:   26
- NUMBER OF LINES:   56    NUMBER OF POINTS:   583    max.ph.:   43
+      9  3977  Y =              0.3859 ,      2 REACTIONS:   26   27
+      5  3982  X =              0.3203 ,      1 REACTIONS:   26
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   584    max.ph.:   43
  LEVEL:  5   SQUARE: (123 , 92 ) LINE     3   REACTION    3: OPEN END              
-      9  3982  Y =              0.2859 ,      2 REACTIONS:    3   14
-      5  3987  X =              0.3828 ,      1 REACTIONS:    3
- NUMBER OF LINES:   56    NUMBER OF POINTS:   586    max.ph.:   59
+      9  3991  Y =              0.2859 ,      2 REACTIONS:    3   14
+      5  3996  X =              0.3828 ,      1 REACTIONS:    3
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   587    max.ph.:   49
  LEVEL:  5   SQUARE: (108 ,  4 ) LINE     4   REACTION    4: OPEN END              
-      6  3993  Y =              0.0109 ,      2 REACTIONS:   14   15
-      2  3995  X =              0.3359 ,      0 REACTIONS:
- NUMBER OF LINES:   56    NUMBER OF POINTS:   588    max.ph.:   39
+      6  4002  Y =              0.0109 ,      2 REACTIONS:   14   15
+      2  4004  X =              0.3359 ,      0 REACTIONS:
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   589    max.ph.:   40
  LEVEL:  5   SQUARE: (160 , 80 ) LINE     5   REACTION    5: OPEN END              
-      6  4001  Y =              0.2484 ,      1 REACTIONS:    5
-      5  4006  X =              0.4984 ,      1 REACTIONS:    5
- NUMBER OF LINES:   56    NUMBER OF POINTS:   590    max.ph.:   39
+      6  4010  Y =              0.2484 ,      1 REACTIONS:    5
+      5  4015  X =              0.4984 ,      1 REACTIONS:    5
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   591    max.ph.:   40
  LEVEL:  5   SQUARE: (161 , 80 ) LINE     6   REACTION    6: OPEN END              
-     10  4016  Y =              0.2484 ,      3 REACTIONS:    6   16   19
-      5  4021  X =              0.5016 ,      1 REACTIONS:   19
- NUMBER OF LINES:   56    NUMBER OF POINTS:   594    max.ph.:   43
+     10  4025  Y =              0.2484 ,      3 REACTIONS:    6   16   19
+      5  4030  X =              0.5016 ,      1 REACTIONS:   19
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   595    max.ph.:   41
  LEVEL:  5   SQUARE: (180 , 32 ) LINE     7   REACTION    7: OPEN END              
-      6  4027  Y =              0.0984 ,      1 REACTIONS:    7
-      5  4032  X =              0.5609 ,      1 REACTIONS:    7
- NUMBER OF LINES:   56    NUMBER OF POINTS:   596    max.ph.:   59
+      6  4036  Y =              0.0984 ,      1 REACTIONS:    7
+      5  4041  X =              0.5609 ,      1 REACTIONS:    7
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   597    max.ph.:   49
  LEVEL:  5   SQUARE: (222 , 33 ) LINE     9   REACTION    9: OPEN END              
-      6  4038  Y =              0.1016 ,      2 REACTIONS:    9   10
-      5  4043  X =              0.6922 ,      1 REACTIONS:   10
- NUMBER OF LINES:   56    NUMBER OF POINTS:   599    max.ph.:   43
+      6  4047  Y =              0.1016 ,      2 REACTIONS:    9   10
+      5  4052  X =              0.6922 ,      1 REACTIONS:   10
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   600    max.ph.:   42
  LEVEL:  5   SQUARE: (241 , 80 ) LINE    11   REACTION   11: OPEN END              
-      5  4048  Y =              0.2484 ,      2 REACTIONS:   11   18
-      1  4049  X =              0.7516 ,      1 REACTIONS:   18
- NUMBER OF LINES:   56    NUMBER OF POINTS:   602    max.ph.:   35
+      5  4057  Y =              0.2484 ,      2 REACTIONS:   11   18
+      1  4058  X =              0.7516 ,      1 REACTIONS:   18
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   603    max.ph.:   34
  LEVEL:  5   SQUARE: ( 52 ,205 ) LINE    12   REACTION   12: OPEN END              
-      7  4056  Y =              0.6391 ,      2 REACTIONS:   34   27
-      2  4058  X =              0.1609 ,      0 REACTIONS:
- NUMBER OF LINES:   56    NUMBER OF POINTS:   604    max.ph.:   58
+      7  4065  Y =              0.6391 ,      2 REACTIONS:   34   27
+      2  4067  X =              0.1609 ,      0 REACTIONS:
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   605    max.ph.:   49
  LEVEL:  5   SQUARE: (124 , 92 ) LINE    15   REACTION   15: OPEN END              
-      6  4064  Y =              0.2859 ,      2 REACTIONS:   15   41
-      5  4069  X =              0.3859 ,      1 REACTIONS:   41
- NUMBER OF LINES:   56    NUMBER OF POINTS:   607    max.ph.:   46
+      6  4073  Y =              0.2859 ,      2 REACTIONS:   15   41
+      5  4078  X =              0.3859 ,      1 REACTIONS:   41
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   608    max.ph.:   43
  LEVEL:  5   SQUARE: (192 , 63 ) LINE    17   REACTION   17: OPEN END              
-      6  4075  Y =              0.1953 ,      1 REACTIONS:   20
-      2  4077  X =              0.5984 ,      0 REACTIONS:
- NUMBER OF LINES:   56    NUMBER OF POINTS:   608    max.ph.:   60
+      6  4084  Y =              0.1953 ,      1 REACTIONS:   20
+      2  4086  X =              0.5984 ,      0 REACTIONS:
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   609    max.ph.:   49
  LEVEL:  5   SQUARE: (177 ,114 ) LINE    19   REACTION   19: OPEN END              
-      6  4083  Y =              0.3547 ,      1 REACTIONS:   19
-      8  4091  X =              0.5516 ,      2 REACTIONS:   19   17
- NUMBER OF LINES:   56    NUMBER OF POINTS:   611    max.ph.:   60
+      6  4092  Y =              0.3547 ,      1 REACTIONS:   19
+      8  4100  X =              0.5516 ,      2 REACTIONS:   19   17
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   612    max.ph.:   49
  LEVEL:  5   SQUARE: (220 , 40 ) LINE    21   REACTION   21: OPEN END              
-      8  4099  Y =              0.1234 ,      2 REACTIONS:   28   44
-      5  4104  X =              0.6859 ,      1 REACTIONS:   28
- NUMBER OF LINES:   56    NUMBER OF POINTS:   614    max.ph.:   80
+      8  4108  Y =              0.1234 ,      2 REACTIONS:   28   44
+      5  4113  X =              0.6859 ,      1 REACTIONS:   28
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   615    max.ph.:   55
  LEVEL:  5   SQUARE: (214 ,107 ) LINE    21   REACTION   21: OPEN END              
-      6  4110  Y =              0.3328 ,      3 REACTIONS:   20   21   25
-      1  4111  X =              0.6672 ,      1 REACTIONS:   25
- NUMBER OF LINES:   56    NUMBER OF POINTS:   618    max.ph.:   42
+      6  4119  Y =              0.3328 ,      3 REACTIONS:   20   21   25
+      1  4120  X =              0.6672 ,      1 REACTIONS:   25
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   619    max.ph.:   44
  LEVEL:  5   SQUARE: (240 , 80 ) LINE    22   REACTION   22: OPEN END              
-      6  4117  Y =              0.2484 ,      1 REACTIONS:   43
-      2  4119  X =              0.7484 ,      0 REACTIONS:
- NUMBER OF LINES:   56    NUMBER OF POINTS:   619    max.ph.:   40
+      6  4126  Y =              0.2484 ,      1 REACTIONS:   43
+      2  4128  X =              0.7484 ,      0 REACTIONS:
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   620    max.ph.:   42
  LEVEL:  5   SQUARE: (183 ,138 ) LINE    29   REACTION   28: OPEN END              
-      2  4121  Y =              0.4297 ,      1 REACTIONS:   33
-      4  4125  X =              0.5703 ,      2 REACTIONS:   28   33
- NUMBER OF LINES:   56    NUMBER OF POINTS:   622    max.ph.:   78
+      2  4130  Y =              0.4297 ,      1 REACTIONS:   33
+      4  4134  X =              0.5703 ,      2 REACTIONS:   28   33
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   623    max.ph.:   60
  LEVEL:  5   SQUARE: (179 ,142 ) LINE    32   REACTION   31: OPEN END              
-      2  4127  Y =              0.4422 ,      1 REACTIONS:   33
-      1  4128  X =              0.5578 ,      1 REACTIONS:   33
- NUMBER OF LINES:   56    NUMBER OF POINTS:   624    max.ph.:   81
+      2  4136  Y =              0.4422 ,      1 REACTIONS:   33
+      1  4137  X =              0.5578 ,      1 REACTIONS:   33
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   625    max.ph.:   63
  LEVEL:  5   SQUARE: (138 ,183 ) LINE    32   REACTION   31: OPEN END              
-      2  4130  Y =              0.5703 ,      1 REACTIONS:   33
-      4  4134  X =              0.4297 ,      2 REACTIONS:   31   33
- NUMBER OF LINES:   56    NUMBER OF POINTS:   627    max.ph.:   61
+      2  4139  Y =              0.5703 ,      1 REACTIONS:   33
+      4  4143  X =              0.4297 ,      2 REACTIONS:   31   33
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   628    max.ph.:   69
  LEVEL:  5   SQUARE: (118 ,203 ) LINE    34   REACTION   33: OPEN END              
-      2  4136  Y =              0.6328 ,      1 REACTIONS:   33
-      1  4137  X =              0.3672 ,      1 REACTIONS:   33
- NUMBER OF LINES:   56    NUMBER OF POINTS:   629    max.ph.:   81
+      2  4145  Y =              0.6328 ,      1 REACTIONS:   33
+      1  4146  X =              0.3672 ,      1 REACTIONS:   33
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   630    max.ph.:   66
  LEVEL:  5   SQUARE: ( 39 ,252 ) LINE    36   REACTION   35: OPEN END              
-     11  4148  Y =              0.7859 ,      3 REACTIONS:   37   38   39
-     10  4158  X =              0.1203 ,      3 REACTIONS:   37   38   39
- NUMBER OF LINES:   56    NUMBER OF POINTS:   635    max.ph.:   63
+      8  4154  Y =              0.7859 ,      2 REACTIONS:   37   45
+      7  4161  X =              0.1203 ,      2 REACTIONS:   37   45
+ NUMBER OF LINES:   57    NUMBER OF POINTS:   634    max.ph.:   54
  LEVEL:  5   SQUARE: (  1 ,320 ) LINE    37   REACTION   36: OPEN END              
-      2  4160  Y =              0.9984 ,      1 REACTIONS:   36
-      4  4164  X =              0.0016 ,      2 REACTIONS:   39   36
- NUMBER OF LINES:   57    NUMBER OF POINTS:   638    max.ph.:   62
+      2  4163  Y =              0.9984 ,      1 REACTIONS:   36
+      4  4167  X =              0.0016 ,      2 REACTIONS:   39   36
+ NUMBER OF LINES:   58    NUMBER OF POINTS:   637    max.ph.:   53
  LEVEL:  5   SQUARE: (  7 ,298 ) LINE    38   REACTION   37: OPEN END              
-      9  4173  Y =              0.9297 ,      2 REACTIONS:   35   39
-      8  4181  X =              0.0203 ,      2 REACTIONS:   35   39
- NUMBER OF LINES:   57    NUMBER OF POINTS:   642    max.ph.:   63
+      9  4176  Y =              0.9297 ,      2 REACTIONS:   35   39
+      8  4184  X =              0.0203 ,      2 REACTIONS:   35   39
+ NUMBER OF LINES:   58    NUMBER OF POINTS:   641    max.ph.:   53
+ LEVEL:  5   SQUARE: ( 39 ,253 ) LINE    39   REACTION   38: OPEN END              
+      3  4187  Y =              0.7891 ,      0 REACTIONS:
+      2  4189  X =              0.1203 ,      0 REACTIONS:
+ NUMBER OF LINES:   58    NUMBER OF POINTS:   641    max.ph.:   51
  LEVEL:  5   SQUARE: (  5 ,312 ) LINE    40   REACTION   39: OPEN END              
-      6  4187  Y =              0.9734 ,      1 REACTIONS:   39
-      5  4192  X =              0.0141 ,      1 REACTIONS:   39
- NUMBER OF LINES:   57    NUMBER OF POINTS:   644    max.ph.:   63
+      6  4195  Y =              0.9734 ,      1 REACTIONS:   39
+      5  4200  X =              0.0141 ,      1 REACTIONS:   39
+ NUMBER OF LINES:   58    NUMBER OF POINTS:   643    max.ph.:   50
  LEVEL:  5   SQUARE: (  3 ,312 ) LINE    41   REACTION   39: OPEN END              
-      6  4198  Y =              0.9734 ,      1 REACTIONS:   39
-      5  4203  X =              0.0078 ,      1 REACTIONS:   39
- NUMBER OF LINES:   57    NUMBER OF POINTS:   646    max.ph.:   63
- LEVEL:  5   SQUARE: (  3 ,316 ) LINE    51   REACTION   39: OPEN END              
-      6  4209  Y =              0.9859 ,      1 REACTIONS:   39
-      5  4214  X =              0.0078 ,      1 REACTIONS:   39
- NUMBER OF LINES:   57    NUMBER OF POINTS:   648    max.ph.:   51
- LEVEL:  5   SQUARE: (  5 ,313 ) LINE    51   REACTION   39: OPEN END              
-      6  4220  Y =              0.9766 ,      1 REACTIONS:   39
-      2  4222  X =              0.0141 ,      0 REACTIONS:
- NUMBER OF LINES:   57    NUMBER OF POINTS:   649    max.ph.:   60
- LEVEL:  5   SQUARE: (  2 ,318 ) LINE    52   REACTION   39: OPEN END              
-      6  4228  Y =              0.9922 ,      1 REACTIONS:   39
-      5  4233  X =              0.0047 ,      1 REACTIONS:   39
- NUMBER OF LINES:   57    NUMBER OF POINTS:   651    max.ph.:   61
- LEVEL:  5   SQUARE: (  3 ,317 ) LINE    52   REACTION   39: OPEN END              
-      3  4236  Y =              0.9891 ,      0 REACTIONS:
-      2  4238  X =              0.0078 ,      0 REACTIONS:
- NUMBER OF LINES:   57    NUMBER OF POINTS:   651    max.ph.:   62
- LEVEL:  5   SQUARE: (  3 ,313 ) LINE    53   REACTION   39: OPEN END              
-      6  4244  Y =              0.9766 ,      1 REACTIONS:   39
+      6  4206  Y =              0.9734 ,      1 REACTIONS:   39
+      5  4211  X =              0.0078 ,      1 REACTIONS:   39
+ NUMBER OF LINES:   58    NUMBER OF POINTS:   645    max.ph.:   53
+ LEVEL:  5   SQUARE: (  3 ,316 ) LINE    52   REACTION   39: OPEN END              
+      6  4217  Y =              0.9859 ,      1 REACTIONS:   39
+      5  4222  X =              0.0078 ,      1 REACTIONS:   39
+ NUMBER OF LINES:   58    NUMBER OF POINTS:   647    max.ph.:   50
+ LEVEL:  5   SQUARE: (  5 ,313 ) LINE    52   REACTION   39: OPEN END              
+      6  4228  Y =              0.9766 ,      1 REACTIONS:   39
+      2  4230  X =              0.0141 ,      0 REACTIONS:
+ NUMBER OF LINES:   58    NUMBER OF POINTS:   648    max.ph.:   50
+ LEVEL:  5   SQUARE: (  2 ,318 ) LINE    53   REACTION   39: OPEN END              
+      6  4236  Y =              0.9922 ,      1 REACTIONS:   39
+      5  4241  X =              0.0047 ,      1 REACTIONS:   39
+ NUMBER OF LINES:   58    NUMBER OF POINTS:   650    max.ph.:   51
+ LEVEL:  5   SQUARE: (  3 ,317 ) LINE    53   REACTION   39: OPEN END              
+      3  4244  Y =              0.9891 ,      0 REACTIONS:
       2  4246  X =              0.0078 ,      0 REACTIONS:
- NUMBER OF LINES:   57    NUMBER OF POINTS:   652    max.ph.:   48
- LEVEL:  5   SQUARE: (  2 ,316 ) LINE    53   REACTION   39: OPEN END              
-      6  4252  Y =              0.9859 ,      1 REACTIONS:   39
-      2  4254  X =              0.0047 ,      0 REACTIONS:
- NUMBER OF LINES:   57    NUMBER OF POINTS:   653    max.ph.:   48
- LEVEL:  5   SQUARE: (  1 ,319 ) LINE    55   REACTION   39: OPEN END              
-      9  4263  Y =              0.9953 ,      2 REACTIONS:   39   39
-      5  4268  X =              0.0016 ,      1 REACTIONS:   39
- NUMBER OF LINES:   58    NUMBER OF POINTS:   656    max.ph.:   63
- LEVEL:  5   SQUARE: (  2 ,319 ) LINE    55   REACTION   39: OPEN END              
-      2  4270  Y =              0.9953 ,      1 REACTIONS:   36
-      1  4271  X =              0.0047 ,      1 REACTIONS:   36
- NUMBER OF LINES:   58    NUMBER OF POINTS:   658    max.ph.:   61
- LEVEL:  5   SQUARE: (  2 ,317 ) LINE    56   REACTION   39: OPEN END              
-      6  4277  Y =              0.9891 ,      1 REACTIONS:   39
-      2  4279  X =              0.0047 ,      0 REACTIONS:
- NUMBER OF LINES:   58    NUMBER OF POINTS:   659    max.ph.:   51
- LEVEL:  5   SQUARE: (  1 ,318 ) LINE    56   REACTION   39: OPEN END              
-      6  4285  Y =              0.9922 ,      1 REACTIONS:   39
-      2  4287  X =              0.0016 ,      0 REACTIONS:
- NUMBER OF LINES:   58    NUMBER OF POINTS:   660    max.ph.:   63
+ NUMBER OF LINES:   58    NUMBER OF POINTS:   650    max.ph.:   51
+ LEVEL:  5   SQUARE: (  3 ,313 ) LINE    54   REACTION   39: OPEN END              
+      6  4252  Y =              0.9766 ,      1 REACTIONS:   39
+      2  4254  X =              0.0078 ,      0 REACTIONS:
+ NUMBER OF LINES:   58    NUMBER OF POINTS:   651    max.ph.:   51
+ LEVEL:  5   SQUARE: (  2 ,316 ) LINE    54   REACTION   39: OPEN END              
+      6  4260  Y =              0.9859 ,      1 REACTIONS:   39
+      2  4262  X =              0.0047 ,      0 REACTIONS:
+ NUMBER OF LINES:   58    NUMBER OF POINTS:   652    max.ph.:   51
+ LEVEL:  5   SQUARE: (  1 ,319 ) LINE    56   REACTION   39: OPEN END              
+      9  4271  Y =              0.9953 ,      2 REACTIONS:   39   39
+      5  4276  X =              0.0016 ,      1 REACTIONS:   39
+ NUMBER OF LINES:   59    NUMBER OF POINTS:   655    max.ph.:   53
+ LEVEL:  5   SQUARE: (  2 ,319 ) LINE    56   REACTION   39: OPEN END              
+      2  4278  Y =              0.9953 ,      1 REACTIONS:   36
+      1  4279  X =              0.0047 ,      1 REACTIONS:   36
+ NUMBER OF LINES:   59    NUMBER OF POINTS:   657    max.ph.:   52
+ LEVEL:  5   SQUARE: (  2 ,317 ) LINE    57   REACTION   39: OPEN END              
+      6  4285  Y =              0.9891 ,      1 REACTIONS:   39
+      2  4287  X =              0.0047 ,      0 REACTIONS:
+ NUMBER OF LINES:   59    NUMBER OF POINTS:   658    max.ph.:   51
+ LEVEL:  5   SQUARE: (  1 ,318 ) LINE    57   REACTION   39: OPEN END              
+      6  4293  Y =              0.9922 ,      1 REACTIONS:   39
+      2  4295  X =              0.0016 ,      0 REACTIONS:
+ NUMBER OF LINES:   59    NUMBER OF POINTS:   659    max.ph.:   55
  exit DOMINO
- CPU time:    0h 00m 18.58s
+ CPU time:    0h 00m 06.66s

@@ -38,7 +38,7 @@
   38):   =
   39):  (2)*LIQUID = *LIQUID
   40):  (2)*LIQUID b-Crist = (2)*LIQUID
-  41):  (2)*LIQUID b-Crist = *LIQUID b-Crist
+  41):  *LIQUID b-Crist = (2)*LIQUID b-Crist
   42):  (2)*LIQUID b-Crist = *LIQUID b-Crist
   43):  (2)*LIQUID b-Crist = *LIQUID b-Crist
   44):   =
@@ -49,11 +49,12 @@
   49):  *LIQUID 3Ca1Si 3Ca1Al = *LIQUID a-Larn 3Ca1Si
   50):  *LIQUID = *LIQUID 3Ca1Si
   51):   =
-  52):  (2)*LIQUID b-Crist = *LIQUID b-Crist
+  52):  *LIQUID b-Crist = (2)*LIQUID
   53):  (2)*LIQUID b-Crist = *LIQUID b-Crist
   54):  (2)*LIQUID b-Crist = *LIQUID b-Crist
-  55):  *LIQUID = *LIQUID 1Ca2Al
-  56):  (2)*LIQUID b-Crist = *LIQUID b-Crist
+  55):  (2)*LIQUID b-Crist = *LIQUID b-Crist
+  56):  *LIQUID = *LIQUID 1Ca2Al
   57):  (2)*LIQUID b-Crist = *LIQUID b-Crist
-  58):  *LIQUID b-Crist = (2)*LIQUID b-Crist
-  59):  (2)*LIQUID b-Crist = *LIQUID b-Crist
+  58):  (2)*LIQUID b-Crist = *LIQUID b-Crist
+  59):  *LIQUID b-Crist = (2)*LIQUID b-Crist
+  60):  (2)*LIQUID b-Crist = *LIQUID b-Crist
