@@ -1,4 +1,4 @@
-2022.03.06 Release Notes
+2023.03.06 Release Notes
 
 The Theriak-Domino suite of programs are now released with the GNU GPLv3 
 open source license. This release focussed on getting programs theriak 
