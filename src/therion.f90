@@ -49,8 +49,8 @@
 !-    The global variable for the directory is NEWDIR
 !*****
       progname='THERION'
-      !vers='28.05.2022'
-      vers = _CURRBUILDNAME_
+      vers='whatever'
+!      vers = _CURRBUILDNAME_
       task='"check consistency of databases"'
       ierr=0
       call initialize('$THERION-FILES',ierr)
@@ -143,16 +143,6 @@
 !===== for therion
       filename(dbs)=DBNAME
 !------------------
-!     Open UNIT=out
-!------------------
-      j=out
-      line=filename(j)(1:fnl(j))//ext(j)
-      path=wpath
-      akzess=' '
-      state=' '
-      call openfile(j,ierr)
-      if(ierr.ne.0) CALL EXIT
-!------------------
 !     open UNIT=dbs
 !------------------
       j=dbs
@@ -174,7 +164,6 @@
       if(ierr.ne.0) CALL EXIT
 !-----
       WRITE (scr,101) DBNAME(1:I001)
-      WRITE (out,101) DBNAME(1:I001)
   101 FORMAT (/' database for this run: ',A/)
 !*****
       COMAY=COMAX
@@ -199,23 +188,18 @@
 !=====
       Call LABLA(line,I1)
       WRITE (scr,102) line(1:I1)
-      WRITE (out,102) line(1:I1) 
   102 FORMAT (/,' Input from file',1x,a)
       write(scr,104) ('-',I=1,I1+16)
-      write(out,104) ('-',I=1,I1+16)
   104 format(1x,130a1,:)
       write(scr,106) TC,P
-      write(out,106) TC,P
   106 format(' T =',F8.2,' C     P =',F9.2,' Bar')
       CALL PUST (scr,' '//SYREC)
-      CALL PUST (out,' '//SYREC)
 !*****
 !-----check for consistency (type of calculation = cdc)
 !!      READ (UNIT=IFNR,FMT='(A500)') CH001
 
 !*****
     6 WRITE (scr,115)
-      WRITE (out,115)
   115 FORMAT (/ &
       ' -----------------'/ &
       ' check consistency'/ &
@@ -258,7 +242,6 @@
 !*****
 !*****
     7 WRITE (scr,118)
-      WRITE (out,118)
   118 FORMAT (/ &
       ' ------------------'/ &
       ' choose experiments'/ &
@@ -369,6 +352,7 @@
       CLOSE (UNIT=log)
 !*****
 !----- here jump to KONSI
+
       CALL KONSI
 !-----------------------------------------------------------------
 !-----AT THIS POINT THE PROGRAM MAY BE CHANGED TO PERFORM REPEATED
@@ -440,7 +424,6 @@
       CALL CPU_TIME(FF)
       CALL LABLA(ZEITSTRING,I001)
       WRITE (scr,150) ZEITSTRING(1:I001)
-      WRITE (out,150) ZEITSTRING(1:I001)
   150 FORMAT (/,' exit THERIAK',/,1X,A)
       END
 !-----
@@ -456,12 +439,13 @@
       LOGICAL(4) L001,L002,L003,L004,L005
       CHARACTER(1) TABTAB,CH1
       CHARACTER(32) TEXT,CH16
+      CHARACTER(80) CH80,FOLDERLIST(1000)
       CHARACTER(16) KEYWORD,TABPNR,BATEX
       CHARACTER(100) TABREA,TABAUT,TABBUL,TABPHA,HTXT1,HTXT2,HTXT3
       CHARACTER(250) CH001,CH002,BININ,TEXTQ
       CHARACTER(500) CH500
-      INTEGER(4) COMAY,I,J,I1,I2,I001,IC,NFEHL,FICOM,NCOMPS, &
-      EXONE,I3,I4,I5,PLNR,ISU,IO
+      INTEGER(4) COMAY,I,J,I1,I2,I001,I002,IC,NFEHL,FICOM,NCOMPS, &
+      EXONE,I3,I4,I5,PLNR,ISU,IO,NFOLD
       REAL(8) FF,FF2, &
       ZERO,F1,F2,F3,F4,PLCONST,MODE(3),CHEM2(COMAX),CHEM3(3,COMAX)
 !-----
@@ -497,6 +481,24 @@
 !             check_missing-phases | summary of all phases not found in database
 !----
 
+!     make a list of all folders beginning with "_"
+      NFOLD=0
+      CALL DIRLIST
+      OPEN (UNIT=52,FILE='dirlist',STATUS='UNKNOWN')
+      DO I=1,1000
+        READ(UNIT=52,FMT='(A)',END=777) CH001
+        CALL TAXI(CH001,CH80)
+        IF (CH80(1:1).EQ.'_') THEN
+          NFOLD=NFOLD+1
+          FOLDERLIST(NFOLD)=CH80
+        END IF
+      END DO
+  777 CONTINUE
+      WRITE (UNIT=6,FMT='(/,'' the following experiment folders exist:'',I4)') NFOLD
+      DO I=1,NFOLD
+        CALL PUST(6,'  '//FOLDERLIST(I))
+      END DO
+      
 
       INCSTR='------------------- '
       BLAN=' '
@@ -563,8 +565,6 @@
 !      DO I=1,19
 !        WRITE (UNIT=6,FMT='(''FDELETE'',I3,2X,L4)') I,FDELETE(I)
 !      END DO
-
-
 
 !----
 !----
@@ -712,10 +712,11 @@
 !      CALL PUST(35,CH001)
 !      CALL PUST(35,' ')
 
-      DO J=1,NTRANS
-       WRITE (scr,fmt='('' translate: '',a,a)') TRANS(J,1),TRANS(J,2)
-!       WRITE (35,fmt='('' translate: '',a,a)') TRANS(J,1),TRANS(J,2)
-      END DO
+!!      WRITE (UNIT=scr,FMT='('' '')')
+!!      DO J=1,NTRANS
+!!       WRITE (scr,fmt='('' translate: '',a,a)') TRANS(J,1),TRANS(J,2)
+!!!       WRITE (35,fmt='('' translate: '',a,a)') TRANS(J,1),TRANS(J,2)
+!!      END DO
       GOTO 16
    15 WRITE (scr,1000) 'trans_'//DBNAME(1:I1)
 !      WRITE (35,1000) 'trans_'//DBNAME(1:I1)
@@ -741,7 +742,7 @@
        NICREAC=' '
        PRISUM=.TRUE.
 !----------------------------------------------------------------
-!--    search START and begin reading experiments UNIT=drv
+!--    search START and begin reading experiments UNIT=drv (not anymore)
 !----------------------------------------------------------------
 !    2 READ (UNIT=drv,FMT='(A)',END=998) CH001
 !      IF (CH001(1:5).NE.'START') GOTO 2
@@ -751,48 +752,68 @@
         ENO(I)=0
       END DO
       ENO(4)=1
+      ENO(1)=1
 !
-!--   ENO(1)=1 if REAC (or ev synonym EXPTXT)
-!     ENO(2)=1 if REAID (or ev synonym EXPID)
+!--   ENO(1)=1 if REAC (or ev synonym EXPTXT) not used
+!     ENO(2)=1 if REAID
 !     ENO(3)=1 if PHASES
-!     ENO(4)=1 if SYSEL (elements defined in BULK or COMP0, COMPS etc) not used!!!!
+!     ENO(4)=1 if SYSEL (elements defined in BULK or COMP0, COMPS etc) not used
 !=====================================================================
 !
     1 READ (UNIT=drv,FMT='(A)',END=999) CH001
+!!      write (UNIT=6,FMT='(//,''NEW READ  :'',A)') CH001(1:20)
 !------------------------------------------
 ! as soon as all ENOs are 1, make directory
       I001=0
       DO I=1,4
         IF (ENO(I).GT.0) I001=I001+1
+!!!        WRITE (UNIT=6,FMT='(''ENO('',I1,'') = '',I2)') I,ENO(I)
       END DO
 
       CALL LABLA(REAID,I1)
 
-      IF (I001.EQ.4) THEN
-      WRITE (UNIT=6,FMT='(''ENOS AT THE MOMENT: '',I4)') I001
-      WRITE (UNIT=6,FMT='(''NEWDIR AT THE MOMENT: '',A)') NEWDIR(1:LDIR)
-      WRITE (UNIT=6,FMT='(''REAID AT THE MOMENT: '',A)') REAID(1:I1)
-      END IF
+!      IF (I001.EQ.4) THEN
+!      WRITE (UNIT=6,FMT='(''ENOS AT THE MOMENT: '',I4)') I001
+!      WRITE (UNIT=6,FMT='(''NEWDIR AT THE MOMENT: '',A)') NEWDIR(1:LDIR)
+!      WRITE (UNIT=6,FMT='(''REAID AT THE MOMENT: '',A)') REAID(1:I1)
+!      END IF
 
 
-      CALL LABLA(NEWDIR,LDIR)
+!!      CALL LABLA(NEWDIR,LDIR)
+!!      write (unit=6,fmt='(''NEWDIR,LDIR='',a,i4)') NEWDIR,LDIR
 
       IF (I001.EQ.4) THEN
         WRITE (UNIT=6,FMT='(''     REAID '',a,''  new dir '',a)') REAID(1:I1),NEWDIR(1:LDIR)
       END IF
 
-!      WRITE (UNIT=6,FMT='(''reaok ='',l4)') REAOK
-
 
       IF ('_'//REAID(1:I1)//'/'.NE.NEWDIR(1:LDIR)) THEN
 
+!      check if directoy exists (is in FOLDERLIST)
+        IF (I001.EQ.4) THEN
+        CH80='_'//REAID
+        CALL LABLA(CH80,I1)
+          WRITE (UNIT=6,FMT='('' LOOKING FOR '',A)') CH80(1:I1)
+          I002=0
+          DO I=1,NFOLD
+            IF (CH80(1:I1).EQ.FOLDERLIST(I)(1:I1)) I002=I
+!            write (unit=6,fmt='('' searching '',A,i4)') CH80(1:I1),I002
+          END DO
+          IF (I002.GT.0) THEN
+            WRITE (UNIT=6,FMT='('' folder already exists: '',A,A)') CH80(1:I1),FOLDERLIST(I002)(1:LDIR)
+            NEWDIR=CH80(1:I1)//'/'
+            LDIR=I1+1
+            CALL NEWREADIR
+          ELSE
+            WRITE (UNIT=6,FMT='('' folder must be made: '',A)') CH80(1:I1)
+            NFOLD=NFOLD+1
+            FOLDERLIST(NFOLD)=NEWDIR(1:LDIR)
+            NEWDIR=CH80(1:I1)
+            LDIR=I1
+            CALL NEWREADIR
+          END IF
+        END IF
 
-        IF (I001.EQ.4.AND.REAOK) WRITE (UNIT=6,FMT='(''     do not make new dir '',a)') NEWDIR(1:LDIR)
-        IF (I001.NE.4.AND.REAOK) WRITE (UNIT=6,FMT='(''     make new dir '',a)') NEWDIR(1:LDIR)
-
-        IF (I001.EQ.4.AND.REAOK) WRITE (UNIT=6,FMT='(''     call newreadir'')') 
-
-        IF (I001.EQ.4.AND.REAOK) CALL NEWREADIR
       ELSE
         WRITE (UNIT=6,FMT='(''     REAID is equal'',a,''  new dir '',a)') REAID(1:I1),NEWDIR(1:LDIR)
       END IF
@@ -816,7 +837,7 @@
       L002=.NOT.VERGL(KEYWORD(1:7),'TITLE2')
       IF (L001.AND.L002.AND.ISU.EQ.1) GOTO 1
 !
-      IF (PRTEST) WRITE (UNIT=6,FMT='('' keyword = '',A)') KEYWORD
+      IF (PRTEST) WRITE (UNIT=6,FMT='(/,'' keyword = '',A)') KEYWORD
 !
 !======================================================================
 !======================================================================
@@ -841,6 +862,7 @@
          ENO(I)=0
        END DO
        ENO(4)=1
+       ENO(1)=1
        ISU=0
        NCOMPS=0
        BUFORMUL=' '
@@ -880,6 +902,7 @@
        REAOK=.FALSE.
        NEXP=0
        NINC=0
+       EXPER='no experiments'
 !
        WRITE (UNIT=scr,FMT='(//,130A1)') ('=',J=1,130)
 !!!       WRITE (UNIT=35,FMT='(//,130A1)') ('=',J=1,130)
@@ -893,6 +916,7 @@
          ENO(I)=0
        END DO
        ENO(4)=1
+       ENO(1)=1
        BUFORMUL=' '
        BUFORMUL0=' '
        FLUFORMUL=' '
@@ -922,6 +946,7 @@
        REAOK=.FALSE.
        NEXP=0
        NINC=0
+       EXPER='no experiments'
       END IF
 !======================================================================
 !======================================================================
@@ -962,16 +987,18 @@
         CALL TAXI(CH001,REAID)
 
         CALL LABLA(REAID,I1)
+        CH80='_'//REAID(1:I1)
         IF ('_'//REAID(1:I1)//'/'.NE.NEWDIR(1:LDIR)) THEN
 
 
 
-          WRITE (UNIT=6,FMT='('' new directory name '',a,a)') '_'//REAID(1:I1)//'/',NEWDIR(1:LDIR)
-!DO NOT CALL YET READIR, WAIT FOR 'EXP' 
+          WRITE (UNIT=6,FMT='('' new directory name would be '',a)') '_'//REAID(1:I1)//'/'
+!          DO NOT CALL YET READIR, WAIT FOR 'EXP' OR ALL ENO'S=1
 !          CALL NEWREADIR
-        END IF
 
-        ENO(2)=1
+        END IF
+        I1=I1+1
+
 
 !         CALL LABLA(REAID,I1)
 !        IF ('_'//REAID(1:I1)//'/'.NE.NEWDIR) THEN
@@ -980,26 +1007,32 @@
 !          CALL NEWREADIR
 !        END IF
 !===
+        ENO(2)=1
         IF (VERGL(KEYW,'exp')) THEN
-          REAOK=.FALSE.
+          ENO(2)=0
           IF (NKEYWS.GT.0) THEN
             CALL PUST(6,' REAID    : '//REAID)
             CALL PUST(6,' KEYWS(1) : '//KEYWS(1))
             IF (.NOT.VERGL(REAID,KEYWS(1))) THEN
               WRITE (UNIT=6,FMT='('' -- REAID does not match'')')
               ISU=1
-              GOTO 1
             ELSE
               WRITE (UNIT=6,FMT='('' ++ REAID does match'')')
-              REAOK=.TRUE.
+              ENO(2)=1
             END IF
           END IF
         END IF
 !===
         IF (VERGL(KEYW,'all')) THEN
-          REAOK=.TRUE.
+          ENO(2)=1
           WRITE (UNIT=6,FMT='('' -- KEYW = all'')')
         END IF
+        
+        
+        
+        
+        
+        
 !===
       END IF
 !+
@@ -1039,15 +1072,15 @@
 !!!      WRITE (UNIT=35,FMT='('' new phases: (all OK)'',A)') PICKSTRING(1:I1)
       END IF
 
-      ENO(3)=1
+!      ENO(3)=1
 
        DO I1=1,NKEYWS
          WRITE (UNIT=6,FMT='(I3,''  PHA: KEYWS(I)'',A)') I1,KEYWS(I1)
        END DO
 
-
+      ENO(3)=1
       IF (VERGL(KEYW,'pha')) THEN
-       REAOK=.FALSE.
+       ENO(3)=0
        IC=0
        DO I1=1,NKEYWS
         DO I2=1,NCHOOSE
@@ -1062,17 +1095,17 @@
              ISU=1
              GOTO 1
        END IF
-       IF (IC.GT.0) REAOK=.TRUE.
+       IF (IC.GT.0) ENO(3)=1
       END IF
-
-      IF (REAOK) THEN
+!---
+      IF (ENO(3).EQ.1) THEN
         WRITE (UNIT=6,FMT='('' PHA: this reaction will be used'')')
       ELSE
         WRITE (UNIT=6,FMT='('' PHA: this reaction will not be used'')')
       END IF
 !===
         IF (VERGL(KEYW,'all')) THEN
-          REAOK=.TRUE.
+          ENO(3)=1
           WRITE (UNIT=6,FMT='('' -- KEYW = all'')')
         END IF
 !===
@@ -1657,6 +1690,7 @@
 !      CALL PUST(6,'Open file 30: '//OPFILE)
       CALL LABLA(OPFILE,IO)
 !-- open _0exp (experiments with scale, fill: none and gray)
+!       WRITE (UNIT=6,FMT='(''OPEN 1720 '',A)')OPFILE(1:IO)
        OPEN (UNIT=30,FILE=OPFILE(1:IO),STATUS='UNKNOWN')
        WRITE (30,2010) PLXMIN,PLXMAX,PLYMIN,PLYMAX,PLBR,PLHO
  2010  FORMAT ( &
@@ -1670,6 +1704,7 @@
 !      CALL PUST(6,'Open file 32: '//OPFILE)
       CALL LABLA(OPFILE,IO)
 !-- open _exn (experiments no scale, fill: none and gray)
+!       WRITE (UNIT=6,FMT='(''OPEN 1735 '',A)')OPFILE(1:IO)
        OPEN (UNIT=32,FILE=OPFILE(1:IO),STATUS='UNKNOWN')
        WRITE (UNIT=32,FMT='(/,''FGRAY    0.5'')') 
        WRITE (UNIT=32,FMT='(/,''FAT    0.01'')') 
@@ -1677,6 +1712,7 @@
 !      CALL PUST(6,'Open file 34: '//OPFILE)
       CALL LABLA(OPFILE,IO)
 !-- open _exn2 (experiments no scale, inconsstencies: black)
+!       WRITE (UNIT=6,FMT='(''OPEN 1743 '',A)')OPFILE(1:IO)
        OPEN (UNIT=34,FILE=OPFILE(1:IO),STATUS='UNKNOWN')
        WRITE (UNIT=34,FMT='(/,''FGRAY    0.0'')') 
        WRITE (UNIT=34,FMT='(/,''FAT    0.01'')') 
@@ -2145,7 +2181,7 @@
 !==
         KEY1='TC'
         CTUNIT='TC'
-        CALL CHECKVALPT(TEXTQ)
+        CALL CHECKVALPT(TEXTQ,I001)
 
 !-----q-summary
 
@@ -2221,10 +2257,10 @@
 !======================================================================
 !----------------------------------------------------
 !     print concentration of one element of one phase.
-!     input: PRTCOM:   phasename    element
-!            PRTCOM    phasename    element/value
+!     input: PRTVAL:   phasename    element
+!            PRTVAL    phasename    element/value
 !
-      IF (VERGL(KEYWORD,'PRTCOM')) THEN
+      IF (VERGL(KEYWORD,'PRTVAL')) THEN
        FICOM=FICOM+1
        IF (FICOM.EQ.1) THEN
        WRITE (scr,FMT='(5X,49A1)') ('-',I=1,19)
@@ -2235,22 +2271,29 @@
        CHKPH=CH16(1:16)
        CALL FUNTAXI(CH001,CHKEL,CHKELDIV,CHKELCH)
 !--
-       CALL PRTCOM
+       CALL PRTVAL
       END IF
 !======================================================================
 !======================================================================
       L001=VERGL(KEYWORD,'TP')
       L002=VERGL(KEYWORD,'PT')
       IF (L001.OR.L002) THEN
-       CALL GELI(CH001,TEM)
-       CALL GELI(CH001,PRE)
-
+       CALL GELI(CH001,FF)
+       CALL TAXI(CH001,CH16)
+       CALL MINMAX(FF,CH16,F1,F2)
+       TEM=(F1+F2)/2.0D0
+       TERR0=DABS(F1-F2)/2.0D0
+       
+       CALL GELI(CH001,FF)
+       CALL TAXI(CH001,CH16)
+       CALL MINMAX(FF,CH16,F1,F2)
+       PRE=(F1+F2)/2.0D0
+       PERR0=DABS(F1-F2)/2.0D0
 
        IF (TEM.LT.TSHMIN) TSHMIN=TEM
        IF (TEM.GT.TSHMAX) TSHMAX=TEM
        IF (PRE.LT.PSHMIN) PSHMIN=PRE
        IF (PRE.GT.PSHMAX) PSHMAX=PRE
-
 
 !====
 !       CALL GELI(CH001,TERR0)
@@ -3089,10 +3132,8 @@
        IF (NUMMER(I).NE.0) THEN
         IF (NAME(NUMMER(I))(1:1).EQ.'$') THEN
 !         WRITE (UNIT=scr,FMT='('' '')')
-!         WRITE (UNIT=out,FMT='('' '')')
 !         WRITE (scr,162) NUMMER(I),EMCODE(I), &
 !                NAME(NUMMER(I)),G(I),VV(I)*10.0D0
-!         WRITE (out,162) NUMMER(I),EMCODE(I), &
 !                NAME(NUMMER(I)),G(I),VV(I)*10.0D0
           WERT=G(I)
           IF (WERT*FS.LT.0.0D0) THEN
@@ -3144,14 +3185,14 @@
       FF,PROZ,MAXPROZ,PTPROZ,WERTMIN,WERTMAX, &
       WERT,XAMIN,XAMAX,YAMIN,YAMAX
 !--
-      IF (PRTEST) WRITE (UNIT=6,FMT='(''-> CHECKEXCH'')')
-      IF (PRTEST) WRITE (UNIT=35,FMT='(''-> CHECKEXCH'')')
+      IF (PRTEST) WRITE (UNIT=6,FMT='(''-> exchange reaction (CHECKEXCH)'')')
+      IF (PRTEST) WRITE (UNIT=35,FMT='(''-> exchange reaction (CHECKEXCH)'')')
       CTUNIT='TC'
 !+++
-      IF (PRTEST) THEN
-      WRITE (UNIT=6,FMT= &
-      '('' checking exchange reaction (CHECKEXCH)'')')
-      END IF
+!      IF (PRTEST) THEN
+!      WRITE (UNIT=6,FMT= &
+!      '('' checking exchange reaction (CHECKEXCH)'')')
+!      END IF
 !+++
       CCODE=0
 ! ignore if unstable assembage
@@ -3670,6 +3711,7 @@
 !      CALL PUST(6,'Open file 30: '//OPFILE)
       CALL LABLA(OPFILE,IO)
 !-- open _0exp (experiments with scale, fill: none and gray)
+!       WRITE (UNIT=6,FMT='(''OPEN 3742 '',A)')OPFILE(1:IO)
        OPEN (UNIT=30,FILE=OPFILE(1:IO),STATUS='UNKNOWN')
        CALL LABLA(XVARI,I1)
        CALL LABLA(YVARI,I2)
@@ -3719,6 +3761,7 @@
       CALL LABLA(OPFILE,IO)
 !-- open .txt script for theriak with bin++, fun++ or rea++
 !   theriak will produce bin_loop, fun_loop or rea_loop
+!       WRITE (UNIT=6,FMT='(''OPEN 3791 '',A)')OPFILE(1:IO)
        OPEN (UNIT=31,FILE=OPFILE(1:IO),STATUS='UNKNOWN')
        CALL LABLA(filename(dbs),I1)
        CALL LABLA(PICKSTRING,I2)
@@ -3852,13 +3895,25 @@
 !-----END OF COMMON VARIABLES
 !
       INTEGER(4) I1,I2,J,JJ,PLNR,IE,IP,IS,IO
-      REAL(8) F1,F2,XVAL,XERR,YU,YO,YRE,YERR,YC,TEMNOW
+      REAL(8) F1,F2,XVAL,XERR,YU,YO,YRE,YERR,YC,TEMNOW, &
+      GRSVAL,GRSBIV,GRSEXC,GRSPTX,GRSEX2,GRSLKD,GRSLKR,GRSPT,GRSTXC,GRSISO
       CHARACTER(32) CH20
+!
+      GRSVAL=0.03D0
+      GRSBIV=0.1D0
+      GRSEXC=0.1D0
+      GRSPTX=0.1D0
+      GRSEX2=0.1D0
+      GRSLKD=0.1D0
+      GRSLKR=0.1D0
+      GRSPT=0.1D0
+      GRSTXC=0.1D0
+      GRSISO=0.1D0
 !------
       IF (PRTEST) THEN
-      WRITE (UNIT=6,FMT='(''-> PLOTEXP '',I4,2X,A4)') &
+      WRITE (UNIT=6,FMT='(''-> PLOTEXP plot Nr and type:'',I4,2X,A4)') &
       PLNR,AUTOTYP(PLNR)
-      WRITE (UNIT=35,FMT='(''-> PLOTEXP '',I4,2X,A4)') &
+      WRITE (UNIT=35,FMT='(''-> PLOTEXP plot Nr and type:'',I4,2X,A4)') &
       PLNR,AUTOTYP(PLNR)
 !      WRITE (UNIT=6,FMT='(''   CCODE = '',I4)') CCODE
 !      WRITE (UNIT=35,FMT='(''   CCODE = '',I4)') CCODE
@@ -3870,7 +3925,7 @@
 
 
       OPFILE=NEWDIR(1:LDIR)//AUTOPLOT(PLNR)(1:I1)//'_0exp'
-!      CALL PUST(6,'Open file 30: '//OPFILE)
+      CALL PUST(6,'Open file 30: '//OPFILE)
       CALL LABLA(OPFILE,IO)
 !-- open _0exp (experiments with scale, fill: none and gray)
       OPEN (UNIT=30,FILE=OPFILE(1:IO),STATUS='OLD',POSITION='APPEND')
@@ -3896,6 +3951,7 @@
 !======
       XERR=0.0D0
       IF (AUTOTYP(PLNR).EQ.'VAL') THEN
+        WRITE (UNIT=6,FMT='(''-> plot typ = VAL'')')
         IF (XKEY(PLNR).EQ.'TC') THEN
            XVAL=TEM
           XERR=TERR0
@@ -3934,6 +3990,7 @@
         CALL FIBLA(EXPEC,I1)
         IF (EXPEC(I1:I1).EQ.'+') J=2
         IF (CCODE.GT.0) JJ=2
+        
 ! draw box around observed point
         WRITE (30,1010) J,XVAL-XERR,YU,XVAL+XERR,YU, &
         XVAL+XERR,YO,XVAL-XERR,YO
@@ -3956,11 +4013,11 @@
         END IF
 ! draw label
         I2=INDEX(EXPER,'  ')
-        WRITE (30,1014) EXPER(1:I2),XVAL+XERR,(YU+YO)/2.0D0
-        WRITE (32,1014) EXPER(1:I2),XVAL+XERR,(YU+YO)/2.0D0
-        WRITE (34,1014) EXPER(1:I2),XVAL+XERR,(YU+YO)/2.0D0
+        WRITE (30,1014) EXPER(1:I2),XVAL+XERR,(YU+YO)/2.0D0,GRSVAL
+        WRITE (32,1014) EXPER(1:I2),XVAL+XERR,(YU+YO)/2.0D0,GRSVAL
+        WRITE (34,1014) EXPER(1:I2),XVAL+XERR,(YU+YO)/2.0D0,GRSVAL
   1014  FORMAT ( &
-        'TEXT    ',A,2(2X,1PE15.8),'  0.1  0.5  0  -0.5  0')
+        'TEXT    ',A,2(2X,1PE15.8),2X,0P,F6.2,'  0.5  0  -0.5  0')
 ! draw dotted line
         F1=XVAL
         F2=(YU+YO)/2.0D0
@@ -3983,6 +4040,7 @@
 !======
       XERR=0.0D0
       IF (AUTOTYP(PLNR).EQ.'BIV') THEN
+        WRITE (UNIT=6,FMT='(''-> plot typ = BIV'')')
         XKEY(PLNR)='bi'
         XVAL=(XCHKMIN+XCHKMAX)/2.0D0
         XERR=DABS(XCHKMIN-XCHKMAX)/2.0D0
@@ -4030,16 +4088,17 @@
         END IF
 ! draw label
         I2=INDEX(EXPER,'  ')
-        WRITE (30,2014) EXPER(1:I2),XVAL+XERR,(YU+YO)/2.0D0
-        WRITE (32,2014) EXPER(1:I2),XVAL+XERR,(YU+YO)/2.0D0
-        WRITE (34,2014) EXPER(1:I2),XVAL+XERR,(YU+YO)/2.0D0
+        WRITE (30,2014) EXPER(1:I2),XVAL+XERR,(YU+YO)/2.0D0,GRSBIV
+        WRITE (32,2014) EXPER(1:I2),XVAL+XERR,(YU+YO)/2.0D0,GRSBIV
+        WRITE (34,2014) EXPER(1:I2),XVAL+XERR,(YU+YO)/2.0D0,GRSBIV
   2014  FORMAT ( &
-        'TEXT    ',A,2(2X,1PE15.8),'  0.1  0.5  0  -0.5  0')
+        'TEXT    ',A,2(2X,1PE15.8),2X,0P,F6.2,'  0.5  0  -0.5  0')
 
       END IF
 !=================================================================
 !======
       IF (AUTOTYP(PLNR).EQ.'EXC') THEN
+        WRITE (UNIT=6,FMT='(''-> plot typ = EXC'')')
       J=0
       JJ=0
 ! re-define CCODE (>1 if not consistent)
@@ -4094,15 +4153,16 @@
        WRITE (UNIT=34,FMT='(/,''FGRAY    0.0'')') 
 ! write label
        I2=INDEX(EXPER,'  ')
-       WRITE (30,1028) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0
-       WRITE (32,1028) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0
-       WRITE (34,1028) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0
+       WRITE (30,1028) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0,GRSEXC
+       WRITE (32,1028) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0,GRSEXC
+       WRITE (34,1028) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0,GRSEXC
   1028 FORMAT ( &
-       'TEXT    ',A,2(2X,1PE15.8),'  0.1  0.5  0  -0.5  0')
+        'TEXT    ',A,2(2X,1PE15.8),2X,0P,F6.2,'  0.5  0  -0.5  0')
       END IF
 !=================================================================
 !======
       IF (AUTOTYP(PLNR).EQ.'PX'.OR.AUTOTYP(PLNR).EQ.'TX') THEN
+        WRITE (UNIT=6,FMT='(''-> plot typ = PX of TX'')')
       IF (AUTOTYP(PLNR).EQ.'PX') THEN
         YRE=PRE
         YERR=PERR0
@@ -4188,18 +4248,19 @@
        WRITE (UNIT=34,FMT='(/,''FGRAY    0.0'')') 
 ! write label
        I2=INDEX(EXPER,'  ')
-       WRITE (30,1038) EXPER(1:I2),XCMAX,YRE
-       WRITE (32,1038) EXPER(1:I2),XCMAX,YRE
-       WRITE (34,1038) EXPER(1:I2),XCMAX,YRE
-       WRITE (30,1038) EXPER(1:I2),YCMAX,YRE
-       WRITE (32,1038) EXPER(1:I2),YCMAX,YRE
-       WRITE (34,1038) EXPER(1:I2),YCMAX,YRE
+       WRITE (30,1038) EXPER(1:I2),XCMAX,YRE,GRSPTX
+       WRITE (32,1038) EXPER(1:I2),XCMAX,YRE,GRSPTX
+       WRITE (34,1038) EXPER(1:I2),XCMAX,YRE,GRSPTX
+       WRITE (30,1038) EXPER(1:I2),YCMAX,YRE,GRSPTX
+       WRITE (32,1038) EXPER(1:I2),YCMAX,YRE,GRSPTX
+       WRITE (34,1038) EXPER(1:I2),YCMAX,YRE,GRSPTX
   1038 FORMAT ( &
-       'TEXT    ',A,2(2X,1PE15.8),'  0.1  0.5  0  -0.5  0')
+        'TEXT    ',A,2(2X,1PE15.8),2X,0P,F6.2,'  0.5  0  -0.5  0')
       END IF
 !=================================================================
 !======
       IF (AUTOTYP(PLNR).EQ.'EX2') THEN
+        WRITE (UNIT=6,FMT='(''-> plot typ = EX2'')')
 
        WRITE (6,1041) XRPH,XREL1,XREL2,XREL1CH,XREL2CH
  1041 FORMAT (5A)
@@ -4280,15 +4341,16 @@
        'PUNKTE    ',2X,I3,2X,'0.1',2(2X,1PE15.8),'   999  999  0')
 
        I2=INDEX(EXPER,'  ')
-       WRITE (30,1048) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0
-       WRITE (32,1048) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0
-       WRITE (34,1048) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0
+       WRITE (30,1048) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0,GRSEX2
+       WRITE (32,1048) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0,GRSEX2
+       WRITE (34,1048) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0,GRSEX2
   1048 FORMAT ( &
-       'TEXT    ',A,2(2X,1PE15.8),'  0.1  0.5  0  -0.5  0')
+        'TEXT    ',A,2(2X,1PE15.8),2X,0P,F6.2,'  0.5  0  -0.5  0')
       END IF
 !=================================================================
 !======
       IF (AUTOTYP(PLNR).EQ.'LKD') THEN
+        WRITE (UNIT=6,FMT='(''-> plot typ = LKD'')')
       J=0
       JJ=0
       IF (KEY1.EQ.'1000/T') THEN
@@ -4356,15 +4418,16 @@
        'PUNKTE    ',2X,I3,2X,'0.1',2(2X,1PE15.8),'   999  999  0')
 ! write label
        I2=INDEX(EXPER,'  ')
-       WRITE (30,1058) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0
-       WRITE (32,1058) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0
-       WRITE (34,1058) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0
+       WRITE (30,1058) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0,GRSLKD
+       WRITE (32,1058) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0,GRSLKD
+       WRITE (34,1058) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0,GRSLKD
   1058 FORMAT ( &
-       'TEXT    ',A,2(2X,1PE15.8),'  0.1  0.5  0  -0.5  0')
+        'TEXT    ',A,2(2X,1PE15.8),2X,0P,F6.2,'  0.5  0  -0.5  0')
       END IF
 !=================================================================
 !======
       IF (AUTOTYP(PLNR).EQ.'LKR') THEN
+        WRITE (UNIT=6,FMT='(''-> plot typ = LKR'')')
       J=0
       JJ=0
       CALL FIBLA(EXPEC,I1)
@@ -4389,20 +4452,22 @@
        'LINIEN     0  0  0   0',4(2X,1PE15.8),'   999  999  0')
        END IF
        I2=INDEX(EXPER,'  ')
-       WRITE (30,1064) EXPER(1:I2),TEM+TERR0,(CHKMIN+CHKMAX)/2.0D0
-       WRITE (32,1064) EXPER(1:I2),TEM+TERR0,(CHKMIN+CHKMAX)/2.0D0
-!       WRITE (34,1064) EXPER(1:I2),TEM+TERR0,(CHKMIN+CHKMAX)/2.0D0
+       WRITE (30,1064) EXPER(1:I2),TEM+TERR0,(CHKMIN+CHKMAX)/2.0D0,GRSLKR
+       WRITE (32,1064) EXPER(1:I2),TEM+TERR0,(CHKMIN+CHKMAX)/2.0D0,GRSLKR
+!       WRITE (34,1064) EXPER(1:I2),TEM+TERR0,(CHKMIN+CHKMAX)/2.0D0,GRSLKR
   1064 FORMAT ( &
-       'TEXT    ',A,2(2X,1PE15.8),'  0.1  0.5  0  -0.5  0')
+        'TEXT    ',A,2(2X,1PE15.8),2X,0P,F6.2,'  0.5  0  -0.5  0')
       END IF
 !=================================================================
 !======
       IF (AUTOTYP(PLNR).EQ.'PT') THEN
+        WRITE (UNIT=6,FMT='(''-> plot typ = PT'')')
       J=0
       JJ=0
       CALL FIBLA(EXPEC,I1)
       IF (EXPEC(I1:I1).EQ.'+') J=2
       IF (CCODE.GT.0) JJ=2
+        WRITE (UNIT=6,FMT='(''WRITE 30'')')
        WRITE (30,1070) J,TEM-TERR0,PRE-PERR0,TEM+TERR0,PRE-PERR0, &
        TEM+TERR0,PRE+PERR0,TEM-TERR0,PRE+PERR0
        WRITE (32,1070) J,TEM-TERR0,PRE-PERR0,TEM+TERR0,PRE-PERR0, &
@@ -4422,16 +4487,17 @@
        'LINIEN     0  0  0   0',4(2X,1PE15.8),'   999  999  0')
        END IF
        I2=INDEX(EXPER,'  ')
-       WRITE (30,1074) EXPER(1:I2),TEM+TERR0,PRE,TANG
-       WRITE (32,1074) EXPER(1:I2),TEM+TERR0,PRE,TANG
-       WRITE (34,1074) EXPER(1:I2),TEM+TERR0,PRE,TANG
+       WRITE (30,1074) EXPER(1:I2),TEM+TERR0,PRE,TANG,GRSPT
+       WRITE (32,1074) EXPER(1:I2),TEM+TERR0,PRE,TANG,GRSPT
+       WRITE (34,1074) EXPER(1:I2),TEM+TERR0,PRE,TANG,GRSPT
   1074 FORMAT ( &
-       'TEXT    ',A,2(2X,1PE15.8),'  0.1  0.5  0  -0.5  ',F8.1)
+        'TEXT    ',A,2(2X,1PE15.8),2X,0P,F6.2,'  0.5  0  -0.5  0')
 !       TANG=TANG+5.0D0
       END IF
 !=================================================================
 !======
       IF (AUTOTYP(PLNR).EQ.'TXC') THEN
+        WRITE (UNIT=6,FMT='(''-> plot typ = TXC'')')
       J=0
       JJ=0
       CALL FIBLA(EXPEC,I1)
@@ -4456,15 +4522,16 @@
        'LINIEN     0  0  0   0',4(2X,1PE15.8),'   999  999  0')
        END IF
        I2=INDEX(EXPER,'  ')
-       WRITE (30,1084) EXPER(1:I2),XCO2+XCO2ERR,TEM
-       WRITE (32,1084) EXPER(1:I2),XCO2+XCO2ERR,TEM
-       WRITE (34,1084) EXPER(1:I2),XCO2+XCO2ERR,TEM
+       WRITE (30,1084) EXPER(1:I2),XCO2+XCO2ERR,TEM,GRSTXC
+       WRITE (32,1084) EXPER(1:I2),XCO2+XCO2ERR,TEM,GRSTXC
+       WRITE (34,1084) EXPER(1:I2),XCO2+XCO2ERR,TEM,GRSTXC
   1084 FORMAT ( &
-       'TEXT    ',A,2(2X,1PE15.8),'  0.2  0.5  0  -0.5  0')
+        'TEXT    ',A,2(2X,1PE15.8),2X,0P,F6.2,'  0.5  0  -0.5  0')
       END IF
 !=================================================================
 !======
       IF (AUTOTYP(PLNR).EQ.'ISO') THEN
+        WRITE (UNIT=6,FMT='(''-> plot typ = ISO'')')
       J=0
       JJ=0
       CALL FIBLA(EXPEC,I1)
@@ -4489,29 +4556,29 @@
        'LINIEN     0  0  0   0',4(2X,1PE15.8),'   999  999  0')
        END IF
        I2=INDEX(EXPER,'  ')
-       WRITE (30,1094) EXPER(1:I2),TC+TERR0,PRE
-       WRITE (32,1094) EXPER(1:I2),TC+TERR0,PRE
-       WRITE (34,1094) EXPER(1:I2),TC+TERR0,PRE
+       WRITE (30,1094) EXPER(1:I2),TC+TERR0,PRE,GRSISO
+       WRITE (32,1094) EXPER(1:I2),TC+TERR0,PRE,GRSISO
+       WRITE (34,1094) EXPER(1:I2),TC+TERR0,PRE,GRSISO
   1094 FORMAT ( &
-       'TEXT    ',A,2(2X,1PE15.8),'  0.1  0.5  0  -0.5  0')
+        'TEXT    ',A,2(2X,1PE15.8),2X,0P,F6.2,'  0.5  0  -0.5  0')
 !       WRITE (UNIT=CH20,FMT='(F20.10)') CHKMIN
 !       CALL ZAHL(CH20,I1,I2)
        I1=5
        CALL MAKEZAHL(CHKMAX,I1,CH20,I2)
-       WRITE (30,1096) CH20(1:I2),TC-TERR0,PRE+PERR0
-       WRITE (32,1096) CH20(1:I2),TC-TERR0,PRE+PERR0
-       WRITE (34,1096) CH20(1:I2),TC-TERR0,PRE+PERR0
+       WRITE (30,1096) CH20(1:I2),TC-TERR0,PRE+PERR0,GRSISO
+       WRITE (32,1096) CH20(1:I2),TC-TERR0,PRE+PERR0,GRSISO
+       WRITE (34,1096) CH20(1:I2),TC-TERR0,PRE+PERR0,GRSISO
   1096 FORMAT ( &
-       'TEXT    ',A,2(2X,1PE15.8),'  0.1  0.0  0   0.5  0')
+        'TEXT    ',A,2(2X,1PE15.8),2X,0P,F6.2,'  0.5  0  -0.5  0')
 !       WRITE (UNIT=CH20,FMT='(F20.10)') CHKMAX
 !       CALL ZAHL(CH20,I1,I2)
        I1=5
        CALL MAKEZAHL(CHKMIN,I1,CH20,I2)
-       WRITE (30,1098) CH20(1:I2),TC-TERR0,PRE-PERR0
-       WRITE (32,1098) CH20(1:I2),TC-TERR0,PRE-PERR0
-       WRITE (34,1098) CH20(1:I2),TC-TERR0,PRE-PERR0
+       WRITE (30,1098) CH20(1:I2),TC-TERR0,PRE-PERR0,GRSISO
+       WRITE (32,1098) CH20(1:I2),TC-TERR0,PRE-PERR0,GRSISO
+       WRITE (34,1098) CH20(1:I2),TC-TERR0,PRE-PERR0,GRSISO
   1098 FORMAT ( &
-       'TEXT    ',A,2(2X,1PE15.8),'  0.1  0.0  0  -1.5  0')
+        'TEXT    ',A,2(2X,1PE15.8),2X,0P,F6.2,'  0.5  0  -0.5  0')
       END IF
 !=================================================================
 !=================================================================
@@ -4647,7 +4714,7 @@
 !-----
 !*************************************************************
 !*************************************************************
-      SUBROUTINE PRTCOM
+      SUBROUTINE PRTVAL
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -4661,8 +4728,8 @@
 !--
 !+++
       IF (PRTEST) THEN
-      WRITE (UNIT=scr,FMT='(''printing compositions'')')
-      WRITE (UNIT=35,FMT='(''printing compositions'')')
+        WRITE (UNIT=scr,FMT='(''-> printing values (PRTVAL)'')')
+        WRITE (UNIT=35,FMT='(''-> printing values (PRTVAL)'')')
       END IF
 !+++
 !---- assign value
@@ -4977,8 +5044,8 @@
       REAL(8) CHECKWERT,F1,F2,FF,PROZ
 !-----
       IF (PRTEST) THEN
-      WRITE (UNIT=6,FMT='('' check value (CHECKVAL)'')')
-      WRITE (UNIT=35,FMT='('' check value (CHECKVAL)'')')
+      WRITE (UNIT=6,FMT='(//,''-> check value (CHECKVAL)'')')
+      WRITE (UNIT=35,FMT='(//,''-> check value (CHECKVAL)'')')
       END IF
 !--
       CHECKWERT=0.0D0
@@ -5002,6 +5069,7 @@
  3000 FORMAT (' to check: ',2(2X,A),'/',F8.4,2(2X,F8.4))
       END IF
 !+++
+
       DO I=1,NPHA
       IF (VERGL(NAME(I),CHKPH)) THEN
        TC=TEM
@@ -5017,6 +5085,7 @@
       IF (VERGL(CHKEL,'S')) CHECKWERT=SR/CHKELDIV
       IF (VERGL(CHKEL,'V')) CHECKWERT=VOLUM/CHKELDIV
       IF (VERGL(CHKEL,'CP')) CHECKWERT=CPR/CHKELDIV
+      IF (VERGL(CHKEL,'V/V0')) CHECKWERT=VOLUM/CHKELDIV/REDATA(4,IP)/10.0D0
 !
 !
        WRITE (CH80,2002) CHKMIN,CHECKWERT,CHKMAX
@@ -5033,7 +5102,7 @@
        FF=(CHKMIN+CHKMAX)/2.0D0
        PROZ=(CHECKWERT-FF)/FF*100.0D0
        CH16=' '
-       WRITE (UNIT=CH16,FMT='(E7.2)') PROZ
+       WRITE (UNIT=CH16,FMT='(1PE9.2)') PROZ
        CALL FIBLA(CH16,IC1)
        CALL LABLA(CH16,IC2)
        IF (CHECKWERT.GE.CHKMIN.AND.CHECKWERT.LE.CHKMAX) THEN
@@ -5048,7 +5117,7 @@
         ELSE
         FF=F2
         END IF
-        CH001=' '
+!!        CH001=' '
         CH001(I1+2:)='+'
         I1=I1+2
         DO J=I1+1,108
@@ -5071,7 +5140,7 @@
 !-----
 !*************************************************************
 !*************************************************************
-      SUBROUTINE CHECKVALPT(TEXTQ)
+      SUBROUTINE CHECKVALPT(TEXTQ,COUNT)
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -5079,7 +5148,7 @@
 !
 !-----END OF COMMON VARIABLES
       INTEGER(4) I,IP,J,I1,I2,I3,I4,ITT,IPP,IC,IE,IS, &
-      BARSHIFT,FEA,FEA1,BPOS,PLNR
+      BARSHIFT,FEA,FEA1,BPOS,PLNR,COUNT
       CHARACTER(250) TEXT1,TEXT2,TEXTQ
       CHARACTER(80) CHE2,CHE1,SUMSTR
       CHARACTER(32) CH16
@@ -5089,18 +5158,20 @@
       TOFMAX,POFMAX,MAXPROZ,PTPROZ
 !-----
       IF (PRTEST) THEN
-      WRITE (UNIT=6,FMT='('' check value (CHECKVALPT)'')')
-      WRITE (UNIT=35,FMT='('' check value (CHECKVALPT)'')')
+      WRITE (UNIT=6,FMT='(''-> check value (CHECKVALPT)'')')
+      WRITE (UNIT=35,FMT='(''-> check value (CHECKVALPT)'')')
       END IF
 
+      COUNT=0
       TEXTQ='not initialized'
 !+++
-      IF (PRTEST) THEN
-      CALL LABLA(CHKPH,I1)
-      CALL LABLA(CHKEL,I2)
-      WRITE (6,3000) CHKPH(1:I1),CHKEL(1:I2),CHKELDIV,CHKMIN,CHKMAX
- 3000 FORMAT (' to check: ',2(2X,A),'/',F8.4,2(2X,F8.4))
-      END IF
+!      IF (PRTEST) THEN
+!      CALL LABLA(CHKPH,I1)
+!      CALL LABLA(CHKEL,I2)
+!      WRITE (6,3000) CHKPH(1:I1),CHKEL(1:I2),CHKELDIV,CHKMIN,CHKMAX
+!      WRITE (35,3000) CHKPH(1:I1),CHKEL(1:I2),CHKELDIV,CHKMIN,CHKMAX
+! 3000 FORMAT (' to check: ',2(2X,A),'/',F8.4,2(2X,F8.4))
+!      END IF
 !==
 !====
 !====
@@ -5248,15 +5319,16 @@
 
        IF (FEA.EQ.0.AND.WERT.LE.CHKMIN) THEN
         IF (CHKLIM.GT.0) THEN
-        TEXT1(IC+2:)='upper limit OK'
-        TEXTQ='upper limit OK'
-        CCODE=0
+          TEXT1(IC+2:)='upper limit OK'
+          TEXTQ='upper limit OK'
+          CCODE=0
         ELSE
         DO J=IC+1,43
          TEXT1(J:J)='+'
         END DO
         TEXT1(45:)='(VALPT)value too small'
         TEXTQ='value too small'
+        COUNT=COUNT+1
         IF (ISINC.EQ.0) THEN
 !!          NINC=NINC+1
           ISINC=1
@@ -5267,15 +5339,16 @@
 
        IF (FEA.EQ.0.AND.WERT.GT.CHKMAX) THEN
         IF (CHKLIM.LT.0) THEN
-        TEXT1(IC+2:)='lower limit OK'
-        TEXTQ='lower limit OK'
-        CCODE=0
+          TEXT1(IC+2:)='lower limit OK'
+          TEXTQ='lower limit OK'
+          CCODE=0
         ELSE
         DO J=IC+1,43
          TEXT1(J:J)='+'
         END DO
         TEXT1(45:)='(VALPT)value too large'
         TEXTQ='value too large'
+        COUNT=COUNT+1
         IF (ISINC.EQ.0) THEN
 !!          NINC=NINC+1
           ISINC=1
@@ -5435,8 +5508,8 @@
       TOFMAX,POFMAX,MAXPROZ,PTPROZ,GOFR
 !-----
       IF (PRTEST) THEN
-      WRITE (UNIT=6,FMT='('' check reaction (CHECKKREA)'')')
-      WRITE (UNIT=35,FMT='('' check reaction (CHECKKREA)'')')
+      WRITE (UNIT=6,FMT='(//,'' check reaction (CHECKKREA)'')')
+      WRITE (UNIT=35,FMT='(//,'' check reaction (CHECKKREA)'')')
       END IF
 !+++
       IF (PRTEST) THEN
@@ -5661,15 +5734,17 @@
       include 'checkdb.cmn'
 !
 !-----END OF COMMON VARIABLES
-      INTEGER(4) I,IP,IS,IE,J,I1,I2,I3,I4,I5,EXNR,IC,ICF
+      INTEGER(4) I,IP,IS,IE,J,I1,I2,I3,I4,I5,EXNR,IC,ICF,COUNTIN
       CHARACTER*(*) CH250
       CHARACTER(250) CH001,CH002,TEXTQ
       CHARACTER(32) CH16,CHNR,V1,V2,EINH
       REAL(8) F1,VNULL,FAK,ZPFU,FF,WW
 !-----
       IF (PRTEST) THEN
-      WRITE (UNIT=6,FMT='('' check table (CHECKTAB)'')')
-      WRITE (UNIT=35,FMT='('' check table (CHECKTAB)'')')
+      WRITE (UNIT=6,FMT='(//,'' check table (CHECKTAB)'')')
+      WRITE (UNIT=35,FMT='(//,'' check table (CHECKTAB)'')')
+      WRITE (UNIT=6,FMT='(''NEWDIR='',A)') NEWDIR
+      WRITE (UNIT=35,FMT='(''NEWDIR='',A)') NEWDIR
       END IF
 !--
 
@@ -5771,6 +5846,8 @@
 !==
 
        NEXP=0
+       NINC=0
+       COUNTIN=0
 
    37  READ (UNIT=drv,FMT='(A)',END=999) CH002
        IF (CH002.EQ.' ') GOTO 999
@@ -5785,17 +5862,10 @@
        CALL TAXI(CH002,CH16)
        CALL MINMAX(F1,CH16,CHKMIN,CHKMAX)
 
-
-
-
        IF (TEM.LT.TSHMIN) TSHMIN=TEM
        IF (TEM.GT.TSHMAX) TSHMAX=TEM
        IF (PRE.LT.PSHMIN) PSHMIN=PRE
        IF (PRE.GT.PSHMAX) PSHMAX=PRE
-
-
-
-
 
 !       CHKMIN=F1-F2
 !       CHKMAX=F1+F2
@@ -5834,8 +5904,9 @@
        END IF
       END IF
 !==
-      CALL CHECKVALPT(TEXTQ)
-
+      I1=0
+      CALL CHECKVALPT(TEXTQ,I1)
+      IF (I1.NE.0) COUNTIN=COUNTIN+1
 
 !-----q-summary
 
@@ -5849,16 +5920,12 @@
       WRITE (39,2015) TEM,PRE,F1,CH002(1:39),TEXTQ(1:I5)
  2015 FORMAT (3X,'T = ',F8.2,'  P = ',F10.1,2X,'value: ',F15.6,2X,A,2X,A)
 
-
-
-
-
-
       GOTO 37
 
   999 CONTINUE
 
-
+      ISINC=0
+      NINC=COUNTIN
 
 !----
       RETURN
@@ -6499,7 +6566,7 @@
       IF (NPLOTS.GT.0) THEN
        DO J=1,NPLOTS
         CALL LABLA(AUTOPLOT(J),I1)
-        CH001=' plotfile: '//AUTOPLOT(J)(1:I1)//'  typ: '//AUTOTYP(J)
+        CH001=' plotfile: '//NEWDIR(1:LDIR)//'/'//AUTOPLOT(J)(1:I1)//'  typ: '//AUTOTYP(J)
         CALL PUST(scr,CH001)
         CALL PUST(35,CH001)
        END DO
@@ -6899,6 +6966,7 @@
         OPFILE=NEWDIR(1:LDIR)//CH001(1:I1)
         CALL PUST(6,'Open file 36: '//OPFILE)
         CALL LABLA(OPFILE,IO)
+!        WRITE (UNIT=6,FMT='(''OPEN 6983 '',A)')OPFILE(1:IO)
         OPEN (UNIT=36,FILE=OPFILE(1:IO),STATUS='UNKNOWN')
         CALL PUST(36,CH001)
         CALL PUST(36,' ')
@@ -7031,6 +7099,7 @@
       OPFILE=NEWDIR(1:LDIR)//'checkquiteshort_'//DBNAME(1:I1)
       CALL PUST(6,'Open file 39: '//OPFILE)
       CALL LABLA(OPFILE,IO)
+!      WRITE (UNIT=6,FMT='(''OPEN 7119 '',A)') OPFILE(1:IO)
       OPEN (UNIT=39,FILE=OPFILE(1:IO),STATUS='UNKNOWN')
       CALL PUST(39,'quiteshort '//DBNAME(1:I1)//'  '//sdate(1:ISD))
       CALL PUST(39,' ')
@@ -7046,6 +7115,7 @@
       OPFILE=NEWDIR(1:LDIR)//CH001(1:I1)
       CALL PUST(6,'Open file 35: '//OPFILE)
       CALL LABLA(OPFILE,IO)
+!      WRITE (UNIT=6,FMT='(''OPEN 7135 '',A)') OPFILE(1:IO)
       OPEN (UNIT=35,FILE=OPFILE(1:IO),STATUS='UNKNOWN')
       CALL PUST(35,CH001(1:I1)//'  '//sdate(1:ISD))
       CALL PUST(35,' ')
@@ -7069,10 +7139,6 @@
 !      OPEN (UNIT=51,FILE=OPFILE(1:IO),STATUS='UNKNOWN')
 !      CALL PUST(51,CH001(1:I1)//'  '//sdate(1:ISD))
 !      CALL PUST(51,' ')
-
-
-
-
 
 
 

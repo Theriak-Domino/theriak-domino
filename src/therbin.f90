@@ -87,8 +87,8 @@
 !*****
 !CCCC      CALL CPUTIME(ZEITSTRING)
       progname='THERBIN'
-      !vers='28.05.2022'
-      vers = _CURRBUILDNAME_
+      vers='whatever'
+!      vers = _CURRBUILDNAME_
       task='"Computation of binary phase diagrams"'
       ierr=0
       call initialize('$THERBIN-FILES',ierr)
@@ -327,7 +327,7 @@
       CALL TAXI(CH001,FORMUL)
       CALL CHEMIE(COMAY,NC,OXYDE,OXANZ,FORMUL,CHE)
       DO II=1,NC
-        IF (CHE(II).NE.0.0D0) I1=I1+1
+        IF (DABS(CHE(II)).GT.1D-12) I1=I1+1
         XXECK(I,II)=CHE(II)
       END DO
       IF (I1.EQ.0) THEN
@@ -371,7 +371,7 @@
       ECKE(3)=NAM
       CALL GELI(CH001,YYMIN)
       CALL GELI(CH001,YYMAX)
-      IF (YYMIN.EQ.YYMAX) THEN
+      IF (DABS(YYMIN-YYMAX).LT.1D-12) THEN
       CALL SHOUTI
       WRITE (scr,2012)
  2012 FORMAT (/' ymin and ymax are the same')
@@ -624,7 +624,7 @@
       ECKCODE=0
       DO IROW=1,2
         IF (KOEFF(IROW)*KOEFF(3).GT.0.0D0) OUTCODE=1
-        IF (KOEFF(IROW).EQ.0.0D0) ECKCODE=ECKCODE+1
+        IF (DABS(KOEFF(IROW)).LT.1D-12) ECKCODE=ECKCODE+1
       END DO
       IF (OUTCODE.EQ.1) THEN
       WRITE (scr,2057) NAME(NUMMER(I))
@@ -886,7 +886,7 @@
       END DO
       CALL CLOSER(SUDIA1,SUDIA2,SUDIA3,SUDIA4)
 !-----
-      IF (SUDIA4.NE.0.0D0) THEN
+      IF (DABS(SUDIA4).GT.1D-12) THEN
       IF (SUDIA3.LT.Y0999) THEN
       SUDIA=4.0D0
       ELSE
@@ -1337,7 +1337,7 @@
       END DO
       MORE=.FALSE.
       DO I=1,NC
-        IF (CHE(I).EQ.0.0D0.NEQV.CHEM(I).EQ.0.0D0) MORE=.TRUE.
+        IF (DABS(CHE(I)).LT.1D-12.NEQV.DABS(CHEM(I)).LT.1D-12) MORE=.TRUE.
         CHEM(I)=CHE(I)
       END DO
       IF (MORE) THEN
@@ -1442,12 +1442,12 @@
 !-----
       IF (K.LE.2) THEN
       DO II=K,NUNORI
-        IF (XCORN(K,II).NE.0.0D0) THEN
+        IF (DABS(XCORN(K,II)).GT.1D-12) THEN
         JX=II
         GOTO 421
         END IF
       END DO
-  421 IF (JX.EQ.0.AND.EMBULK(K).NE.0.0D0) THEN
+  421 IF (JX.EQ.0.AND.DABS(EMBULK(K)).GT.1D-12) THEN
       CALL SHOUTF
       WRITE (scr,3000)
       WRITE (out,3000)
@@ -1468,7 +1468,7 @@
 !------
       ELSE
       DO 450,II=K,I001
-      IF (XCORN(II,K).NE.0.0D0) THEN
+      IF (DABS(XCORN(II,K)).GT.1D-12) THEN
       JX=II
       CALL SHOUTF
       WRITE (scr,3002)
@@ -1479,20 +1479,20 @@
       END IF
 !-----
       F=XCORN(K,K)
-      IF (F.EQ.0.0D0) THEN
+      IF (DABS(F).LT.1D-12) THEN
       DO II=1,I001
         XCORN(II,K)=0.0D0
       END DO
       ELSE
       RANK=RANK+1
       DO I=1,I001
-        IF (XCORN(I,K).NE.0.0D0) XCORN(I,K)=XCORN(I,K)/F
+        IF (DABS(XCORN(I,K)).GT.1D-12) XCORN(I,K)=XCORN(I,K)/F
       END DO
       DO I=1,NUNORI
         AR(I)=XCORN(K,I)
       END DO
       DO I=1,NUNORI
-        IF (I.NE.K.AND.AR(I).NE.0.0D0) THEN
+        IF (I.NE.K.AND.DABS(AR(I)).GT.1D-12) THEN
           DO II=1,I001
             XCORN(II,I)=XCORN(II,I)-XCORN(II,K)*AR(I)
             IF (DABS(XCORN(II,I)).LT.1D-12) XCORN(II,I)=0.0D0
@@ -1500,7 +1500,7 @@
         END IF
       END DO
       END IF
-      IF (XCORN(K,K).NE.0.0D0) THEN
+      IF (DABS(XCORN(K,K)).GT.1D-12) THEN
       DO I=1,NUNORI
         XCORN(K,I)=0.0D0
       END DO
@@ -1528,7 +1528,7 @@
       DO I=1,NUNORI
         SUM=SUM+XCORN(II,I)
       END DO
-      IF (SUM.NE.0.0D0) THEN
+      IF (DABS(SUM).GT.1D-12) THEN
       DO I=1,NUNORI
         XCORN(II,I)=XCORN(II,I)/SUM
       END DO
@@ -1616,7 +1616,7 @@
           END IF
   609   CONTINUE
         END DO
-        IF (WERT.NE.0.0D0) GOTO 611
+        IF (DABS(WERT).GT.1D-12) GOTO 611
       END DO
   611 CONTINUE
       IF (JX.EQ.0.OR.JY.EQ.0) RETURN

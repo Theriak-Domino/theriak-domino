@@ -105,7 +105,7 @@
       CALL getdate(cdateandtime)
       compver = COMPILER_VERSION()
       !compopt=compiler_options()
-      PRINT *, 'Compile date:     '//__DATE__//'  '//__TIME__
+!!!      PRINT *, 'Compile date:     '//__DATE__//'  '//__TIME__
       PRINT *, 'Compiler version: '//trim(adjustl(compver))
 !      PRINT *, 'Compiler options: '
 !      PRINT *, 'Compiler flags:   '//_CURRCFLAGSTR_

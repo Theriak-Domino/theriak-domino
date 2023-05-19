@@ -1571,8 +1571,8 @@
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
 !-----END OF COMMON VARIABLES
-      INTEGER(4) IS,I,CODE,N,PROB,PR01,N0,IC
-!      INTEGER(4) II,I001
+      INTEGER(4) IS,I,CODE,N,PROB,PR01,N0
+!      INTEGER(4) II,I001,IC
       REAL(8) XXSC(EMAX),GSC,FF,MUE2(EMAX),MUE0(EMAX),GG0,GAIN
 !      REAL(8) AR001(EMAX),AR002(EMAX)
 !-----
@@ -1680,12 +1680,15 @@
         FF=FF+DABS(MUE0(I)-GG0)
       END DO
       FF=FF/DBLE(N0)
-!23MAI2022 don't if ideal solution
-      IF (FF.GT.1D5.AND.SUGCOD(0).NE.'idmn') THEN
+!---------------------------------------------------
+!23MAI2022 don't if ideal solution !!! (was 1D5)
+!18Mai2023 don't if ideal+Margules (set to 1D7)
+!---------------------------------------------------
+      IF (FF.GT.1D7.AND.SUGCOD(0).NE.'idmn') THEN
 !==
 !     ridiculous phases are nowhere close to a minimum
 !     with a huge gradient, but are stuck in the minimization
-!     tested wit sum(mue(i)-G)/n > 1D5
+!     tested with sum(mue(i)-G)/n > 1D5
 !
         NRIDI=NRIDI+1
         IF (TEST.LT.0.0D0) THEN

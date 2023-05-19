@@ -41,6 +41,7 @@
 !achtung EMAX muss auch in theriak.cmn angepasst werden
 !********************************
       SUBROUTINE SOLINI(SOLNAM,K,EMSTR,N,EMBCOD)
+      IMPLICIT NONE
       INTEGER(4) EMAX
       PARAMETER (EMAX=15)
       CHARACTER(16) SOLNAM,NAME(EMAX),EMSTR(EMAX)
@@ -127,13 +128,13 @@
 !-----** added Mn according to tc-6axNCKFMASHTOm45.txt
       IF (SOLNAM.EQ.'OPX6') THEN
       N=7
-      NAME(1)='Enstatite'
-      NAME(2)='Ferrosilite'
+      NAME(1)='enstatite'
+      NAME(2)='ferrosilite'
       NAME(3)='FM_pyx'
       NAME(4)='Mg-tscher_pyrox'
       NAME(5)='fopx'
       NAME(6)='Mn-Opx'
-      NAME(7)='Orthodiopside'
+      NAME(7)='orthodiopside'
       END IF
       IF (SOLNAM.EQ.'OPXW14') THEN
       N=7
@@ -611,6 +612,7 @@
 !-----
 !********************************
       SUBROUTINE SOLMOD(SOLNAM,K,MODELL)
+      IMPLICIT NONE
       CHARACTER(16) SOLNAM
       CHARACTER(500) MODELL
       INTEGER(4) K
@@ -844,6 +846,7 @@
       !REAL(8) XH2O
       INTEGER(4) N
       DATA R/8.3143D0/
+!      
 !-----this is just a test
       IF (SOLNAM.EQ.'TRI') THEN
       A(1)=X(1)**7.0D0
@@ -1070,7 +1073,8 @@
       END IF
 !-----**H2O-CO2: Duan (2006)**
       IF (SOLNAM.EQ.'HC-DU06') THEN
-      IF (SAR(1).EQ.T.AND.SAR(2).EQ.P) THEN
+!      IF (SAR(1).EQ.T.AND.SAR(2).EQ.P) THEN
+      IF (DABS(SAR(1)-T).LT.1D-12.AND.DABS(SAR(2)-P).LT.1D-12) THEN
 !!      WRITE (UNIT=6,FMT='('' PLUS P T'',2(F20.10))') T,P
       F1PLO=SAR(3)
       F2PLO=SAR(4)
@@ -1133,7 +1137,8 @@
 !-----**hopo liquid**
       IF (SOLNAM.EQ.'LIQtc') THEN
       FF=(X(6)+X(7))
-      IF (FF.EQ.0.0D0) FF=1.0D0
+!      IF (FF.EQ.0.0D0) FF=1.0D0
+      IF (DABS(FF).LT.1D-12) FF=1.0D0
       F1=X(6)/FF
       F2=X(7)/FF
       A(1)=(1.0D0-X(8))*X(1)
@@ -1156,7 +1161,8 @@
 !-----**hopo liquid**
       IF (SOLNAM.EQ.'LIQtc6') THEN
       FF=(X(6)+X(7))
-      IF (FF.EQ.0.0D0) FF=1.0D0
+!      IF (FF.EQ.0.0D0) FF=1.0D0
+      IF (DABS(FF).LT.1D-12) FF=1.0D0
       F1=X(6)/FF
       F2=X(7)/FF
       A(1)=(1.0D0-X(8))*X(1)
@@ -1179,7 +1185,8 @@
 !-----**hopo liquid**
       IF (SOLNAM.EQ.'LIQtc6F') THEN
       FF=(X(6)+X(7))
-      IF (FF.EQ.0.0D0) FF=1.0D0
+!      IF (FF.EQ.0.0D0) FF=1.0D0
+      IF (DABS(FF).LT.1D-12) FF=1.0D0
       F1=X(6)/FF
       F2=X(7)/FF
       A(1)=(1.0D0-X(8))*X(1)
@@ -1215,7 +1222,8 @@
 !
       IF (SOLNAM.EQ.'LIQtc62') THEN
       FF=(X(6)+X(7))
-      IF (FF.EQ.0.0D0) FF=1.0D0
+!      IF (FF.EQ.0.0D0) FF=1.0D0
+      IF (DABS(FF).LT.1D-12) FF=1.0D0
       F1=X(6)/FF
       F2=X(7)/FF
       A(1)=(1.0D0-X(8))*X(1)
@@ -1815,14 +1823,21 @@
 !********************************
 !-----**PSIspinels thing**
       SUBROUTINE PSISPIN(SOLNAM,P,T,N,X,A)
-      INTEGER(4) EMAX
+      IMPLICIT NONE
+      INTEGER(4) EMAX,N,NXYZ
       PARAMETER (EMAX=15)
-      CHARACTER(16) SOLNAM
+      CHARACTER(16) SOLNAM,CHXYZ
       REAL(8) P,T,X(EMAX),A(EMAX)
       REAL(8) Y1,Y2,Y3,Y4,Z1,Z2,Z3,Z4,B11,B21,B31,B41, &
       B12,B22,B32,B42,B13,B23,B33,B43,B14,B24,B34,B44, &
       B15,B25,B35,B45,B16,B26,B36,B46, &
-      LNG1,LNG2,LNG3,LNG4
+      LNG1,LNG2,LNG3,LNG4,XYZ
+!
+      NXYZ=N
+      CHXYZ=SOLNAM
+      XYZ=P
+      XYZ=T
+!
       Y1=X(2)+X(4)
       Y2=1.0D0-X(2)-X(4)
       Y3=X(2)+X(4)
@@ -1869,15 +1884,20 @@
 !********************************
 !-----**Vidals thing**
       SUBROUTINE MICA4O(SOLNAM,P,T,N,X,A)
+      IMPLICIT NONE
       INTEGER(4) EMAX
       PARAMETER (EMAX=15)
-      CHARACTER(16) SOLNAM
+      CHARACTER(16) SOLNAM,CHXYZ
       REAL(8) P,T,R,X(EMAX),A(EMAX)
       REAL(8) Si,Alt,Alo,Mg,K,v, &
       gamAl,gamMgc,gamAlc,gamv,gamK,WAlMg,WKKv,WKvv, &
-      gamcel,gammus,gamprl
-      INTEGER(4) N
+      gamcel,gammus,gamprl,XYZ
+      INTEGER(4) N,NXYZ
       DATA R/8.3143D0/
+      NXYZ=N
+      CHXYZ=SOLNAM
+      XYZ=P
+      
       WAlMg=-30500D0+15D0*T+78D-2*P
       WKKv=35000D0-25D0*T-85D-2*P
       WKvv=45000D0-10D0*T-85D-2*P
@@ -1916,16 +1936,21 @@
 !********************************
 !-----**Vidals thing**
       SUBROUTINE MICA4(SOLNAM,P,T,N,X,A)
+      IMPLICIT NONE
       INTEGER(4) EMAX
       PARAMETER (EMAX=15)
-      CHARACTER(16) SOLNAM
+      CHARACTER(16) SOLNAM,CHXYZ
       REAL(8) P,T,R,X(EMAX),A(EMAX)
       REAL(8) Si,Alt,Alo,Mg,K,Fe,Na,v
       REAL(8) gamAl,gamMgc,gamFec,gamAlc,gamv,gamK,gamNa,WAlMg, &
       WAlFe,WKKv,WKvv,WKKNa,WKNaNa,WNaNav,WNavv,WKNav,gammcel, &
-      gamfcel,gammus,gamprl,gampg
-      INTEGER(4) N
+      gamfcel,gammus,gamprl,gampg,XYZ
+      INTEGER(4) N,NXYZ
       DATA R/8.3143D0/
+      XYZ=P
+      NXYZ=N
+      CHXYZ=SOLNAM
+      
       WAlMg=-30500D0-15D0*T+78D-2*P
       WAlFe=-5500D0-15D0*T+65D-2*P
       WKKNa=12230D0+5D0*T+67D-2*P
@@ -1984,12 +2009,16 @@
 !-----
 !********************************
       SUBROUTINE LANDAU1(SOLNAM,P,T,N,X,A)
+      IMPLICIT NONE
       INTEGER(4) EMAX
       PARAMETER (EMAX=15)
-      CHARACTER(16) SOLNAM
+      CHARACTER(16) SOLNAM,CHXYZ
       REAL(8) P,T,X(EMAX),A(EMAX),XA,XB,XC,TC,G,DG,R, &
-      MU1,MU2,GA1,GA2,FF
-      INTEGER(4) N
+      MU1,MU2,GA1,GA2,FF,XYZ
+      INTEGER(4) N,NXYZ
+      NXYZ=N
+      XYZ=P
+      CHXYZ=SOLNAM
       TC=1138.0D0
       R=3.143D0
       A(1)=X(1)*1.01D0
@@ -2015,6 +2044,7 @@
 !-----
 !********************************
       SUBROUTINE MGSI(SOLNAM,P,T,N,X,A)
+      IMPLICIT NONE
       INTEGER(4) EMAX
       PARAMETER (EMAX=15)
       CHARACTER(16) SOLNAM
@@ -2032,6 +2062,7 @@
 !-----
 !********************************
       SUBROUTINE MNTI(SOLNAM,P,T,N,X,A)
+      IMPLICIT NONE
       INTEGER(4) EMAX
       PARAMETER (EMAX=15)
       CHARACTER(16) SOLNAM
@@ -2049,6 +2080,7 @@
 !-----
 !********************************
       SUBROUTINE MGTI(SOLNAM,P,T,N,X,A)
+      IMPLICIT NONE
       INTEGER(4) EMAX
       PARAMETER (EMAX=15)
       CHARACTER(16) SOLNAM
@@ -2066,6 +2098,7 @@
 !-----
 !********************************
       SUBROUTINE FETI(SOLNAM,P,T,N,X,A)
+      IMPLICIT NONE
       INTEGER(4) EMAX
       PARAMETER (EMAX=15)
       CHARACTER(16) SOLNAM
@@ -2083,13 +2116,18 @@
 !-----
 !********************************
       SUBROUTINE QUASI(SOLNAM,P,T,N,X,A,B,ZZ,W,E)
+      IMPLICIT NONE
       INTEGER(4) EMAX
       PARAMETER (EMAX=15)
-      CHARACTER(16) SOLNAM
+      CHARACTER(16) SOLNAM,CHXYZ
       REAL(8) P,T,X(EMAX),A(EMAX),B(2),ZZ,W(0:10),E(0:10),Z2,R,RT, &
-      X1,X2,Y1,Y2,X11,X22,X122,WET,DWEDY,XI,F1,F2,F3,YY
-      INTEGER(4) I,N
+      X1,X2,Y1,Y2,X11,X22,X122,WET,DWEDY,XI,F1,F2,F3,YY,XYZ
+      INTEGER(4) I,N,NXYZ
       DATA R/8.3143D0/
+      NXYZ=N
+      CHXYZ=SOLNAM
+      XYZ=P
+      
       RT=R*T
       Z2=ZZ/2.0D0
       X1=X(1)
@@ -2137,7 +2175,7 @@
       !Liquid Jennings & Holland (2015)
       !coded by D.K. Tinkham. Needs tested again
       SUBROUTINE LiqJH15(X,A,N)
-        USE flags, only : PMINXXX, PMINAAA
+        USE flags, only : PMINXXX
         IMPLICIT NONE
         INTEGER(4),PARAMETER  :: emax = 15  !ensure same as in theriak.cmn.
         REAL(8),INTENT(IN)    :: X(emax)
@@ -2238,6 +2276,8 @@
         REAL(8),INTENT(OUT)   :: A(EMAX)
         INTEGER(4),INTENT(IN) :: N
         REAL(8) :: OMPH2O,FF
+        INTEGER(4) NXYZ
+        NXYZ=N
         ! X(1)='qL1'   pqL=X(1)
         ! X(2)='abL1'  pabL=X(2)
         ! X(3)='kspL1' pkspL=X(3)
@@ -2279,6 +2319,8 @@
         REAL(8)               :: P(emax)
         REAL(8) :: psl1L, pwo1L, pfo2L, pfa2L, ph2o1L
         REAL(8) :: sumM, sumF, omh2, F1, F2
+        INTEGER(4) NXYZ
+        NXYZ=N
         ! ---------------------------------------------------
         ! X(1)='q4L'   X(4)='fo2L'  X(7)='hmL'  X(10)='kjL' 
         ! X(2)='sl1L'  X(5)='fa2L'  X(8)='ekL'  X(11)='ctL' 
@@ -2353,9 +2395,10 @@
         REAL(8) :: den, sumM
         REAL(8) :: pq3L, psl1L, pwo1L, pfo2L, pfa2L, pneL1, phmL
         REAL(8) :: pekL, ptiL, pkjL, panL1, pab1L, penL1, pkfL
-        REAL(8) :: aq3L, asl1L, awo1L, afo2L, afa2L, aneL1, ahmL
-        REAL(8) :: aekL, atiL, akjL, aanL1, aab1L, aenL1, akfL
-        logical :: isnorm = .true.
+!        REAL(8) :: aq3L, asl1L, awo1L, afo2L, afa2L, aneL1, ahmL
+        REAL(8) :: asl1L, awo1L, afo2L, afa2L
+!        REAL(8) :: aekL, atiL, akjL, aanL1, aab1L, aenL1, akfL
+!        logical :: isnorm = .true.
         ! ---------------------------
         !   N=14  
         !   q4L->q3L  jdL->neL1  ctL->anL1  +ab1L  +enL1  +kfL
@@ -2469,6 +2512,7 @@
 !-----
 !********************************
       SUBROUTINE GSPEC(NAME,P,PGAS,T,FALL,G,V)
+      IMPLICIT NONE
       CHARACTER(16) NAME,FALL
       REAL(8) P,PGAS,T,G,V,F1
       INTEGER(4) IH2O,ICO2
@@ -2506,6 +2550,7 @@
 !-----
 !********************************
       SUBROUTINE CORD(P,TK,G,V)
+      IMPLICIT NONE
       REAL(8) H,S,V,A,B,C,D,E,F,X1,X2,X3,X4,X5,X6,X7,P,TK,TR,G,Z
       TR=298.15D0
         H = -563493.8
@@ -2614,7 +2659,8 @@
       CUC=-(B*RT+B*B*P-AF/SQT)/P
       CUD=-AF*B/SQT/P
       CALL CUBIC(CUB,CUC,CUD,X1,X2,X2I,X3)
-      IF (X2I.NE.0.0D0) THEN
+!      IF (X2I.NE.0.0D0) THEN
+      IF (DABS(X2I).GT.1D-12) THEN
       VMRK=X1
       ELSE
       IF (P.LT.PSA.AND.T.LT.TK)  THEN
@@ -2651,7 +2697,8 @@
       CUC=-(B*RT+B*B*PSA-AF/SQT)/PSA
       CUD=-AF*B/SQT/PSA
       CALL CUBIC(CUB,CUC,CUD,X1,X2,X2I,X3)
-      IF (X2I.NE.0.0D0) THEN
+!      IF (X2I.NE.0.0D0) THEN
+      IF (DABS(X2I).GT.1D-12) THEN
       V1=X1
       ELSE
       V1=DMAX1(X1,X2,X3)
@@ -2666,7 +2713,8 @@
       CUC=-(B*RT+B*B*PSA-A/SQT)/PSA
       CUD=-A*B/SQT/PSA
       CALL CUBIC(CUB,CUC,CUD,X1,X2,X2I,X3)
-      IF (X2I.NE.0.0D0) THEN
+!      IF (X2I.NE.0.0D0) THEN
+      IF (DABS(X2I).GT.1D-12) THEN
       V2=X1
       ELSE
       V2=DMIN1(X1,X2,X3)
@@ -2787,7 +2835,8 @@
       CUC=-(B*RT+B*B*P-A/SQT)/P
       CUD=-A*B/SQT/P
       CALL CUBIC(CUB,CUC,CUD,X1,X2,X2I,X3)
-      IF (X2I.NE.0.0D0) THEN
+!      IF (X2I.NE.0.0D0) THEN
+      IF (DABS(X2I).GT.1D-12) THEN
       VMRK=X1
       ELSE
       VMRK=DMIN1(X1,X2,X3)
@@ -2943,7 +2992,8 @@
       CUK=OFT-BRK*BRK+BRK*BUK
       DUK=-BRK*OFT
       CALL CUBIC(BUK,CUK,DUK,X1,X2,X2I,X3)
-      IF (X2I.NE.0.0D0) THEN
+!      IF (X2I.NE.0.0D0) THEN
+      IF (DABS(X2I).GT.1D-12) THEN
       VOL=X1
       ELSE
       IF (P.LT.PS)  THEN
@@ -3070,6 +3120,8 @@
 !-----
 !********************************
       SUBROUTINE PSAT2(T,PS)
+      IMPLICIT NONE
+      INTEGER(4) I
       DOUBLE PRECISION T,PS,A(8),W,WSQ,V,FF
       DATA A/-7.8889166D0,2.5514255D0,-6.716169D0 &
       ,33.239495D0,-105.38479D0,174.35319D0,-148.39348D0 &
@@ -3092,12 +3144,14 @@
 !-----
 !********************************
       SUBROUTINE CUBIC(B,C,D,X1,X2,X2I,X3)
+      IMPLICIT NONE
       REAL(8) B,C,D,Q,P,R,PI,PHI3,FF,X1,X2,X2I,X3
       PI=3.14159263538979D0
       X2=0.0D0
       X2I=0.0D0
       X3=0.0D0
-      IF (C.EQ.0.0D0.AND.D.EQ.0.0D0) THEN
+!      IF (C.EQ.0.0D0.AND.D.EQ.0.0D0) THEN
+      IF (DABS(C).LT.1D-12.AND.DABS(D).LT.1D-12) THEN
       X1=-B
       RETURN
       END IF
@@ -3303,6 +3357,7 @@
 !-----
 !********************************
       SUBROUTINE KUNDJ(JJ,P,T,G,VOLUM)
+      IMPLICIT NONE
       REAL(8) P,T,G,H0,S0,K1,K2,K3,K4,K6, &
       CPDT,CPTDT,T0,TT,TT0,SQT,SQT0,FUGCF,VOLUM
       INTEGER(4) JJ
@@ -3604,6 +3659,7 @@
 !    SEE KERRICK AND JACOBS (IN PRESS) FOR A DERIVATION OF THE PURE
 !    FUGACITY COEFFICIENT EXPRESSION (FCP)
 !
+      PXYZ=P
 !
       IF (L.EQ.1) THEN
           B = BC
@@ -3655,6 +3711,8 @@
 !     SEE KERRICK AND JACOBS (IN PRESS) FOR A DERIVATION OF FUGACITY
 !     COEFFICIENT EXPRESSION (FCM)
 !
+      XYZ=FWM
+      XYZ=P
 !
       B = BM
       V = VM
@@ -3908,7 +3966,8 @@
 !      INTEGER(4) I
 !--
 !
-      IF (FUGH2O.EQ.0.0D0.AND.FUGCO2.EQ.0.0D0) THEN
+!      IF (FUGH2O.EQ.0.0D0.AND.FUGCO2.EQ.0.0D0) THEN
+      IF (DABS(FUGH2O).LT.1D-12.AND.DABS(FUGCO2).LT.1D-12) THEN
 !      WRITE (6,1900)
 ! 1900 FORMAT (/,' pure H2O', &
 !              /,' --------')
@@ -3991,7 +4050,8 @@
 !      INTEGER(4) I
 !--
 !
-      IF (FUGH2O.EQ.0.0D0.AND.FUGCO2.EQ.0.0D0) THEN
+!      IF (FUGH2O.EQ.0.0D0.AND.FUGCO2.EQ.0.0D0) THEN
+      IF (DABS(FUGH2O).LT.1D-12.AND.DABS(FUGCO2).LT.1D-12) THEN
 !      WRITE (6,1900)
 ! 1900 FORMAT (/,' pure H2O', &
 !              /,' --------')
@@ -5414,7 +5474,7 @@
       SUBROUTINE JUSTF(T,V,Z,P1)
       IMPLICIT NONE
       REAL(8) T,V,Z,P1, &
-      V2,V4,V5
+      V2,V4,V5,XYZ
 !--
       REAL(8) BVC,CVC2,DVC4,EVC5,FVC2,BETA1,GAMMAVC2,R,RT,MWT, &
       BST1,CST1,DST1,EST1,FST1,BESTST1,GAMST1, &
@@ -5424,6 +5484,8 @@
       BST1,CST1,DST1,EST1,FST1,BESTST1,GAMST1, &
       BST2,CST2,DST2,EST2,FST2,BESTST2,GAMST2
 !--
+      XYZ=T
+      
        V2=V*V
        V4=V2*V2
        V5=V4*V
@@ -5438,7 +5500,7 @@
       SUBROUTINE EQUA9(T,V,Z,PHI1,PHI2)
       IMPLICIT NONE
       REAL(8) T,V,Z,PHI1,PHI2, &
-      V2,V4,V5,EXPON
+      V2,V4,V5,EXPON,XYZ
 !--
       REAL(8) BVC,CVC2,DVC4,EVC5,FVC2,BETA1,GAMMAVC2,R,RT,MWT, &
       BST1,CST1,DST1,EST1,FST1,BESTST1,GAMST1, &
@@ -5448,6 +5510,8 @@
       BST1,CST1,DST1,EST1,FST1,BESTST1,GAMST1, &
       BST2,CST2,DST2,EST2,FST2,BESTST2,GAMST2
 !--
+      XYZ=T
+      
       V2=V*V
       V4=V2*V2
       V5=V4*V
@@ -5481,7 +5545,7 @@
       SUBROUTINE INTEGRALF(T,V,PST)
       IMPLICIT NONE
       REAL(8) T,V,PST, &
-      V2,V4,V5
+      V2,V4,V5,XYZ
 !--
       REAL(8) BVC,CVC2,DVC4,EVC5,FVC2,BETA1,GAMMAVC2,R,RT,MWT, &
       BST1,CST1,DST1,EST1,FST1,BESTST1,GAMST1, &
@@ -5491,6 +5555,8 @@
       BST1,CST1,DST1,EST1,FST1,BESTST1,GAMST1, &
       BST2,CST2,DST2,EST2,FST2,BESTST2,GAMST2
 !--
+      XYZ=T
+      
        V2=V*V
        V4=V2*V2
        V5=V4*V
@@ -5506,7 +5572,7 @@
       SUBROUTINE ABLEITF(T,V,PST)
       IMPLICIT NONE
       REAL(8) T,V,PST, &
-      V2,V3,V4
+      V2,V3,V4,XYZ
 !--
       REAL(8) BVC,CVC2,DVC4,EVC5,FVC2,BETA1,GAMMAVC2,R,RT,MWT, &
       BST1,CST1,DST1,EST1,FST1,BESTST1,GAMST1, &
@@ -5516,6 +5582,8 @@
       BST1,CST1,DST1,EST1,FST1,BESTST1,GAMST1, &
       BST2,CST2,DST2,EST2,FST2,BESTST2,GAMST2
 !--
+      XYZ=T
+      
        V2=V*V
        V3=V2*V
        V4=V2*V2
@@ -5671,7 +5739,8 @@
 !      INTEGER(4) I
 !--
 !
-      IF (FUGH2O.EQ.0.0D0.AND.FUGCO2.EQ.0.0D0) THEN
+!      IF (FUGH2O.EQ.0.0D0.AND.FUGCO2.EQ.0.0D0) THEN
+      IF (DABS(FUGH2O).LT.1D-12.AND.DABS(FUGCO2).LT.1D-12) THEN
 !      WRITE (6,1900)
 ! 1900 FORMAT (/,' pure H2O', &
 !              /,' --------')
@@ -6496,6 +6565,7 @@
 !      (for �spline interpolation�)
 !
       SUBROUTINE spline(x,y,n,yp1,ypn,y2) 
+      IMPLICIT NONE
       INTEGER n,NMAX 
       REAL yp1,ypn,x(n),y(n),y2(n) 
       PARAMETER (NMAX=500)
@@ -6549,6 +6619,7 @@
 !      splint (for �spline interpolation�)
 !
       SUBROUTINE splint(xa,ya,y2a,n,x,y) 
+      IMPLICIT NONE
       INTEGER n 
       REAL x,y,xa(n),y2a(n),ya(n)
 !      Given the arrays xa(1:n) and ya(1:n) of length n, which tabulate a 
@@ -6640,7 +6711,8 @@
       LIM2=0.03D0
       RHINI=1.0D0/RT
       CALL PISTFINDRH(ZZ,LIM1,LIM2,RHINI,RH0)
-      IF (RH0.EQ.0.0D0) THEN
+!      IF (RH0.EQ.0.0D0) THEN
+      IF (DABS(RH0).LT.1D-12) THEN
       VOL0=RT/P
       ELSE
       VOL0=1.0D0/RH0/10.0D0
@@ -6653,7 +6725,8 @@
       LIM2=0.03D0
       RHINI=1D-5
       CALL PISTFINDRH(ZZ,LIM1,LIM2,RHINI,RH1)
-      IF (RH1.EQ.0.0D0) THEN
+!      IF (RH1.EQ.0.0D0) THEN
+      IF (DABS(RH1).LT.1D-12) THEN
       VOL1=RT/P
       RH1=1.0D0/VOL1/10.0D0
       ELSE
@@ -6667,7 +6740,8 @@
       LIM2=1D20
       RHINI=6D-2
       CALL PISTFINDRH(ZZ,LIM1,LIM2,RHINI,RH2)
-      IF (RH2.EQ.0.0D0) THEN
+!      IF (RH2.EQ.0.0D0) THEN
+      IF (DABS(RH2).LT.1D-12) THEN
       VOL2=RT/P
       RH2=1.0D0/VOL2/10.0D0
       ELSE
@@ -6799,7 +6873,8 @@
       LIM2=0.03D0
       RHINI=1.0D0/RT
       CALL PISTFINDRH(ZZ,LIM1,LIM2,RHINI,RH0)
-      IF (RH0.EQ.0.0D0) THEN
+!      IF (RH0.EQ.0.0D0) THEN
+      IF (DABS(RH0).LT.1D-12) THEN
       VOL0=RT/P
       ELSE
       VOL0=1.0D0/RH0/10.0D0
@@ -6812,7 +6887,8 @@
       LIM2=0.03D0
       RHINI=1D-5
       CALL PISTFINDRH(ZZ,LIM1,LIM2,RHINI,RH1)
-      IF (RH1.EQ.0.0D0) THEN
+!      IF (RH1.EQ.0.0D0) THEN
+      IF (DABS(RH1).LT.1D-12) THEN
       VOL1=RT/P
       RH1=1.0D0/VOL1/10.0D0
       ELSE
@@ -6826,7 +6902,8 @@
       LIM2=1D20
       RHINI=6D-2
       CALL PISTFINDRH(ZZ,LIM1,LIM2,RHINI,RH2)
-      IF (RH2.EQ.0.0D0) THEN
+!      IF (RH2.EQ.0.0D0) THEN
+      IF (DABS(RH2).LT.1D-12) THEN
       VOL2=RT/P
       RH2=1.0D0/VOL2/10.0D0
       ELSE
@@ -6929,7 +7006,8 @@
       IST=0.0D0
       IF (Z1.LT.ZZ.AND.Z2.GT.ZZ) IST=1.0D0
       IF (Z1.GT.ZZ.AND.Z2.LT.ZZ) IST=-1.0D0
-      IF (IST.EQ.0.0D0) THEN
+!      IF (IST.EQ.0.0D0) THEN
+      IF (DABS(IST).LT.1D-12) THEN
        RH=0.0D0
        RETURN
       END IF

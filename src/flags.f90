@@ -94,8 +94,8 @@ MODULE FLAGS
         INCLUDE 'files.cmn'
         !
         INTEGER(4)    :: istat,spos,epos,dpos,bpos,lenofstr
-        CHARACTER*500 linestr
-        CHARACTER*1000 datstr,tdatstr
+        CHARACTER(500) linestr
+        CHARACTER(1000) datstr,tdatstr
         CHARACTER(len=16) :: tstr1,tstr2
         !
         ! read (CALC-FLAGS)  2019-08-03
@@ -126,7 +126,7 @@ MODULE FLAGS
                 bpos = INDEX(tdatstr,' ')               !space b/w value and remaining string
                 if(bpos == 0) then
                   !must be last one, and no space? Never hit this case afaict.
-                  tstr2 = tdatstr(1:)                   !holds value in this case
+                  tstr2 = tdatstr(1:LEN(tstr2))                   !holds value in this case
                   tdatstr = TRIM(ADJUSTL(tdatstr))      !is needed? 
                   print*,'ERROR in SR CALCFLAGS. This value is not getting set:',tdatstr
                 else

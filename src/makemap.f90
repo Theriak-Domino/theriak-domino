@@ -107,8 +107,8 @@
 !-----
 !!!      CALL clearscreen
       progname='MAKEMAP'
-      !vers='28.05.2022'
-      vers = _CURRBUILDNAME_
+      vers='whatever'
+!      vers = _CURRBUILDNAME_
       task='draw greymap images of phase diagrams'
       sdate=' '
       ierr=0
@@ -151,7 +151,7 @@
       read (99,'(a)',end=301) line
       if(line(1:1).eq.'_') then
         NDIRS=NDIRS+1
-        dirname(NDIRS)=line
+        dirname(NDIRS)=line(1:LEN(dirname(NDIRS)))
       end if
   300 CONTINUE
   301 CALL FILEDELETE
@@ -376,7 +376,7 @@
 !      CALL GELI(CH001,F001)
 !      I1=IDINT(F001)
       CALL FUNGELI(CH001,I1,MAPDIV,MAPDIVCH)
-      IF (MAPDIV.EQ.0.0D0) MAPDIV=1.0D0
+      IF (DABS(MAPDIV).LT.1D-12) MAPDIV=1.0D0
 !
       IF (I1.GT.NVAR) THEN
       WRITE (scr,1115) NVAR
@@ -416,7 +416,7 @@
       CLOSE (UNIT=log)
 !
 !---- hier division
-      IF (MAPDIV.NE.1.0D0) THEN
+      IF (DABS(MAPDIV-1.0D0).GT.1D-12) THEN
        CH002=TITLE(1:I001)//MAPDIVCH
        CALL LABLA(CH002,I001)
        TITLE=CH002(1:I001)
@@ -444,7 +444,7 @@
  3000 FORMAT (I6,2X,D20.12)
 !---- hier division
       F001=F001/MAPDIV
-      IF (FF0(JJ).EQ.MISSING) THEN
+      IF (DABS(FF0(JJ)-MISSING).LT.1D-12) THEN
       IF (F001.LT.FMIN) FMIN=F001
       IF (F001.GT.FMAX) FMAX=F001
       FF0(JJ)=F001
@@ -454,17 +454,17 @@
   600 CONTINUE
   599 CONTINUE
 !+
-      IF (FMIN.EQ.FMAX) THEN
+      IF (DABS(FMIN-FMAX).LT.1D-12) THEN
        FMIN=FMIN*0.9D0
        FMAX=FMAX*1.1D0
-       IF (FMIN.EQ.0.0D0) THEN
+       IF (DABS(FMIN).LT.1D-12) THEN
         FMIN=-1.0D0
         FMAX=1.0D0
        END IF
       END IF
 !+
       DO I=1,NMAX
-        IF (FF0(I).EQ.-999.0D0) FF0(I)=MISSING
+        IF (DABS(FF0(I)+999.0D0).LT.1D-12) FF0(I)=MISSING
       END DO
       CLOSE (UNIT=33)
 !---
@@ -730,7 +730,7 @@
 !====
       INTEGER(4)  I1,I2
 !---
-      IF (FF0(I2).EQ.MISSING) THEN
+      IF (DABS(FF0(I2)-MISSING).LT.1D-12) THEN
       FLINE(I1)=255
       ELSE
       FLINE(I1)=IDINT(FF0(I2)*FA+CMAX-FA*FMAX)
@@ -886,8 +886,8 @@
       DO I=1,NMAX,NX
       DO II=0,NX-1
         JJ=I+II
-        IF (II.LT.(NX-1).AND.FF0(JJ).NE.MISSING &
-        .AND.FF0(JJ+1).NE.MISSING) THEN
+        IF (II.LT.(NX-1).AND.DABS(FF0(JJ)-MISSING).GT.1D-12 &
+        .AND.DABS(FF0(JJ+1)-MISSING).GT.1D-12) THEN
         FF1(JJ)=(FF0(JJ+1)-FF0(JJ))/DX
         ELSE
         FF1(JJ)=MISSING
@@ -904,8 +904,8 @@
       DO I=1,NMAX,NX
       DO II=0,NX-1
         JJ=I+II
-        IF (I.LT.(NMAX-NX+1).AND.FF0(JJ).NE.MISSING &
-        .AND.FF0(JJ+NX).NE.MISSING) THEN
+        IF (I.LT.(NMAX-NX+1).AND.DABS(FF0(JJ)-MISSING).GT.1D-12 &
+        .AND.DABS(FF0(JJ+NX)-MISSING).GT.1D-12) THEN
         FF1(JJ)=(FF0(JJ+NX)-FF0(JJ))/DY
         ELSE
         FF1(JJ)=MISSING
@@ -922,8 +922,8 @@
       DO I=1,NMAX,NX
       DO II=0,NX-1
         JJ=I+II
-        IF (II.LT.(NX-1).AND.FF0(JJ).NE.MISSING &
-        .AND.FF0(JJ+1).NE.MISSING) THEN
+        IF (II.LT.(NX-1).AND.DABS(FF0(JJ)-MISSING).GT.1D-12 &
+        .AND.DABS(FF0(JJ+1)-MISSING).GT.1D-12) THEN
         FF1(JJ)=(FF0(JJ+1)-FF0(JJ))/DX/((FF0(JJ)+FF0(JJ+1))/2.0D0)
         ELSE
         FF1(JJ)=MISSING
@@ -940,8 +940,8 @@
       DO I=1,NMAX,NX
       DO II=0,NX-1
         JJ=I+II
-        IF (I.LT.(NMAX-NX+1).AND.FF0(JJ).NE.MISSING &
-        .AND.FF0(JJ+NX).NE.MISSING) THEN
+        IF (I.LT.(NMAX-NX+1).AND.DABS(FF0(JJ)-MISSING).GT.1D-12 &
+        .AND.DABS(FF0(JJ+NX)-MISSING).GT.1D-12) THEN
         FF1(JJ)=-(FF0(JJ+NX)-FF0(JJ))/DY/((FF0(JJ)+FF0(JJ+NX))/2.0D0)
         ELSE
         FF1(JJ)=MISSING
@@ -959,8 +959,8 @@
       DO I=1,NMAX,NX
       DO II=0,NX-1
         JJ=I+II
-        IF (II.LT.(NX-1).AND.I.LT.(NMAX-NX+1).AND.FF0(JJ).NE.MISSING &
-        .AND.FF0(JJ+NX).NE.MISSING.AND.FF0(JJ+1).NE.MISSING) THEN
+        IF (II.LT.(NX-1).AND.I.LT.(NMAX-NX+1).AND.DABS(FF0(JJ)-MISSING).GT.1D-12 &
+        .AND.DABS(FF0(JJ+NX)-MISSING).GT.1D-12.AND.DABS(FF0(JJ+1)-MISSING).GT.1D-12) THEN
         FF1(JJ)=(FF0(JJ+1)-FF0(JJ))/DX+(FF0(JJ+NX)-FF0(JJ))/DY
         ELSE
         FF1(JJ)=MISSING
@@ -976,7 +976,7 @@
       FMIN=1D40
       FMAX=-1D40
       DO 600,I=1,NMAX
-      IF (FF1(I).NE.MISSING) THEN
+      IF (DABS(FF1(I)-MISSING).GT.1D-12) THEN
       IF (FF1(I).GT.FMAX) FMAX=FF1(I)
       IF (FF1(I).LT.FMIN) FMIN=FF1(I)
       END IF
@@ -1142,7 +1142,7 @@
         IF (NUMMER(II:II).EQ.' ') NUMMER(II:II)='0'
       END DO
       CALL PSMLEN(NUMMER,LAE,GRZ,SIZE)
-      IF (SID.EQ.-1.0D0) THEN
+      IF (DABS(SID+1.0D0).LT.1D-12) THEN
       XKOR=XX-SIZE-F3-GRZ/2.0D0
       ELSE
       XKOR=XX+F3+GRZ/2.0D0+FFF-SIZE
@@ -1268,17 +1268,17 @@
       THETA=0.0D0
 
       IF (ASYM.GT.2.9D0.AND.ASYM.LT.10.6D0) THEN
-      IF (FSYM.NE.SYM) THEN
+      IF (DABS(FSYM-SYM).GT.1D-12) THEN
       THETA=180.0D0/FSYM
       END IF
       CALL POLY(X,Y,ISYM,GRS2,THETA)
       RETURN
       END IF
 
-      IF (SYM.EQ.1.0D0) CALL VPPOINT(X,Y,GRS,1)
-      IF (SYM.EQ.-1.0D0) CALL VPPOINT(X,Y,GRS,-1)
-      IF (SYM.EQ.1.0D0) CALL SVGCIRCLE(X,Y,GRS,1)
-      IF (SYM.EQ.-1.0D0) CALL SVGCIRCLE(X,Y,GRS,-1)
+      IF (DABS(SYM-1.0D0).LT.1D-12) CALL VPPOINT(X,Y,GRS,1)
+      IF (DABS(SYM+1.0D0).LT.1D-12) CALL VPPOINT(X,Y,GRS,-1)
+      IF (DABS(SYM-1.0D0).LT.1D-12) CALL SVGCIRCLE(X,Y,GRS,1)
+      IF (DABS(SYM+1.0D0).LT.1D-12) CALL SVGCIRCLE(X,Y,GRS,-1)
 
       XP=X+GRS2
       XM=X-GRS2
@@ -1288,14 +1288,14 @@
       I1=1
       I2=0
 
-      IF (SYM.EQ.0.0D0) THEN
+      IF (DABS(SYM).LT.1D-12) THEN
        CALL SVGPATH(I1,I2)
        CALL VPMOVE(X,YM)
        CALL VPDRAW(X,YP)
        CALL VPSTROKE
        CALL SVGPATHEND
       END IF
-       IF (SYM.EQ.2.0D0) THEN
+       IF (DABS(SYM-2.0D0).LT.1D-12) THEN
        CALL SVGPATH(I1,I2)
        CALL VPMOVE(X,YP)
        CALL VPDRAW(X,YM)
@@ -1309,7 +1309,7 @@
       XMD=X-SQ2
       YPD=Y+SQ2
       YMD=Y-SQ2
-      IF (SYM.EQ.-2.0D0) THEN
+      IF (DABS(SYM+2.0D0).LT.1D-12) THEN
        CALL SVGPATH(I1,I2)
        CALL VPMOVE(XMD,YMD)
        CALL VPDRAW(XPD,YPD)
@@ -1318,7 +1318,7 @@
        CALL VPSTROKE
        CALL SVGPATHEND
       END IF
-      IF (SYM.EQ.11.0D0) THEN
+      IF (DABS(SYM-11.0D0).LT.1D-12) THEN
        CALL SVGPATH(I1,I2)
        CALL VPMOVE(XMD,YMD)
        CALL VPDRAW(XPD,YPD)
@@ -1331,7 +1331,7 @@
        CALL VPSTROKE
        CALL SVGPATHEND
       END IF
-      IF (SYM.EQ.12.0D0) THEN
+      IF (DABS(SYM-12.0D0).LT.1D-12) THEN
        CALL VPPOINT(X,Y,GRS,1)
        CALL SVGCIRCLE(X,Y,GRS,1)
        CALL SVGPATH(I1,I2)
@@ -1343,7 +1343,7 @@
        CALL VPSTROKE
        CALL SVGPATHEND
       END IF
-      IF (SYM.EQ.13.0D0) THEN
+      IF (DABS(SYM-13.0D0).LT.1D-12) THEN
        CALL SVGPATH(I1,I2)
        CALL VPMOVE(X,YM)
        CALL VPDRAW(X,YP)
@@ -1353,13 +1353,13 @@
        CALL VPSTROKE
        CALL SVGPATHEND
       END IF
-      IF (SYM.EQ.97.0D0) THEN
+      IF (DABS(SYM-97.0D0).LT.1D-12) THEN
        CALL SVGPATH(I1,I2)
        CALL VPMOVE(X,Y)
        CALL SVGPATHEND
        CALL GREYCDCH(X,Y,GRS)
       END IF
-      IF (SYM.EQ.99.0D0.OR.SYM.EQ.98.0D0) THEN
+      IF (DABS(SYM-99.0D0).LT.1D-12.OR.DABS(SYM-98.0D0).LT.1D-12) THEN
         CALL SVGPATH(I1,I2)
         CALL VPMOVE(X,YM)
         DO I=2,21
@@ -1369,7 +1369,7 @@
         END DO
         CALL VPSTROKE
         CALL SVGPATHEND
-        IF (SYM.EQ.98.0D0) THEN
+        IF (DABS(SYM-98.0D0).LT.1D-12) THEN
          CALL VPMOVE (X,Y)
          CALL VPTHERDOM(GRS)
          CALL SVGTHERDOM(X,Y,GRS)
@@ -1728,14 +1728,14 @@
 !!--- for ps
       IF (MAKEPS) THEN
 !
-      IF (GRS.EQ.0.0D0) RETURN
+      IF (DABS(GRS).LT.1D-12) RETURN
       IF (TEXT.EQ.' ') RETURN
       XI=GRS*1.3715D0
       CALL VPSTROKE
       WRITE(pst,1000) XI
  1000 FORMAT (F7.4,' ff ')
       CALL VPMOVE(X1,Y1)
-      IF (THETA.NE.0.0D0) THEN
+      IF (DABS(THETA).GT.1D-12) THEN
       WRITE (pst,1010) THETA
  1010 FORMAT (F9.3,' rotate')
       END IF
@@ -1782,7 +1782,7 @@
   500 CONTINUE
 !=====
       IF (I002.GE.I001) CALL SHOWTEX(TEXT,I001,I002)
-      IF (THETA.NE.0.0D0) THEN
+      IF (DABS(THETA).GT.1D-12) THEN
       WRITE (pst,1020) -THETA
  1020 FORMAT (F9.3,' rotate')
       END IF

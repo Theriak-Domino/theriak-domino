@@ -88,8 +88,8 @@
       COPHASE(3),ICH
 !*****
       progname='THERTER'
-      !vers='28.05.2022'
-      vers = _CURRBUILDNAME_
+      vers='whatever'
+!      vers = _CURRBUILDNAME_
       task='"Computation of ternary phase diagrams"'
       ierr=0
       CALL initialize('$THERTER-FILES',ierr)
@@ -328,7 +328,7 @@
       CALL TAXI(CH001,FORMUL)
       CALL CHEMIE(COMAY,NC,OXYDE,OXANZ,FORMUL,CHE)
       DO II=1,NC
-        IF (CHE(II).NE.0.0D0) I1=I1+1
+        IF (DABS(CHE(II)).GT.1D-12) I1=I1+1
         XXECK(I,II)=CHE(II)
       END DO
       IF (I1.EQ.0) THEN
@@ -540,7 +540,7 @@
       ECKCODE=0
       DO IROW=1,3
         IF (KOEFF(IROW)*KOEFF(4).GT.0.0D0) OUTCODE=1
-        IF (KOEFF(IROW).EQ.0.0D0) ECKCODE=ECKCODE+1
+        IF (DABS(KOEFF(IROW)).LT.1D-12) ECKCODE=ECKCODE+1
       END DO
       IF (OUTCODE.EQ.1) THEN
       WRITE (scr,2057) NAME(NUMMER(I))
@@ -622,7 +622,7 @@
        DO I=1,NEND(II)
         IF (.NOT.NULL(EM(II,I))) NICHT0=NICHT0+1
        END DO
-       IF (NICHT0.NE.0) THEN
+       IF (DABS(NICHT0).GT.1D-12) THEN
        CALL LABLA(SOLNAM(II),I001)
        NCOMIN=NCOMIN+1
        COMINS(NCOMIN)=SOLNAM(II)(1:I001)//': '//SOLINFO(II)
@@ -1122,7 +1122,7 @@
       IF (FF.GT.0.0D0) THEN
       KK3=KK3+1
       ELSE
-      IF (FF.EQ.0.0D0) GOTO 101
+      IF (DABS(FF).LT.1D-12) GOTO 101
       DO I=1,3
         XFF(I)=ZUG(KK1+1,I)
       END DO
@@ -1465,7 +1465,7 @@
 !.....
       NPOSNB=0
       DO I=1,3
-      IF (EMBULK(I).NE.0.0D0) NPOSNB=NPOSNB+1
+      IF (DABS(EMBULK(I)).GT.1D-12) NPOSNB=NPOSNB+1
       END DO
 !.....
       DO II=1,NC
@@ -1475,7 +1475,7 @@
       END DO
       MORE=.FALSE.
       DO I=1,NC
-        IF (CHE(I).EQ.0.0D0.NEQV.CHEM(I).EQ.0.0D0) MORE=.TRUE.
+        IF (DABS(CHE(I)).LT.1D-12.NEQV.DABS(CHEM(I)).LT.1D-12) MORE=.TRUE.
         CHEM(I)=CHE(I)
       END DO
       IF (MORE) THEN
@@ -1577,9 +1577,9 @@
       IIX=0
 !-----
       DO II=K,NUNORI
-        IF (XCORN(K,II).NE.0.0D0) IIX=II
+        IF (DABS(XCORN(K,II)).GT.1D-12) IIX=II
       END DO
-      IF (IIX.EQ.0.AND.EMBULK(K).NE.0.0D0) THEN
+      IF (IIX.EQ.0.AND.DABS(EMBULK(K)).GT.1D-12) THEN
       CALL SHOUTF
       WRITE (scr,3000)
       WRITE (out,3000)
@@ -1598,19 +1598,19 @@
       END DO
   100 CONTINUE
       F=XCORN(K,K)
-      IF (F.EQ.0.0D0) THEN
+      IF (DABS(F).LT.1D-12) THEN
       DO II=1,I001
         XCORN(II,K)=0.0D0
       END DO
       ELSE
       DO I=1,I001
-        IF (XCORN(I,K).NE.0.0D0) XCORN(I,K)=XCORN(I,K)/F
+        IF (DABS(XCORN(I,K)).GT.1D-12) XCORN(I,K)=XCORN(I,K)/F
       END DO
       DO I=1,NUNORI
         AR(I)=XCORN(K,I)
       END DO
       DO I=1,NUNORI
-        IF (I.NE.K.AND.AR(I).NE.0.0D0) THEN
+        IF (I.NE.K.AND.DABS(AR(I)).GT.1D-12) THEN
         DO II=1,I001
           XCORN(II,I)=XCORN(II,I)-XCORN(II,K)*AR(I)
           IF (DABS(XCORN(II,I)).LT.1D-12) XCORN(II,I)=0.0D0
@@ -1664,7 +1664,7 @@
       DO I=1,NUNORI
         SUM=SUM+XCORN(II,I)
       END DO
-      IF (SUM.NE.0.0D0) THEN
+      IF (DABS(SUM).GT.1D-12) THEN
       DO I=1,NUNORI
         XCORN(II,I)=XCORN(II,I)/SUM
       END DO
@@ -1746,7 +1746,7 @@
           END IF
   609     CONTINUE
         END DO
-        IF (WERT.NE.0.0D0) GOTO 611
+        IF (DABS(WERT).GT.1D-12) GOTO 611
       END DO
   611 CONTINUE
       IF (IIX.EQ.0.OR.IIY.EQ.0) RETURN

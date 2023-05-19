@@ -33,7 +33,7 @@
 !
       !To be removed once activi fully tested
       SUBROUTINE ACTIVI0(IS,XXX,AAA)
-      USE flags, only: PMINAAA, PMINXELSI, DOACT
+      USE flags, only: PMINAAA, PMINXELSI
       !ieee module only needed for testing purposes
       USE, INTRINSIC :: ieee_exceptions, only: ieee_get_flag, ieee_set_flag, &
                                                ieee_underflow, ieee_invalid 
@@ -226,7 +226,7 @@
 !-----
 !******************************
       SUBROUTINE MUECAL(IS,XXX,MUE)
-      USE flags, ONLY: PMINAAA, PMINXXX, PMINXELSI
+      USE flags, ONLY: PMINAAA, PMINXXX
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
 !-----END OF COMMON VARIABLES
@@ -365,7 +365,7 @@
       INCLUDE 'theriak.cmn'
 !-----END OF COMMON VARIABLES
       INTEGER(4) IS,IE,N,I001,J
-      REAL(8) XXX(EMAX),AAA(EMAX),RTA,F001, &
+      REAL(8) XXX(EMAX),AAA(EMAX),RTA, &
       SUMAX,SUMA,QI(EMAX),QIQI,MUE(EMAX),PRDA,AWG
 !-----
       RTA=RT*ALPHA(IS)

@@ -54,8 +54,8 @@
 !-----END OF COMMON VARIABLES
 !*****
       progname='THALIA'
-      !vers='28.05.2022'
-      vers = _CURRBUILDNAME_
+      vers='whatever'
+!      vers = _CURRBUILDNAME_
       task='"Calculation and plot of thermodynamic functions"'
       ierr=0
       CALL initialize('$THALIA-FILES',ierr)
@@ -305,7 +305,7 @@
 !-----
       CALL GELI(REC,XMINI)
       CALL GELI(REC,XMAXI)
-      IF (XMINI.EQ.XMAXI) THEN
+      IF (DABS(XMINI-XMAXI).LT.1D-12) THEN
       CALL SHOUTI
       WRITE (scr,1006)
  1006 FORMAT (//' XMINI is equal to XMAXI')
@@ -918,7 +918,7 @@
         FF1=FF1+XX1(I)
         FF2=FF2+XX2(I)
       END DO
-      IF (FF1.EQ.0.0D0.OR.FF2.EQ.0.0D0) THEN
+      IF (DABS(FF1).LT.1D-12.OR.DABS(FF2).LT.1D-12) THEN
       CALL SHOUTI
       WRITE (scr,1028)
  1028 FORMAT (' one of the phases is zero')
@@ -1382,7 +1382,7 @@
       END
 !-----
 !******************************
-      SUBROUTINE CALSTR
+      SUBROUTINE CALSTR2
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       INCLUDE 'files.cmn'
@@ -1422,11 +1422,11 @@
       CHARACTER(8) CH
       REAL(8) FF
       INTEGER(4) I,I1,I2,I3
-      IF (FF.EQ.0.0D0) RETURN
+      IF (DABS(FF).LT.1D-12) RETURN
       CALL LABLA(CH001,I1)
       CALL LABLA(CH8,I2)
 !-----
-      IF (FF.EQ.1.0D0) THEN
+      IF (DABS(FF-1.0D0).LT.1D-12) THEN
       CH001(I1+1:)=' '//CH8(1:I2)
       RETURN
       END IF

@@ -48,6 +48,9 @@
     1 READ (UNIT=99,FMT='(A)',END=888) CH001
       IF (CH001(1:6).EQ.'trans_') THEN
         CALL LABLA(CH001,I1)
+        
+        IF (CH001(I1:I1).EQ.'*') I1=I1-1
+        
         NDB=NDB+1
         DB(NDB)=CH001(7:I1)
 
@@ -179,3 +182,32 @@
       END
 !-----
 !******************************
+!-----
+!******************************
+      SUBROUTINE LOWUP(REC)
+      IMPLICIT NONE
+! ----
+      CHARACTER*(*) REC
+      CHARACTER(500) CH001   !250
+      CHARACTER(26) UPPER,LOWER
+      INTEGER(4) I1,I2,I,J
+      DATA UPPER /'ABCDEFGHIJKLMNOPQRSTUVWXYZ'/
+      DATA LOWER /'abcdefghijklmnopqrstuvwxyz'/
+! ----
+      CALL LABLA(REC,I1)
+      CH001=' '
+      I2=1
+      DO 500,I=1,I1
+      J=INDEX(LOWER,REC(I:I))
+      IF (J.EQ.0) THEN
+      CH001(I2:I2)=REC(I:I)
+      I2=I2+1
+      ELSE
+      CH001(I2:I2)=UPPER(J:J)
+      I2=I2+1
+      END IF
+  500 CONTINUE
+      REC=CH001
+      RETURN
+      END
+

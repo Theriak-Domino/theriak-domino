@@ -102,7 +102,7 @@
             END DO
             XXEM(EMNR(NUMMER(I)))=1.0D0
             CALL NEWPH(IS)
-            IF (G(I).NE.G(NMAX)) THEN
+            IF (DABS(G(I)-G(NMAX)).GT.1D-12) THEN
               WRITE (UNIT=6,FMT='(''Gi, Gnmax  '',1PE14.7,2X,1PE14.7)') &
                 G(I),G(NMAX)
             END IF
@@ -525,14 +525,14 @@
 !---- PRTLOG(9): print table
 !---- PRTLOG(11): print short table
       IF (PRTLOG(9).OR.PRTLOG(11)) THEN
-      CH16='n_'//CHTXT
+      CH16='n_'//CHTXT(1:LEN(CH16)-2)
       X16=XEM(I,II)*NN(I)
 !---- PRTLOG(9): print table
       IF (PRTLOG(9)) CALL SETTBL(CH16,X16)
-      CH16='x_'//CHTXT
+      CH16='x_'//CHTXT(1:LEN(CH16)-2)
       X16=XEM(I,II)
       CALL SETTBL(CH16,X16)
-      CH16='a_'//CHTXT
+      CH16='a_'//CHTXT(1:LEN(CH16)-2)
       X16=ACT
       CALL SETTBL(CH16,X16)
       END IF
@@ -545,7 +545,7 @@
 !      CH16='nSOL_'//CHTXT
 !      X16=XEM(I,II)*NN(I)
 !      CALL SETMAP(CH16,X16)
-      CH16='x_'//CHTXT
+      CH16='x_'//CHTXT(1:LEN(CH16)-2)
       X16=XEM(I,II)
       CALL SETMAP(CH16,X16)
 !      CH16='actSOL_'//CHTXT
@@ -675,8 +675,8 @@
       END IF
 !+++
 !---- for opx-kd
-      IF (MGM2.NE.0.0D0.AND.FEM1.NE.0.0D0.AND. &
-      MGM1.NE.0.0D0.AND.FEM2.NE.0.0D0) THEN
+      IF (DABS(MGM2).GT.1D-12.AND.DABS(FEM1).GT.1D-12.AND. &
+      DABS(MGM1).GT.1D-12.AND.DABS(FEM2).GT.1D-12) THEN
       OPXKD=DLOG(FEM2*MGM1/(MGM2*FEM1))
       IF (DRU) THEN
       WRITE (scr,115) OPXKD
@@ -703,15 +703,15 @@
       END IF
 !10-B-
       IF (DRU) THEN
-      IF (MGFE(I).NE.0.0D0.AND.MGFE(I).NE.1.0D0) THEN
+      IF (DABS(MGFE(I)).GT.1D-12.AND.DABS(MGFE(I)-1.0D0).GT.1D-12) THEN
        WRITE (UNIT=scr,FMT='(29X,''Mg/(Fe+Mg)  ='',F9.6)') MGFE(I)
        WRITE (UNIT=out,FMT='(29X,''Mg/(Fe+Mg)  ='',F9.6)') MGFE(I)
       END IF
-      IF (SIPFU(I).NE.0) THEN
+      IF (DABS(SIPFU(I)).GT.1D-12) THEN
        WRITE (UNIT=scr,FMT='(29X,''Si(pfu)     ='',F9.6)') SIPFU(I)
        WRITE (UNIT=out,FMT='(29X,''Si(pfu)     ='',F9.6)') SIPFU(I)
       END IF
-      IF (ALPFU(I).NE.0) THEN
+      IF (DABS(ALPFU(I)).GT.1D-12) THEN
        WRITE (UNIT=scr,FMT='(29X,''Al(pfu)     ='',F9.6)') ALPFU(I)
        WRITE (UNIT=out,FMT='(29X,''Al(pfu)     ='',F9.6)') ALPFU(I)
       END IF
@@ -923,19 +923,19 @@
       F002=0.0D0
       DO 700,I=1,NUN2
       IF (ISASOLID(I)) THEN
-      IF (VOLSOL.EQ.0.0D0) THEN
+      IF (DABS(VOLSOL).LT.1D-12) THEN
       VPRO=0.0D0
       ELSE
       VPRO=VOLPH(I)/VOLSOL*100.0D0
       END IF
       F001=F001+VPRO
-      IF (WTSOL.EQ.0.0D0) THEN
+      IF (DABS(WTSOL).LT.1D-12) THEN
       WPRO=0.0D0
       ELSE
       WPRO=WTPH(I)/WTSOL*100.0D0
       END IF
       F002=F002+WPRO
-      IF (VOLPH(I).EQ.0.0D0) THEN
+      IF (DABS(VOLPH(I)).LT.1D-12) THEN
       DENS=0.0D0
       DENS2=0.0D0
       ELSE
@@ -973,27 +973,27 @@
 !      END IF
 !wien09      CHTXT=STPHNAM(I)
       CHTXT=SHORTNAM(I)
-      CH16='mvol_'//CHTXT
+      CH16='mvol_'//CHTXT(1:LEN(CH16)-5)
       X16=VOLM(I)
       CALL SETTBL(CH16,X16)
-      CH16='V_'//CHTXT
+      CH16='V_'//CHTXT(1:LEN(CH16)-2)
       X16=VOLPH(I)
       CALL SETTBL(CH16,X16)
-      CH16='rho_'//CHTXT
+      CH16='rho_'//CHTXT(1:LEN(CH16)-4)
       X16=DENS
       CALL SETTBL(CH16,X16)
-      IF (MGFE(I).NE.0.0D0) THEN
-      CH16='Mg#_'//CHTXT
+      IF (DABS(MGFE(I)).GT.1D-12) THEN
+      CH16='Mg#_'//CHTXT(1:LEN(CH16)-4)
       X16=MGFE(I)
       CALL SETTBL(CH16,X16)
       END IF
-      IF (SIPFU(I).NE.0.0D0) THEN
-      CH16='Si_pfu_'//CHTXT
+      IF (DABS(SIPFU(I)).GT.1D-12) THEN
+      CH16='Si_pfu_'//CHTXT(1:LEN(CH16)-7)
       X16=SIPFU(I)
       CALL SETTBL(CH16,X16)
       END IF
-      IF (ALPFU(I).NE.0.0D0) THEN
-      CH16='Al_pfu_'//CHTXT
+      IF (DABS(ALPFU(I)).GT.1D-12) THEN
+      CH16='Al_pfu_'//CHTXT(1:LEN(CH16)-7)
       X16=ALPFU(I)
       CALL SETTBL(CH16,X16)
       END IF
@@ -1015,24 +1015,24 @@
 !      CH16='mvol_'//CHTXT
 !      X16=VOLM(I)
 !      CALL SETMAP(CH16,X16)
-      CH16='vol_'//CHTXT
+      CH16='vol_'//CHTXT(1:LEN(CH16)-4)
       X16=VOLPH(I)
       CALL SETMAP(CH16,X16)
-      CH16='rho_'//CHTXT
+      CH16='rho_'//CHTXT(1:LEN(CH16)-4)
       X16=DENS
       CALL SETMAP(CH16,X16)
-      IF (MGFE(I).NE.0.0D0) THEN
-      CH16='Mg#_'//CHTXT
+      IF (DABS(MGFE(I)).GT.1D-12) THEN
+      CH16='Mg#_'//CHTXT(1:LEN(CH16)-4)
       X16=MGFE(I)
       CALL SETMAP(CH16,X16)
       END IF
-      IF (SIPFU(I).NE.0.0D0) THEN
-      CH16='Si_pfu_'//CHTXT
+      IF (DABS(SIPFU(I)).GT.1D-12) THEN
+      CH16='Si_pfu_'//CHTXT(1:LEN(CH16)-7)
       X16=SIPFU(I)
       CALL SETMAP(CH16,X16)
       END IF
-      IF (ALPFU(I).NE.0.0D0) THEN
-      CH16='Al_pfu_'//CHTXT
+      IF (DABS(ALPFU(I)).GT.1D-12) THEN
+      CH16='Al_pfu_'//CHTXT(1:LEN(CH16)-7)
       X16=ALPFU(I)
       CALL SETMAP(CH16,X16)
       END IF
@@ -1040,7 +1040,7 @@
 !*****
       END IF
   700 CONTINUE
-      IF (VOLSOL.EQ.0.0D0) THEN
+      IF (DABS(VOLSOL).LT.1D-12) THEN
       F003=0.0D0
       ELSE
       F003=WTSOL/VOLSOL
@@ -1079,7 +1079,7 @@
 !10-B-
       DO 710,I=1,NUN2
       IF (.NOT.ISASOLID(I)) THEN
-      IF (VOLPH(I).EQ.0.0D0) THEN
+      IF (DABS(VOLPH(I)).LT.1D-12) THEN
       DENS=0.0D0
       DENS2=0.0D0
       ELSE
@@ -1096,7 +1096,7 @@
 !---- und jetzt alles mit dG/dP
       IF (VCHECK) THEN
       IF (DABS(VOLM(I)-VOLM2(I)).GT.1D-6) THEN
-       IF (VOLPH2(I).EQ.0.0D0) THEN
+       IF (DABS(VOLPH2(I)).LT.1D-12) THEN
         DENS2=0.0D0
        ELSE
         DENS2=WTPH(I)/VOLPH2(I)
@@ -1122,13 +1122,13 @@
 !      END IF
 !wien09      CHTXT=STPHNAM(I)
       CHTXT=SHORTNAM(I)
-      CH16='mvol_'//CHTXT
+      CH16='mvol_'//CHTXT(1:LEN(CH16)-5)
       X16=VOLM(I)
       CALL SETTBL(CH16,X16)
-      CH16='V_'//CHTXT
+      CH16='V_'//CHTXT(1:LEN(CH16)-2)
       X16=VOLPH(I)
       CALL SETTBL(CH16,X16)
-      CH16='rho_'//CHTXT
+      CH16='rho_'//CHTXT(1:LEN(CH16)-4)
       X16=DENS
       CALL SETTBL(CH16,X16)
       END IF
@@ -1149,10 +1149,10 @@
 !      CH16='mvol_'//CHTXT
 !      X16=VOLM(I)
 !      CALL SETMAP(CH16,X16)
-      CH16='vol_'//CHTXT
+      CH16='vol_'//CHTXT(1:LEN(CH16)-4)
       X16=VOLPH(I)
       CALL SETMAP(CH16,X16)
-      CH16='rho_'//CHTXT
+      CH16='rho_'//CHTXT(1:LEN(CH16)-4)
       X16=DENS
       CALL SETMAP(CH16,X16)
       END IF
@@ -1189,7 +1189,7 @@
 !-----
       DO 750,I=1,NUN2
       IF (ISASOLID(I).AND.(H2OM(I).GT.0.0D0)) THEN
-      IF (WTPH(I).EQ.0.0D0) THEN
+      IF (DABS(WTPH(I)).LT.1D-12) THEN
       F001=0.0D0
       ELSE
       F001=WTH2O(I)/WTPH(I)*100.0D0
@@ -1220,10 +1220,10 @@
 !      END IF
 !wien09      CHTXT=STPHNAM(I)
       CHTXT=SHORTNAM(I)
-      CH16='n_H2O_'//CHTXT
+      CH16='n_H2O_'//CHTXT(1:LEN(CH16)-6)
       X16=H2OPH(I)
       CALL SETTBL(CH16,X16)
-      CH16='wt_H2O_'//CHTXT
+      CH16='wt_H2O_'//CHTXT(1:LEN(CH16)-7)
       X16=WTH2O(I)
       CALL SETTBL(CH16,X16)
       END IF
@@ -1241,10 +1241,10 @@
 !      END IF
 !wien09      CHTXT=STPHNAM(I)
       CHTXT=SHORTNAM(I)
-      CH16='n_H2O_'//CHTXT
+      CH16='n_H2O_'//CHTXT(1:LEN(CH16)-6)
       X16=H2OPH(I)
       CALL SETMAP(CH16,X16)
-      CH16='wt_H2O_'//CHTXT
+      CH16='wt_H2O_'//CHTXT(1:LEN(CH16)-7)
       X16=WTH2O(I)
       CALL SETMAP(CH16,X16)
       END IF
@@ -1287,7 +1287,7 @@
 !-----
       DO 752,I=1,NUN2
       IF (.NOT.ISASOLID(I).AND.(H2OM(I).GT.0.0D0)) THEN
-      IF (WTPH(I).EQ.0.0D0) THEN
+      IF (DABS(WTPH(I)).LT.1D-12) THEN
       F001=0.0D0
       ELSE
       F001=WTH2O(I)/WTPH(I)*100.0D0
@@ -1316,10 +1316,10 @@
 !      END IF
 !wien09      CHTXT=STPHNAM(I)
       CHTXT=SHORTNAM(I)
-      CH16='n_H2O_'//CHTXT
+      CH16='n_H2O_'//CHTXT(1:LEN(CH16)-6)
       X16=H2OPH(I)
       CALL SETTBL(CH16,X16)
-      CH16='wt_H2O_'//CHTXT
+      CH16='wt_H2O_'//CHTXT(1:LEN(CH16)-7)
       X16=WTH2O(I)
       CALL SETTBL(CH16,X16)
       END IF
@@ -1337,10 +1337,10 @@
 !      END IF
 !wien09      CHTXT=STPHNAM(I)
       CHTXT=SHORTNAM(I)
-      CH16='n_H2O_'//CHTXT
+      CH16='n_H2O_'//CHTXT(1:LEN(CH16)-6)
       X16=H2OPH(I)
       CALL SETMAP(CH16,X16)
-      CH16='wt_H2O_'//CHTXT
+      CH16='wt_H2O_'//CHTXT(1:LEN(CH16)-7)
       X16=WTH2O(I)
       CALL SETMAP(CH16,X16)
       END IF
@@ -1654,7 +1654,7 @@
         IF (OXNUM(NUMMER(I)).GT.0.0D0) THEN
           INTX=IDINT(OXNUM(NUMMER(I)))
           RINTX=REAL(INTX)
-          IF (RINTX.NE.OXNUM(NUMMER(I))) THEN 
+          IF (DABS(RINTX-OXNUM(NUMMER(I))).GT.1D-12) THEN 
             NELINC(NEL)=2.0D0*NELINC(NEL)
             NOINC(NEL)=2.0D0*NOINC(NEL)
           END IF
@@ -1688,7 +1688,7 @@
         ELSE
           CH2=' '
         END IF
-        IF (NOINC(I).NE.0.0D0) THEN
+        IF (DABS(NOINC(I)).GT.1D-12) THEN
          CH3='O'
          IF (NOINC(I).GT.1.0D0) THEN
            INTX=IDINT(NOINC(I))
@@ -1720,7 +1720,7 @@
 !! 3020 FORMAT (32X,'------------',8X,'------------',/, &
 !!      32X,1PE12.5,5X,0P,F15.2)
 !
-      IF (OREMAIN.NE.0.0D0) THEN
+      IF (DABS(OREMAIN).GT.1D-12) THEN
         FF(NLEOX)=G(LEOX)*2.0D0
 !!        WRITE (UNIT=scr,FMT=3025) 'O',OREMAIN, &
 !!        G(LEOX)*OREMAIN,G(LEOX)*OREMAIN,FF(NLEOX)
@@ -1826,7 +1826,7 @@
         IF (OXNUM(NUMMER(I)).GT.0.0D0) THEN
           INTX=IDINT(OXNUM(NUMMER(I)))
           RINTX=REAL(INTX)
-          IF (RINTX.NE.OXNUM(NUMMER(I))) THEN 
+          IF (DABS(RINTX-OXNUM(NUMMER(I))).GT.1D-12) THEN 
             NELINC(NEL)=2.0D0*NELINC(NEL)
             NOINC(NEL)=2.0D0*NOINC(NEL)
           END IF
@@ -1848,7 +1848,7 @@
         ELSE
           CH2=' '
         END IF
-        IF (NOINC(I).NE.0.0D0) THEN
+        IF (DABS(NOINC(I)).GT.1D-12) THEN
          CH3='O'
          IF (NOINC(I).GT.1.0D0) THEN
            INTX=IDINT(NOINC(I))
@@ -1872,7 +1872,7 @@
       END DO
       COMPNAME(NLEOX)='"o2"'
 !
-      IF (OREMAIN.NE.0.0D0) THEN
+      IF (DABS(OREMAIN).GT.1D-12) THEN
         FF(NLEOX)=G(LEOX)*2.0D0
         SUMOFG=SUMOFG+G(LEOX)*OREMAIN
       END IF
@@ -2318,7 +2318,7 @@
       COMMON /LOSOLID/ ISASOLID
 !-----END OF COMMON VARIABLES
       INTEGER(4) I,II,IS,N,IELO,IELH,IELFE,IELMG,IELSI,IELAL,I2,IPH, &
-      IE,IK,ILX,IX1
+      IE,IK,ILX
       REAL(8) XM,SJ,X16,FFE,FMG,FF,DG1,DG2,PVOR,DXP
       CHARACTER(16) TEXT(COMAX)
       CHARACTER(32) CH16
@@ -2448,7 +2448,7 @@
 !-----
       IF (IELFE.NE.0) FFE=X(I,IELFE)
       IF (IELMG.NE.0) FMG=X(I,IELMG)
-      IF ((FFE+FMG).NE.0.0D0) THEN
+      IF (DABS(FFE+FMG).GT.1D-12) THEN
         MGFE(I)=FMG/(FFE+FMG)
       ELSE
         MGFE(I)=0.0D0
@@ -2489,7 +2489,7 @@
   600 CONTINUE
 !*****
 !---- next line added 040606
-      IF (VOLSOL.NE.0.0D0) THEN
+      IF (DABS(VOLSOL).GT.1D-12) THEN
 !---- PRTLOG(9): print table
       IF (PRTLOG(9)) THEN
       CH16='V_solids'
@@ -2788,7 +2788,7 @@
         IF (VERGL(CHNAME(I),'FE')) IFE=I
        END DO
        FF=X(IP,IMG)+X(IP,IFE)
-       IF (FF.NE.0.0D0) THEN
+       IF (DABS(FF).GT.1D-12) THEN
         IF (VERGL(VDEF,'MG#')) WERT=X(IP,IMG)/FF/FMF
         IF (VERGL(VDEF,'FE#')) WERT=X(IP,IFE)/FF/FMF
        END IF
@@ -3943,7 +3943,7 @@
           END IF
   609     CONTINUE
         END DO
-        IF (WERT.NE.0.0D0) GOTO 611
+        IF (DABS(WERT).GT.1D-12) GOTO 611
       END DO
   611 CONTINUE
       IF (IX.EQ.0.OR.IY.EQ.0) RETURN
@@ -4027,7 +4027,7 @@
       INTEGER(4) I1,I2,I,J,I3
       CH001=' '
       DO I=1,NUN
-      IF (BULK(I).NE.0.0D0) THEN
+      IF (DABS(BULK(I)).GT.1D-12) THEN
       WRITE (UNIT=CH20,FMT='(F20.10)') BULK(I)
 !---
       CALL ZAHL(CH20,I1,I2)

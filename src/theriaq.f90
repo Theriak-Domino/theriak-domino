@@ -73,8 +73,8 @@
 !----
       INTEGER(4) ierr,j
       progname='THERIAQ'
-      !vers='28.05.2022'
-      vers = _CURRBUILDNAME_
+      vers='whatever'
+!      vers = _CURRBUILDNAME_
       task='"Computation of aqueous equilibriua"'
       call initialize('$THERIAQ-FILES',ierr)
       if(ierr.ne.0) STOP

@@ -734,7 +734,7 @@
       CRR(II)=CRR(II)-CRR(PIV)*F1
       DO I=1,N
         ARR(II,I)=ARR(II,I)-ARR(PIV,I)*F1
-        IF (RTEST.NE.0.0D0) THEN
+        IF (DABS(RTEST).GT.1D-12) THEN
         IF (DABS(ARR(II,I)).LE.RTEST) ARR(II,I)=0.0D0
         END IF
       END DO

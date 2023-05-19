@@ -82,8 +82,8 @@
       INFODA=.FALSE.
 !***** 
       progname='PLOTXY'
-      !vers='28.05.2022'
-      vers = _CURRBUILDNAME_
+      vers='whatever'
+!      vers = _CURRBUILDNAME_
       task='"XY-plots from tables of variables"'
 !      EINS=1
       ierr=0
@@ -368,7 +368,7 @@
         XXSUM(IXX,NXSUM(IXX))=I1
         XMAPDIV(IXX,I)=FF
         XMAPDIVCH(IXX,I)=CH16
-        IF (FF.EQ.0.0D0) NXSUM(IXX)=NXSUM(IXX)-1
+        IF (DABS(FF).LT.1D-12) NXSUM(IXX)=NXSUM(IXX)-1
         IF (I2.EQ.0) GOTO 50
        END DO
    50 CONTINUE
@@ -386,7 +386,7 @@
         YYSUM(IYY,NYSUM(IYY))=I1
         YMAPDIV(IYY,I)=FF
         YMAPDIVCH(IYY,I)=CH16
-        IF (FF.EQ.0.0D0) NYSUM(IYY)=NYSUM(IYY)-1
+        IF (DABS(FF).LT.1D-12) NYSUM(IYY)=NYSUM(IYY)-1
         IF (I2.EQ.0) GOTO 51
        END DO
    51 CONTINUE
@@ -522,18 +522,18 @@
  3000 FORMAT (' MULTI ',I5)
       END IF
 !+
-      IF (XMINI.EQ.XMAXI) THEN
+      IF (DABS(XMINI-XMAXI).LT.1D-12) THEN
        XMINI=XMINI*0.9D0
        XMAXI=XMAXI*1.1D0
-       IF (XMINI.EQ.0.0D0) THEN
+       IF (DABS(XMINI).LT.1D-12) THEN
         XMINI=-1.0D0
         XMAXI=1.0D0
        END IF
       END IF
-      IF (YMINI.EQ.YMAXI) THEN
+      IF (DABS(YMINI-YMAXI).LT.1D-12) THEN
        YMINI=YMINI*0.9D0
        YMAXI=YMAXI*1.1D0
-       IF (YMINI.EQ.0.0D0) THEN
+       IF (DABS(YMINI).LT.1D-12) THEN
         YMINI=-1.0D0
         YMAXI=1.0D0
        END IF
@@ -672,6 +672,9 @@
       ANGE=0.0D0
       I1=0
       IM=NROW/2
+      
+      IF (IM.LT.1) IM=1
+      
 !-----
       write(plt,2025) XLIN(IM,NL),YMINI,SIZLAB,ANGE,I1,BLANK
       write(plt,2025) XLIN(IM,NL),YMAXI,SIZLAB,ANGE,I1,LINTEX(NL)

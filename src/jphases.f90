@@ -55,8 +55,8 @@
       CHARACTER(500) XLINE
 !--
       progname='jphases'
-      !vers='28.05.2022'
-      vers = _CURRBUILDNAME_
+      vers='whatever'
+!      vers = _CURRBUILDNAME_
       task='"read/write files in javathings/..."'
 !-----
       LARG=0
@@ -140,7 +140,7 @@
 !---------------------------
       OPEN (UNIT=40,FILE='javathings'//dir//'lastdb',STATUS='OLD')
       READ (UNIT=40,FMT='(A)') CH001
-      filename(dbs)=CH001
+      filename(dbs)=CH001(1:LEN(filename(dbs)))
       CLOSE (UNIT=40)
 !------------------
 !     open UNIT=dbs

@@ -54,8 +54,8 @@
 !*****
       CALL CPUTIME(ZEITSTRING)
       progname='THERMO'
-      !vers='28.05.2022'
-      vers = _CURRBUILDNAME_
+      vers='whatever'
+!      vers = _CURRBUILDNAME_
       task='"Computation of thermodynamic functions"'
       ierr=0
       call initialize('$THERMO-FILES',ierr)
@@ -414,7 +414,7 @@
       IF (COM) THEN
       DO I=1,NCOM
         FG=FFCOM(I)*GGK(ICOM(I))
-        IF (FG.EQ.0.0D0) THEN
+        IF (DABS(FG).LT.1D-12) THEN
           WRITE (6,1010) NAME(ICOM(I)),FFCOM(I)
           WRITE (out,1010) NAME(ICOM(I)),FFCOM(I)
  1010 FORMAT ('ADD:',9X,'????????????',3X, &
@@ -447,7 +447,7 @@
  1025 FORMAT (' TOTAL:',5X,F13.3,' [Cal/mol] ', &
       '(relative to G0, as in supcrt)')
 !
-      IF (TC.EQ.5025) THEN
+      IF (DABS(TC-5025.0D0).LT.1D-12) THEN
       WRITE (UNIT=6,FMT='(''PTH = '',1PE15.7)') FSPEC(1)
       WRITE (UNIT=6,FMT='(''a   = '',1PE15.7)') FSPEC(2)
       WRITE (UNIT=6,FMT='(''b   = '',1PE15.7)') FSPEC(3)

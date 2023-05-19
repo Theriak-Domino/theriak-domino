@@ -441,8 +441,8 @@
       !nasty message to convince user
       IF(BB*PTH.GE.1.0D0) THEN
         PTH=(1.0D0-EPSILON(0.0D0))/BB
-        WRITE(UNIT=6,FMT='(" - The V EOS has failed for member ",A,&
-          &". You should deactivate",/,"   the phase that contains" &
+        WRITE(UNIT=6,FMT='('' - The V EOS has failed for member '',A, &
+          &". You should deactivate",/,"   the phase that contains", &
           &" this component at these temperatures. biotite??")') trim(NAME(IP))
       END IF
       !
@@ -577,7 +577,7 @@
         IF(BB*PTH.GE.1.0D0) THEN !liq case will be 0.0, so ok
           PTH=(1.0D0-EPSILON(0.0D0))/BB  
           WRITE(UNIT=6,FMT='(" - The V EOS has failed for member ",A,&
-            &". You should deactivate",/,"   the phase that contains" &
+            &". You should deactivate",/,"   the phase that contains", &
             &" this component at these temperatures. biotite??")') trim(NAME(IP))
         END IF
         !

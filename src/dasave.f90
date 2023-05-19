@@ -48,9 +48,10 @@
         INDATA(I+4,N)=ICOM(I)
       END DO
 !-----
-!--- Achtung: Domino verwendet REDATA(3,I) fuer Aktivitaeten. Index nicht aendern!!!
-!--- Achtung: Theriaq verwendet REDATA(3,I) fuer Aktivitaeten. Index nicht aendern!!!
-!--- Achtung: prtcal verwendet REDATA(4,..) Index nicht aendern!!!
+!--- Achtung: Domino verwendet REDATA(3,I) (S0R fuer Aktivitaeten. Index nicht aendern!!!
+!--- Achtung: Theriaq verwendet REDATA(3,I) (S0R) fuer Aktivitaeten. Index nicht aendern!!!
+!--- Achtung: prtcal verwendet REDATA(4,..) (V0R) Index nicht aendern!!!
+!--- Achtung: therion verwendet REDATA(4,..) (V0R) Index nicht aendern!!!
       REDATA(1,N)=G0R
       REDATA(2,N)=H0R
       REDATA(3,N)=S0R
