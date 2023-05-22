@@ -915,11 +915,6 @@
       G(I)=GG(NUMMER(I))
 
       END IF
-
-
-
-!==
-!==
 !
 !      cdc 2020.06.17. do not do that check
 !
@@ -961,10 +956,6 @@
 !==
 !==
   520 CONTINUE
-
-
-
-
 
 !+++++
       RETURN
@@ -1575,6 +1566,7 @@
 !      INTEGER(4) II,I001,IC
       REAL(8) XXSC(EMAX),GSC,FF,MUE2(EMAX),MUE0(EMAX),GG0,GAIN
 !      REAL(8) AR001(EMAX),AR002(EMAX)
+      LOGICAL(4) L001,L002
 !-----
       PROB=0
 !+++++ below added for security
@@ -1680,11 +1672,16 @@
         FF=FF+DABS(MUE0(I)-GG0)
       END DO
       FF=FF/DBLE(N0)
+      IF (TEST.LT.0.0D0) THEN
+        WRITE (UNIT=scr,FMT='(''  average gradient  ='',1PE15.8)') FF
+      END IF
 !---------------------------------------------------
 !23MAI2022 don't if ideal solution !!! (was 1D5)
 !18Mai2023 don't if ideal+Margules (set to 1D7)
 !---------------------------------------------------
-      IF (FF.GT.1D7.AND.SUGCOD(0).NE.'idmn') THEN
+!      IF (FF.GT.1D6.AND.SUGCOD(0).NE.'idmn') THEN
+      L001=FF.GT.1D7.AND.MODELL(IS).EQ.'S'
+      IF (L001) THEN
 !==
 !     ridiculous phases are nowhere close to a minimum
 !     with a huge gradient, but are stuck in the minimization
@@ -2437,7 +2434,7 @@
       IF (TEST.LT.0.0D0) THEN
         WRITE (scr,536) DISTA,GSOL-REFG0,GNOM-GNOMSOFAR
         WRITE (out,536) DISTA,GSOL-REFG0,GNOM-GNOMSOFAR
-  536 FORMAT (' delta x :',1PE12.5,'  delta G: ',1PE12.5, &
+  536 FORMAT ('  1 delta x :',1PE12.5,'  delta G: ',1PE12.5, &
       4X,'GCALC = ',I8)
       END IF
       DO I001=1,NEND(IS)
@@ -2563,7 +2560,7 @@
         CALL GNONID(IS,XXSC,F001)
         WRITE (scr,715) DISTA,F001-REFG,GNOM-GNOMSOFAR
         WRITE (out,715) DISTA,F001-REFG,GNOM-GNOMSOFAR
-  715 FORMAT (' delta x :',1PE12.5,'  delta G: ',1PE12.5, &
+  715 FORMAT ('  2 delta x :',1PE12.5,'  delta G: ',1PE12.5, &
       4X,'GCALC = ',I8)
       END IF
       GNOMSOFAR=GNOM
@@ -2629,7 +2626,7 @@
         CALL GNONID(IS,XXSC,F001)
         WRITE (scr,716) DISTA,F001-REFG,GNOM-GNOMSOFAR
         WRITE (out,716) DISTA,F001-REFG,GNOM-GNOMSOFAR
-  716 FORMAT (' delta x :',1PE12.5,'  delta G: ',1PE12.5, &
+  716 FORMAT ('  3 delta x :',1PE12.5,'  delta G: ',1PE12.5, &
       4X,'GCALC = ',I8)
       END IF
       GNOMSOFAR=GNOM
@@ -3298,7 +3295,7 @@
         DIFF=X2(I)-X1(I)
         DISTA=DISTA+DIFF*DIFF
       END DO
-      DISTA=DSQRT(DISTA)
+      DISTA=DSQRT(DISTA)/DFLOAT(NEND(IS))
       RETURN
       END
 !-----

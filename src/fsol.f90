@@ -991,7 +991,7 @@
 !   4  Mg-tscher_pyrox     Al - Mg - Al,Si       1.0   0   0
 !   5  fopx                F3 - Mg - Al,Si       1.0   0   0
 !   6  Mn-Opx              Mn - Mn - Si,Si       1.0   0   0
-!   7  Orthodiopside       Mg - Ca - Si,Si       1.2   0   0
+!   7  orthodiopside       Mg - Ca - Si,Si       1.2   0   0
 !
       MGM1=X(1)+X(3)+x(7)
       FEM1=X(2)

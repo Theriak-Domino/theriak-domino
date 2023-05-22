@@ -177,5 +177,11 @@ chtp.o : chtp.$(SEX)
 chtp : chtp.o hprogs.o
 	$(COMP90) -o chtp chtp.o hprogs.o 
 
+chid.o : chid.$(SEX)
+	$(COMP90) -c chid.$(SEX)
+
+chid : chid.o hprogs.o
+	$(COMP90) -o chid chid.o hprogs.o 
+
 
 
