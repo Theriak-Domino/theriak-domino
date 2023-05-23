@@ -2683,9 +2683,9 @@
       CHARACTER*(*) TEXT
       CHARACTER(1) A1
       REAL(8) X1,Y1,GRS,THETA,XI
-      INTEGER(4) I,I1,CODE,I001,I002,LL,J1,J2,J3
+      INTEGER(4) I,I1,CODE,I001,I002,LL,J1,J2,J3,J4
       CHARACTER(LEN=10)  :: STR1, STR2, STR3, STR4, STR5, STR6
-      CHARACTER(LEN=300) :: FULLSTR
+      CHARACTER(LEN=300) :: FULLSTR,TE
 !====
 !!--- for ps
       IF (MAKEPS) THEN
@@ -2758,9 +2758,15 @@
       CALL LABLA(SVGSTRO,J1)
       CALL LABLA(TEXT,J2)
 
-      DO I=1,J2
-       IF (TEXT(I:I).EQ.'&') TEXT(I:I)=' '
-      END DO
+      J4=INDEX(TEXT,'&')
+      IF (J4.NE.0) THEN
+        TE=TEXT(1:J4-1)//'&amp;'//TEXT(J4+1:)
+        CALL LABLA(TE,J2)
+        TEXT=TE(1:J2)
+      END IF
+!      DO I=1,J2
+!       IF (TEXT(I:I).EQ.'&') TEXT(I:I)=' '
+!      END DO
 
       CALL LABLA(SVGFONT,J3)
       WRITE(STR1,FMT='(F10.4)') (X1+X0)*CMPX

@@ -446,7 +446,7 @@
       CHARACTER(500) CH500
       INTEGER(4) COMAY,I,J,I1,I2,I001,I002,IC,NFEHL,FICOM,NCOMPS, &
       EXONE,I3,I4,I5,PLNR,ISU,IO,NFOLD
-      REAL(8) FF,FF2, &
+      REAL(8) FF,FF2,YPOS, &
       ZERO,F1,F2,F3,F4,PLCONST,MODE(3),CHEM2(COMAX),CHEM3(3,COMAX)
 !-----
 !---- UNIT=1-25 reserviert
@@ -566,7 +566,27 @@
 !        WRITE (UNIT=6,FMT='(''FDELETE'',I3,2X,L4)') I,FDELETE(I)
 !      END DO
 
-!----
+! make a list of colors
+
+      NCOLORS=6
+      DO I=1,20
+        LCOLOR(I)=' '
+        FCOLOR(I)=' '
+      END DO
+      LCOLOR(1)='LCOLOR   0   0   0'
+      FCOLOR(1)='FCOLOR   0   0   0'
+      LCOLOR(2)='LCOLOR   1   0   0'
+      FCOLOR(2)='FCOLOR   1   0   0'
+      LCOLOR(3)='LCOLOR   0   1   0'
+      FCOLOR(3)='FCOLOR   0   1   0'
+      LCOLOR(3)='LCOLOR   0   0   1'
+      FCOLOR(3)='FCOLOR   0   0   1'
+      LCOLOR(4)='LCOLOR   0   1   1'
+      FCOLOR(4)='FCOLOR   0   1   1'
+      LCOLOR(5)='LCOLOR   1   1   0'
+      FCOLOR(5)='FCOLOR   1   1   0'
+      LCOLOR(6)='LCOLOR   1   0   1'
+      FCOLOR(6)='FCOLOR   1   0   1'
 !----
       DO I=1,6
        CHLINE(I)=' '
@@ -812,7 +832,7 @@
       ELSE
         WRITE (UNIT=6,FMT='(''     REAID is equal'',a,''  new dir '',a)') REAID(1:I1),NEWDIR(1:LDIR)
       END IF
-      WRITE (UNIT=6,FMT='(//,'' NEWDIR IS '',A,//)') NEWDIR(1:LDIR)
+!!      WRITE (UNIT=6,FMT='(//,'' NEWDIR IS '',A,//)') NEWDIR(1:LDIR)
 !------------------------------------------
 !
       IF (ISU.EQ.0) THEN
@@ -887,6 +907,8 @@
        IF (I3.GT.1) I2=I3-1
        TABAUT=CH002(1:I2)
        REFER=TABAUT
+       NPLAUT=1
+       PLAUT(1)=REFER
        TABBUL=' '
        TABPHA=' '
        NPLOTS=0
@@ -937,12 +959,21 @@
        IF (I3.GT.1) I2=I3-1
        TABAUT=CH002(1:I2)
        REFER=TABAUT
+       NPLAUT=NPLAUT+1
+       PLAUT(NPLAUT)=REFER
        TABBUL=' '
        TABPHA=' '
        REAOK=.FALSE.
        NEXP=0
        NINC=0
        EXPER='no experiments'
+!
+       IF (PLAUT(NPLAUT).EQ.PLAUT(NPLAUT-1)) THEN
+       NPLAUT=NPLAUT-1
+       ELSE
+         CALL PLOTAUT
+       END IF
+!
       END IF
 !======================================================================
 !======================================================================
@@ -978,7 +1009,9 @@
       END IF
 !======================================================================
 !======================================================================
-      IF (VERGL(KEYWORD,'REAID')) THEN         
+      L001=VERGL(KEYWORD,'REAID')
+      L002=VERGL(KEYWORD,'REACID')
+      IF (L001.OR.L002) THEN         
 
         CALL TAXI(CH001,REAID)
 
@@ -1698,6 +1731,22 @@
        WRITE (34,2013) DRIVENAME(1:I3),PLBR+1.0
   2013 FORMAT ('PSYM    data: ',A,2X,F8.3, &
        '   1.5   0.3   0   0   -0.5   90')
+       
+! first author here
+!       WRITE (UNIT=30,FMT='(A)') LCOLOR(1)
+!       WRITE (UNIT=30,FMT='(A)') FCOLOR(1)
+!       WRITE (UNIT=32,FMT='(A)') LCOLOR(1)
+!       WRITE (UNIT=32,FMT='(A)') FCOLOR(1)
+!       WRITE (UNIT=34,FMT='(A)') LCOLOR(1)
+!       WRITE (UNIT=34,FMT='(A)') FCOLOR(1)
+       YPOS=PLHO-0.45D0
+       CALL LABLA(PLAUT(NPLAUT),I3)
+       WRITE (30,2055) PLAUT(NPLAUT)(1:I3),ZERO+0.2D0,YPOS
+       WRITE (32,2055) PLAUT(NPLAUT)(1:I3),ZERO+0.2D0,YPOS
+       WRITE (34,2055) PLAUT(NPLAUT)(1:I3),ZERO+0.2D0,YPOS
+  2055 FORMAT ('PSYM    ',A,2X,F8.3,2X,F8.3, &
+       '   0.3    0   0   0   0')
+!
 !
       CLOSE (UNIT=30)
       CLOSE (UNIT=32)
@@ -2017,6 +2066,7 @@
       CALL GELI(CH001,FF)
       CALL TAXI(CH001,CH16)
       CALL MINMAX(FF,CH16,F1,F2)
+      CALL GELI(CH001,CHKSTART)
       CALL GELI(CH001,FF)
       CALL TAXI(CH001,CH16)
       CALL MINMAX(FF,CH16,CHKMIN,CHKMAX)
@@ -3453,7 +3503,8 @@
       
       
       
-!
+!---  MCODE is set to 1 if assemblage is not stable
+!---  at the moment this does not make the experiment inconsistent.
       IF (MCODE.GT.0) THEN
         CALL PUST  &
         (6,'     experiment inconsistent, assemblage not stable ')
@@ -3563,7 +3614,7 @@
       INTEGER(4) I1,I2,I3,I,NCH,NV,IJ,IO
       CHARACTER(250) CH002,BININ
       CHARACTER(3) CH3
-      REAL(8) ZERO
+      REAL(8) ZERO,YPOS,FF
 !
       IF (PRTEST) WRITE (UNIT=6,FMT='(''-> PREPPLOT'')')
       IF (PRTEST) WRITE (UNIT=35,FMT='(''-> PREPPLOT'')')
@@ -3732,6 +3783,7 @@
        CALL LABLA(NICREAC,I2)
 !       CALL LABLA(PLFILE,I3)
 !
+!      write reaction on top
        CALL LABLA(REAID,I3)
        WRITE (30,2051) REAID(1:I3),NICREAC(I1:I2),ZERO,PLHO
        WRITE (32,2051) REAID(1:I3),NICREAC(I1:I2),ZERO,PLHO
@@ -3744,11 +3796,85 @@
        WRITE (34,2053) DRIVENAME(1:I3),PLBR+1.0
   2053 FORMAT ('PSYM    data: ',A,2X,F8.3, &
        '   1.5   0.3   0   0   -0.5   90')
+       
+! first author here
+!       WRITE (UNIT=30,FMT='(A)') LCOLOR(1)
+!       WRITE (UNIT=30,FMT='(A)') FCOLOR(1)
+!       WRITE (UNIT=32,FMT='(A)') LCOLOR(1)
+!       WRITE (UNIT=32,FMT='(A)') FCOLOR(1)
+!       WRITE (UNIT=34,FMT='(A)') LCOLOR(1)
+!       WRITE (UNIT=34,FMT='(A)') FCOLOR(1)
+       YPOS=PLHO-0.45D0
+       CALL LABLA(PLAUT(NPLAUT),I3)
+       WRITE (30,2055) PLAUT(NPLAUT)(1:I3),ZERO+0.2D0,YPOS
+       WRITE (32,2055) PLAUT(NPLAUT)(1:I3),ZERO+0.2D0,YPOS
+       WRITE (34,2055) PLAUT(NPLAUT)(1:I3),ZERO+0.2D0,YPOS
+  2055 FORMAT ('PSYM    ',A,2X,F8.3,2X,F8.3, &
+       '   0.3    0   0   0   0')
 !
 !------
        CLOSE (UNIT=30)
        CLOSE (UNIT=32)
        CLOSE (UNIT=34)
+!
+      RETURN
+      END
+!-----
+!*************************************************************
+!*************************************************************
+      SUBROUTINE PLOTAUT
+      IMPLICIT NONE
+      INCLUDE 'theriak.cmn'
+      include 'files.cmn'
+      include 'checkdb.cmn'
+!-----END OF COMMON VARIABLES
+      INTEGER(4) I,I3,IPL,IO,I1
+      REAL(8) FF,YPOS,ZERO
+!      plot the author from TITLE2, NPLAUT
+      ZERO=0.0D0
+
+      DO IPL=1,NPLOTS
+
+      CALL LABLA(AUTOPLOT(IPL),I1)
+      OPFILE=NEWDIR(1:LDIR)//AUTOPLOT(IPL)(1:I1)//'_0exp'
+      CALL PUST(6,'Open file 30: '//OPFILE)
+      CALL LABLA(OPFILE,IO)
+!-- open _0exp (experiments with scale, fill: none and gray)
+      OPEN (UNIT=30,FILE=OPFILE(1:IO),STATUS='OLD',POSITION='APPEND')
+      OPFILE=NEWDIR(1:LDIR)//AUTOPLOT(IPL)(1:I1)//'_exn'
+!      CALL PUST(6,'Open file 32: '//OPFILE)
+      CALL LABLA(OPFILE,IO)
+!-- open _exn (experiments no scale, fill: none and gray)
+      OPEN (UNIT=32,FILE=OPFILE(1:IO),STATUS='OLD',POSITION='APPEND')
+      OPFILE=NEWDIR(1:LDIR)//AUTOPLOT(IPL)(1:I1)//'_exn2'
+!      CALL PUST(6,'Open file 34: '//OPFILE)
+      CALL LABLA(OPFILE,IO)
+!-- open _exn2 (experiments no scale, inconsstencies: black)
+      OPEN (UNIT=34,FILE=OPFILE(1:IO),STATUS='OLD',POSITION='APPEND')
+
+
+      I=NPLAUT
+!       WRITE (UNIT=30,FMT='(A)') LCOLOR(I)
+!       WRITE (UNIT=30,FMT='(A)') FCOLOR(I)
+!       WRITE (UNIT=32,FMT='(A)') LCOLOR(I)
+!       WRITE (UNIT=32,FMT='(A)') FCOLOR(I)
+!       WRITE (UNIT=34,FMT='(A)') LCOLOR(I)
+!       WRITE (UNIT=34,FMT='(A)') FCOLOR(I)
+      FF=DFLOAT(I-1)
+      YPOS=PLHO-0.45D0-FF*0.45D0
+      CALL LABLA(PLAUT(NPLAUT),I3)
+      WRITE (30,2055) PLAUT(I)(1:I3),ZERO+0.2D0,YPOS
+      WRITE (32,2055) PLAUT(I)(1:I3),ZERO+0.2D0,YPOS
+      WRITE (34,2055) PLAUT(I)(1:I3),ZERO+0.2D0,YPOS
+ 2055 FORMAT ('PSYM    ',A,2X,F8.3,2X,F8.3, &
+       '   0.3    0   0   0   0')
+!
+      END DO
+!------
+       CLOSE (UNIT=30)
+       CLOSE (UNIT=32)
+       CLOSE (UNIT=34)
+!-----
 !
       RETURN
       END
@@ -3789,11 +3915,10 @@
 !      WRITE (UNIT=35,FMT='(''   CCODE = '',I4)') CCODE
       END IF
 !
-      CALL LABLA(AUTOPLOT(PLNR),I1)
 
 !     statt ACCESS='APPEND':  POSITION='APPEND'
 
-
+      CALL LABLA(AUTOPLOT(PLNR),I1)
       OPFILE=NEWDIR(1:LDIR)//AUTOPLOT(PLNR)(1:I1)//'_0exp'
       CALL PUST(6,'Open file 30: '//OPFILE)
       CALL LABLA(OPFILE,IO)
@@ -3961,6 +4086,13 @@
   2012  FORMAT ( &
         'LINIEN     0  0  0   0',4(2X,1PE15.8),'   999  999  0')
         END IF
+! draw line from starting point to observed point
+         F1=(CHKMIN+CHKMAX)/2.0D0
+         WRITE (30,2013) J,XVAL,CHKSTART,XVAL,(YO+YU)/2.0D0
+         WRITE (32,2013) J,XVAL,CHKSTART,XVAL,(YO+YU)/2.0D0
+         WRITE (34,2013) JJ,XVAL,CHKSTART,XVAL,(YO+YU)/2.0D0
+  2013 FORMAT ( &
+       'LINIEN    ',I2,2X,'0  0   0',4(2X,1PE15.8),'   999  999  0')
 ! draw label
         I2=INDEX(EXPER,'  ')
         WRITE (30,2014) EXPER(1:I2),XVAL+XERR,(YU+YO)/2.0D0,GRSBIV
@@ -3978,23 +4110,16 @@
       JJ=0
 ! re-define CCODE (>1 if not consistent)
 !
-!!!       IF (CCOD1.GT.0.OR.CCOD2.GT.0) JJ=2
-       
         WRITE (UNIT=35,FMT='('' in plotexp(EXCH): CCODE='',I4)') CCODE
         
        IF (CCODE.GT.0) JJ=2
        IF (MCODE.GT.0) JJ=2
 
-!      WRITE (UNIT=6,FMT='(''CCOD1 = '',I3)') CCOD1
-!      WRITE (UNIT=6,FMT='(''CCOD2 = '',I3)') CCOD2
-      WRITE (UNIT=6,FMT='(''MCODE = '',I3)') MCODE
+       WRITE (UNIT=6,FMT='(''MCODE = '',I3)') MCODE
 
 !      WRITE (UNIT=6,FMT='(''HERE EXC'',A)') REAID
 
 ! draw box around observed point
-!      CALL FIBLA(EXPEC,I1)
-!      IF (EXPEC(I1:I1).EQ.'+') J=2
-!      IF (CCODE.GT.0) JJ=2
        WRITE (30,1020) J,XCMIN,YCMIN,XCMAX,YCMIN, &
        XCMAX,YCMAX,XCMIN,YCMAX
        WRITE (32,1020) J,XCMIN,YCMIN,XCMAX,YCMIN, &
@@ -4006,21 +4131,20 @@
 ! draw line from starting point to observed point
        F1=(XCMAX+XCMIN)/2.0D0
        F2=(YCMAX+YCMIN)/2.0D0
-         WRITE (30,1022) J,XCSTART,YCSTART,F1,F2
-         WRITE (32,1022) J,XCSTART,YCSTART,F1,F2
-         WRITE (34,1022) JJ,XCSTART,YCSTART,F1,F2
+       WRITE (30,1022) J,XCSTART,YCSTART,F1,F2
+       WRITE (32,1022) J,XCSTART,YCSTART,F1,F2
+       WRITE (34,1022) JJ,XCSTART,YCSTART,F1,F2
   1022 FORMAT ( &
        'LINIEN    ',I2,2X,'0  0   0',4(2X,1PE15.8),'   999  999  0')
 ! draw dotted line from calculated to observed point
 !         WRITE (30,1024) J,XCWERT,YCWERT,F1,F2
-         WRITE (32,1024) J,XCWERT,YCWERT,F1,F2
-         WRITE (34,1024) J,XCWERT,YCWERT,F1,F2
+       WRITE (32,1024) J,XCWERT,YCWERT,F1,F2
+       WRITE (34,1024) J,XCWERT,YCWERT,F1,F2
   1024 FORMAT ( &
        'STYLE   0.05   0.05   0.05   0.05',/, &
        'LINIEN   ',I2,2X,'0  0   0',4(2X,1PE15.8),'  999  999  0',/, &
        'STYLE   0.0   0.0   0.0   0.0')
 ! drow dot at calculated point
-
        WRITE (UNIT=32,FMT='(/,''FGRAY    0'')') 
        WRITE (UNIT=34,FMT='(/,''FGRAY    0'')') 
 !       WRITE (30,1026) PTSYMB,XCWERT,YCWERT
@@ -4056,10 +4180,6 @@
 !
 ! draw box around observed point
        IF (CHKLIM.GT.0) J=2
-       IF (MCODE.GT.0) THEN
-!         CCOD1=1
-!         CCOD2=1
-       END IF
        
         WRITE (UNIT=35,FMT='('' in plotexp(TX/PX): CCODE='',I4)') CCODE
         
@@ -4157,10 +4277,6 @@
 !
 ! draw box around observed point
 !       IF (CHKLIM.GT.0) J=2
-       IF (MCODE.GT.0) THEN
-!         CCOD1=1
-!         CCOD2=1
-       END IF
        
         WRITE (UNIT=35,FMT='('' in plotexp(TX/PX): CCODE='',I4)') CCODE
         
@@ -4189,8 +4305,6 @@
          WRITE (UNIT=34,FMT='(''FAT     0.01'')')
 ! draw line from starting point to observed point
          F1=(CHKMIN+CHKMAX)/2.0D0
-         WRITE (UNIT=35,FMT='(''CHKSTART,YRE,F1,YRE='',4(2X,1PE15.8))') CHKSTART,YRE,F1,YRE
-         
          WRITE (30,1032) J,CHKSTART,YRE,F1,YRE
          WRITE (32,1032) J,CHKSTART,YRE,F1,YRE
          WRITE (34,1032) JJ,CHKSTART,YRE,F1,YRE
@@ -4274,7 +4388,6 @@
         
 !      CALL FIBLA(EXPEC,I1)
 !      IF (EXPEC(I1:I1).EQ.'+') J=2
-!!       IF (CCOD1.GT.0.OR.CCOD2.GT.0) JJ=2
       IF (ISINC.EQ.1) JJ=2
 
 !      WRITE (UNIT=6,FMT='(''HERE EX2'')')
@@ -4465,10 +4578,11 @@
   1072 FORMAT ( &
        'LINIEN     0  0  0   0',4(2X,1PE15.8),'   999  999  0')
        END IF
+! write label
        I2=INDEX(EXPER,'  ')
-       WRITE (30,1074) EXPER(1:I2),TEM+TERR0,PRE,TANG,GRSPT
-       WRITE (32,1074) EXPER(1:I2),TEM+TERR0,PRE,TANG,GRSPT
-       WRITE (34,1074) EXPER(1:I2),TEM+TERR0,PRE,TANG,GRSPT
+       WRITE (30,1074) EXPER(1:I2),TEM+TERR0,PRE,GRSPT
+       WRITE (32,1074) EXPER(1:I2),TEM+TERR0,PRE,GRSPT
+       WRITE (34,1074) EXPER(1:I2),TEM+TERR0,PRE,GRSPT
   1074 FORMAT ( &
         'TEXT    ',A,2(2X,1PE15.8),2X,0P,F6.2,'  0.5  0  -0.5  0')
 !       TANG=TANG+5.0D0
@@ -4778,7 +4892,6 @@
       INTEGER(4) I1,I2,IP,IS,IE
       REAL(8) F1,F2,TORIG,PORIG
 
-
       CALL NURVONPT
       CALL CALSTR
       CALL PRININ
@@ -4812,7 +4925,6 @@
       CALL GETVAL(BIYPH,BIYEL,BIYELDIV,IP,IS,IE,F2)
       WRITE (UNIT=6,FMT='(''F2 = '',F20.10)') F2
       WRITE (UNIT=35,FMT='(''F2 = '',F20.10)') F2
-
 
         END DO
       END DO
