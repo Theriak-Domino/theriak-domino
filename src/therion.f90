@@ -5252,13 +5252,14 @@
       CHARACTER(7) EBAR1,EBAR2
       CHARACTER(4) V1
       REAL(8) WERT,WERTMIN,WERTMAX,F1,FF,PROZ,TOFMIN,POFMIN, &
-      TOFMAX,POFMAX,MAXPROZ,PTPROZ,F2,F3,F4
+      TOFMAX,POFMAX,MAXPROZ,PTPROZ,F2,F3,F4,ZERO
 !-----
       IF (PRTEST) THEN
       WRITE (UNIT=6,FMT='(''-> check value (CHECKVALPT)'')')
       WRITE (UNIT=35,FMT='(''-> check value (CHECKVALPT)'')')
       END IF
 
+      ZERO=0.0D0
       COUNT=0
       INVAL=0
       TEXTQ='not initialized'
@@ -5315,6 +5316,20 @@
         IF (F1.GT.F3.AND.F1.GT.F4.AND.F2.GT.F3.AND.F2.GT.F4) THEN
           INQ=1
         END IF
+        
+        
+        
+        INQ=0
+        F1=CHKSTART-(WERTMIN+WERTMAX)/2.0D0
+        F2=CHKSTART-CHKMIN
+        F3=CHKSTART-CHKMAX
+        IF (F1.GT.ZERO.AND.F2.LT.ZERO.AND.F3.LT.ZERO) THEN
+          INQ=1
+        END IF
+        IF (F1.LT.ZERO.AND.F2.GT.ZERO.AND.F3.GT.ZERO) THEN
+          INQ=1
+        END IF
+        
 !!        WRITE (UNIT=35,FMT='(''F1,F2,F3,F4='',4F12.5)') F1,F2,F3,F4
         
       END IF
