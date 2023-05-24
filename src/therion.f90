@@ -5317,9 +5317,7 @@
           INQ=1
         END IF
         
-        
-        
-        INQ=0
+!!        INQ=0
         F1=CHKSTART-(WERTMIN+WERTMAX)/2.0D0
         F2=CHKSTART-CHKMIN
         F3=CHKSTART-CHKMAX
