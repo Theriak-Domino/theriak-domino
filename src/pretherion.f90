@@ -64,7 +64,7 @@
       DO I=1,NDB
         CALL LABLA(DB(I),I1)
         WRITE (UNIT=6,FMT='(I3,2X,A)') I,DB(I)(1:I1)
-        MACHS(I)='mach'//DB(I)(1:I1)
+        MACHS(I)='m'//DB(I)(1:I1)
         MAKES(I)='make'//DB(I)(1:I1)
       END DO
 
@@ -111,7 +111,7 @@
         CLOSE(UNIT=10)
       END DO
 !!
-      OPEN (UNIT=12,FILE='machall',STATUS='UNKNOWN')
+      OPEN (UNIT=12,FILE='mall',STATUS='UNKNOWN')
       DO I=1,NDB
         CALL LABLA(MACHS(I),I1)
         OPEN (UNIT=10,FILE=MACHS(I)(1:I1),STATUS='UNKNOWN')
@@ -122,7 +122,7 @@
         CLOSE(UNIT=10)
       END DO
       CLOSE(UNIT=12)
-      WRITE (UNIT=6,FMT='(''machall'')')
+      WRITE (UNIT=6,FMT='(''mall'')')
       DO I=1,NDB
         CALL PUST(6,'   therion   '//MAKES(I))
       END DO
@@ -132,8 +132,8 @@
         CALL MAKEEXEC(MACHS(I))
 !!        CALL SYSTEM('chmod  a+x  '//MACHS(I)(1:I1))
       END DO
-      CALL MAKEEXEC('machall')
-!!      CALL SYSTEM('chmod  a+x  machall')
+      CALL MAKEEXEC('mall')
+!!      CALL SYSTEM('chmod  a+x  mall')
 
 
 
