@@ -573,6 +573,7 @@
         LCOLOR(I)=' '
         FCOLOR(I)=' '
       END DO
+      FGRAU='LCOLOR  0.5  0.5  0.5'
       LCOLOR(1)='LCOLOR   0   0   0'
       FCOLOR(1)='FCOLOR   0   0   0'
       LCOLOR(2)='LCOLOR   1   0   0'
@@ -583,8 +584,8 @@
       FCOLOR(3)='FCOLOR   0   0   1'
       LCOLOR(4)='LCOLOR   0   1   1'
       FCOLOR(4)='FCOLOR   0   1   1'
-      LCOLOR(5)='LCOLOR   1   1   0'
-      FCOLOR(5)='FCOLOR   1   1   0'
+      LCOLOR(5)='LCOLOR   1   0.5   0'
+      FCOLOR(5)='FCOLOR   1   0.5   0'
       LCOLOR(6)='LCOLOR   1   0   1'
       FCOLOR(6)='FCOLOR   1   0   1'
 !----
@@ -818,6 +819,7 @@
             WRITE (UNIT=6,FMT='('' folder already exists: '',A,A)') CH80(1:I1),FOLDERLIST(I002)(1:LDIR)
             NEWDIR=CH80(1:I1)//dir(1:1)
             LDIR=I1+1
+!           call newreadir anyway
             CALL NEWREADIR
           ELSE
             WRITE (UNIT=6,FMT='('' folder must be made: '',A)') CH80(1:I1)
@@ -1699,20 +1701,22 @@
        'X-variable',/, &
        'Y-variable',/, &
        F10.2,F10.2,F10.1,F10.1,F10.4,F10.4,'   0  0',/,' ',/, &
-       'FGRAY    0.5',/,'FAT    0.01')
+       'FCOLOR  0.5  0.5  0.5',/,'FAT    0.01')
 !=====
        CALL LABLA(AUTOPLOT(NPLOTS),I1)
       OPFILE=NEWDIR(1:LDIR)//AUTOPLOT(NPLOTS)(1:I1)//'_exn'
       CALL LABLA(OPFILE,IO)
 !-- open _exn (experiments no scale, fill: none and gray)
        OPEN (UNIT=32,FILE=OPFILE(1:IO),STATUS='UNKNOWN')
-       WRITE (UNIT=32,FMT='(/,''FGRAY    0.5'')') 
+!!       WRITE (UNIT=32,FMT='(/,''FGRAY    0.5'')') 
+       WRITE (UNIT=32,FMT='(/,A)') FGRAU
        WRITE (UNIT=32,FMT='(/,''FAT    0.01'')') 
       OPFILE=NEWDIR(1:LDIR)//AUTOPLOT(NPLOTS)(1:I1)//'_exn2'
       CALL LABLA(OPFILE,IO)
 !-- open _exn2 (experiments no scale, inconsstencies: black)
        OPEN (UNIT=34,FILE=OPFILE(1:IO),STATUS='UNKNOWN')
-       WRITE (UNIT=34,FMT='(/,''FGRAY    0.0'')') 
+!!       WRITE (UNIT=34,FMT='(/,''FGRAY    0.0'')') 
+       WRITE (UNIT=34,FMT='(/,A)') FCOLOR(1)
        WRITE (UNIT=34,FMT='(/,''FAT    0.01'')') 
 !
        IF (NICREAC.EQ.' ') NICREAC='X'
@@ -1733,12 +1737,12 @@
        '   1.5   0.3   0   0   -0.5   90')
        
 ! first author here
-!       WRITE (UNIT=30,FMT='(A)') LCOLOR(1)
-!       WRITE (UNIT=30,FMT='(A)') FCOLOR(1)
-!       WRITE (UNIT=32,FMT='(A)') LCOLOR(1)
-!       WRITE (UNIT=32,FMT='(A)') FCOLOR(1)
-!       WRITE (UNIT=34,FMT='(A)') LCOLOR(1)
-!       WRITE (UNIT=34,FMT='(A)') FCOLOR(1)
+       WRITE (UNIT=30,FMT='(A)') LCOLOR(NPLAUT)
+       WRITE (UNIT=30,FMT='(A)') FGRAU
+       WRITE (UNIT=32,FMT='(A)') LCOLOR(NPLAUT)
+       WRITE (UNIT=32,FMT='(A)') FGRAU
+       WRITE (UNIT=34,FMT='(A)') LCOLOR(NPLAUT)
+       WRITE (UNIT=34,FMT='(A)') FCOLOR(NPLAUT)
        YPOS=PLHO-0.45D0
        CALL LABLA(PLAUT(NPLAUT),I3)
        WRITE (30,2055) PLAUT(NPLAUT)(1:I3),ZERO+0.2D0,YPOS
@@ -3641,7 +3645,7 @@
        A,/, &
        A,/, &
        F10.2,F10.2,F10.1,F10.1,F10.4,F10.4,'   0  0',/,' ',/, &
-       'FGRAY    0.5',/,'FAT    0.01')
+       'FCOLOR   0.5   0.5   0.5',/,'FAT    0.01')
 !----------------------------------------------------------------
 !--    make THERIAK input file 31   .txt  (close unit 31)
 !----------------------------------------------------------------
@@ -3767,14 +3771,16 @@
       CALL LABLA(OPFILE,IO)
 !-- open _exn (experiments no scale, fill: none and gray)
        OPEN (UNIT=32,FILE=OPFILE(1:IO),STATUS='UNKNOWN')
-       WRITE (UNIT=32,FMT='(/,''FGRAY    0.5'')') 
+!!       WRITE (UNIT=32,FMT='(/,''FGRAY    0.5'')') 
+       WRITE (UNIT=32,FMT='(/,A)') FGRAU
        WRITE (UNIT=32,FMT='(/,''FAT    0.01'')') 
       OPFILE=NEWDIR(1:LDIR)//AUTOPLOT(NPLOTS)(1:I1)//'_exn2'
 !      CALL PUST(6,'Open file 34: '//OPFILE)
       CALL LABLA(OPFILE,IO)
 !-- open _exn2 (experiments no scale, inconsistencies: black)
        OPEN (UNIT=34,FILE=OPFILE(1:IO),STATUS='UNKNOWN')
-       WRITE (UNIT=34,FMT='(/,''FGRAY    0.0'')') 
+!!       WRITE (UNIT=34,FMT='(/,''FGRAY    0.0'')') 
+       WRITE (UNIT=34,FMT='(/,A)') FCOLOR(NPLAUT)
        WRITE (UNIT=34,FMT='(/,''FAT    0.01'')') 
 !--
        ZERO=0.0D0
@@ -3798,12 +3804,12 @@
        '   1.5   0.3   0   0   -0.5   90')
        
 ! first author here
-!       WRITE (UNIT=30,FMT='(A)') LCOLOR(1)
-!       WRITE (UNIT=30,FMT='(A)') FCOLOR(1)
-!       WRITE (UNIT=32,FMT='(A)') LCOLOR(1)
-!       WRITE (UNIT=32,FMT='(A)') FCOLOR(1)
-!       WRITE (UNIT=34,FMT='(A)') LCOLOR(1)
-!       WRITE (UNIT=34,FMT='(A)') FCOLOR(1)
+       WRITE (UNIT=30,FMT='(A)') LCOLOR(NPLAUT)
+       WRITE (UNIT=30,FMT='(A)') FGRAU
+       WRITE (UNIT=32,FMT='(A)') LCOLOR(NPLAUT)
+       WRITE (UNIT=32,FMT='(A)') FGRAU
+       WRITE (UNIT=34,FMT='(A)') LCOLOR(NPLAUT)
+       WRITE (UNIT=34,FMT='(A)') FCOLOR(NPLAUT)
        YPOS=PLHO-0.45D0
        CALL LABLA(PLAUT(NPLAUT),I3)
        WRITE (30,2055) PLAUT(NPLAUT)(1:I3),ZERO+0.2D0,YPOS
@@ -3854,12 +3860,12 @@
 
 
       I=NPLAUT
-!       WRITE (UNIT=30,FMT='(A)') LCOLOR(I)
-!       WRITE (UNIT=30,FMT='(A)') FCOLOR(I)
-!       WRITE (UNIT=32,FMT='(A)') LCOLOR(I)
-!       WRITE (UNIT=32,FMT='(A)') FCOLOR(I)
-!       WRITE (UNIT=34,FMT='(A)') LCOLOR(I)
-!       WRITE (UNIT=34,FMT='(A)') FCOLOR(I)
+       WRITE (UNIT=30,FMT='(A)') LCOLOR(I)
+       WRITE (UNIT=30,FMT='(A)') FGRAU
+       WRITE (UNIT=32,FMT='(A)') LCOLOR(I)
+       WRITE (UNIT=32,FMT='(A)') FGRAU
+       WRITE (UNIT=34,FMT='(A)') LCOLOR(I)
+       WRITE (UNIT=34,FMT='(A)') FCOLOR(I)
       FF=DFLOAT(I-1)
       YPOS=PLHO-0.45D0-FF*0.45D0
       CALL LABLA(PLAUT(NPLAUT),I3)
@@ -4145,15 +4151,19 @@
        'LINIEN   ',I2,2X,'0  0   0',4(2X,1PE15.8),'  999  999  0',/, &
        'STYLE   0.0   0.0   0.0   0.0')
 ! drow dot at calculated point
-       WRITE (UNIT=32,FMT='(/,''FGRAY    0'')') 
-       WRITE (UNIT=34,FMT='(/,''FGRAY    0'')') 
+!!       WRITE (UNIT=32,FMT='(/,''FGRAY    0'')') 
+!!       WRITE (UNIT=34,FMT='(/,''FGRAY    0'')') 
+       WRITE (UNIT=32,FMT='(/,A)') FCOLOR(NPLAUT)
+       WRITE (UNIT=34,FMT='(/,A)') FCOLOR(NPLAUT)
 !       WRITE (30,1026) PTSYMB,XCWERT,YCWERT
        WRITE (32,1026) PTSYMB,XCWERT,YCWERT
        WRITE (34,1026) PTSYMB,XCWERT,YCWERT
   1026 FORMAT ( &
        'PUNKTE    ',2X,I3,2X,'0.1',2(2X,1PE15.8),'   999  999  0')
-       WRITE (UNIT=32,FMT='(/,''FGRAY    0.5'')') 
-       WRITE (UNIT=34,FMT='(/,''FGRAY    0.0'')') 
+!!       WRITE (UNIT=32,FMT='(/,''FGRAY    0.5'')') 
+!!       WRITE (UNIT=34,FMT='(/,''FGRAY    0.0'')') 
+       WRITE (UNIT=32,FMT='(/,A)') FGRAU
+       WRITE (UNIT=34,FMT='(/,A)') FCOLOR(NPLAUT)
 ! write label
        I2=INDEX(EXPER,'  ')
        WRITE (30,1028) EXPER(1:I2),XCMAX,(YCMIN+YCMAX)/2.0D0,GRSEXC
@@ -4238,16 +4248,20 @@
        'STYLE   0.0   0.0   0.0   0.0')
 ! drow dot at calculated point
 !       WRITE (30,1036) XCWERT,YCWERT
-       WRITE (UNIT=32,FMT='(/,''FGRAY    0'')') 
-       WRITE (UNIT=34,FMT='(/,''FGRAY    0'')') 
+!!       WRITE (UNIT=32,FMT='(/,''FGRAY    0'')') 
+!!       WRITE (UNIT=34,FMT='(/,''FGRAY    0'')') 
+       WRITE (UNIT=32,FMT='(/,A)') FCOLOR(NPLAUT)
+       WRITE (UNIT=32,FMT='(/,A)') FCOLOR(NPLAUT)
        WRITE (32,1036) PTSYMB,XCWERT,YRE
        WRITE (34,1036) PTSYMB,XCWERT,YRE
        WRITE (32,1036) PTSYMB,YCWERT,YRE
        WRITE (34,1036) PTSYMB,YCWERT,YRE
   8036 FORMAT ( &
        'PUNKTE    ',2X,I3,2X,'0.1',2(2X,1PE15.8),'   999  999  0')
-       WRITE (UNIT=32,FMT='(/,''FGRAY    0.5'')') 
-       WRITE (UNIT=34,FMT='(/,''FGRAY    0.0'')') 
+!!       WRITE (UNIT=32,FMT='(/,''FGRAY    0.5'')') 
+!!       WRITE (UNIT=34,FMT='(/,''FGRAY    0.0'')') 
+       WRITE (UNIT=32,FMT='(/,A)') FGRAU
+       WRITE (UNIT=32,FMT='(/,A)') FCOLOR(NPLAUT)
 ! write label
        I2=INDEX(EXPER,'  ')
        WRITE (30,1038) EXPER(1:I2),XCMAX,YRE,GRSPTX
@@ -4322,14 +4336,18 @@
        'STYLE   0.0   0.0   0.0   0.0')
 ! drow dot at calculated point
 !       WRITE (30,1036) XCWERT,YCWERT
-       WRITE (UNIT=32,FMT='(/,''FGRAY    0'')') 
-       WRITE (UNIT=34,FMT='(/,''FGRAY    0'')') 
+!!       WRITE (UNIT=32,FMT='(/,''FGRAY    0'')') 
+!!       WRITE (UNIT=34,FMT='(/,''FGRAY    0'')') 
+       WRITE (UNIT=32,FMT='(/,A)') FGRAU
+       WRITE (UNIT=34,FMT='(/,A)') FGRAU
        WRITE (32,1036) PTSYMB,XCWERT,YRE
        WRITE (34,1036) PTSYMB,XCWERT,YRE
   1036 FORMAT ( &
        'PUNKTE    ',2X,I3,2X,'0.1',2(2X,1PE15.8),'   999  999  0')
-       WRITE (UNIT=32,FMT='(/,''FGRAY    0.5'')') 
-       WRITE (UNIT=34,FMT='(/,''FGRAY    0.0'')') 
+!!       WRITE (UNIT=32,FMT='(/,''FGRAY    0.5'')') 
+!!       WRITE (UNIT=34,FMT='(/,''FGRAY    0.0'')') 
+       WRITE (UNIT=32,FMT='(/,A)') FGRAU
+       WRITE (UNIT=34,FMT='(/,A)') FCOLOR(NPLAUT)
 ! write label
        I2=INDEX(EXPER,'  ')
        WRITE (30,1038) EXPER(1:I2),CHKMAX,YRE,GRSPTX
