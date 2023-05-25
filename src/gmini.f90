@@ -1680,7 +1680,7 @@
 !18Mai2023 don't if ideal+Margules (set to 1D7)
 !---------------------------------------------------
 !      IF (FF.GT.1D6.AND.SUGCOD(0).NE.'idmn') THEN
-      L001=FF.GT.1D7.AND.MODELL(IS).EQ.'S'
+      L001=FF.GT.1D5.AND.MODELL(IS).EQ.'S'
       IF (L001) THEN
 !==
 !     ridiculous phases are nowhere close to a minimum
