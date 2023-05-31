@@ -3748,7 +3748,7 @@
       if(ierr.ne.0) STOP
 !-----
       WRITE (tab,1000) (VARTBL(II),II=1,NVARTBL)
- 1000 FORMAT (500(A32,:,','))
+ 1000 FORMAT (750(A32,:,','))
 !-
       WRITE (6,1002) NVARTBL,NROWTBL
       WRITE (out,1002) NVARTBL,NROWTBL
@@ -3756,7 +3756,7 @@
 !-
       DO IB=1,NROWTBL
         WRITE (tab,1010) (OUTTBL(IB,II),II=1,NVARTBL)
- 1010 FORMAT (500(1PE14.7,:,','))
+ 1010 FORMAT (750(1PE14.7,:,','))
       END DO
       CLOSE (UNIT=tab)
 !------------------
