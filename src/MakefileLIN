@@ -1,11 +1,9 @@
 # command line to use: make -fMakefileLIN all
 # essentially identical to MAC, minus mac-specific flags
+# For versioning, set BUILDVERSION string in version.cmn
 
 
 ### developer set values based on preference
-
-## Set some unique value to print at top of program headers to identify build
-VERSIONSTR=2023.06.01x
 
 ## Select compiler: gfortran, or ifort/ifx for intel
 #COMPILER=gfortran
@@ -31,7 +29,7 @@ LQUADMATH=
 ifeq ($(COMPILER),gfortran)
   MOD_EXT=o
   PLAT = platf-osx
-  BFLAGS= -cpp -J$(ODIR) -D_CURRCMPLR_="'$(COMPILER)'"  -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
+  BFLAGS= -J$(ODIR) 
 
           #-static-libgfortran -static-libgcc -nodefaultlibs \
           
@@ -46,8 +44,7 @@ else ifeq ($(COMPILER),ifort)
   MOD_EXT=o
   PLAT = platf-osx
   BFLAGS= -fpp -fp-model strict -mp1 -module $(ODIR) -I$(ODIR) -I$(SRCDIR) \
-          -qsimd-honor-fp-model -qsimd-serialize-fp-reduction \
-          -D_CURRCMPLR_="'$(COMPILER)'"  -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
+          -qsimd-honor-fp-model -qsimd-serialize-fp-reduction 
   ifeq ($(BUILDTYPE),release)
     CFLAGS = -O3 $(BFLAGS) 
   else
@@ -58,8 +55,7 @@ else ifeq ($(COMPILER),ifx)
   MOD_EXT=o
   PLAT = platf-osx
   BFLAGS= -fpp -fp-model strict -module $(ODIR) -I$(ODIR) -I$(SRCDIR) \
-          -qsimd-honor-fp-model -qsimd-serialize-fp-reduction \
-          -D_CURRCMPLR_="'$(COMPILER)'"  -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
+          -qsimd-honor-fp-model -qsimd-serialize-fp-reduction 
   ifeq ($(BUILDTYPE),release)
     CFLAGS = -O3 $(BFLAGS) 
   else

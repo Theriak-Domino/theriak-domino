@@ -3017,12 +3017,12 @@
       SUBROUTINE writetit(iu,os)
       implicit none
       INCLUDE 'expl.cmn'
+      INCLUDE 'version.cmn'
       character progname*30,vers*30,task*80
       character *(*) os
       integer i, j, k, iu
       progname='EXPLOT'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"Create a PostScritp(TM) file from graphics input"'
       call LABLA(progname,i)
       call LABLA(vers,j)
@@ -3031,9 +3031,9 @@
       if(iu.eq.scr) call clearscreen
       WRITE (iu,1000) progname(1:i), vers(1:j), os(1:k)
 1000  FORMAT (/, &
-      'Program',1x,a,', Version (dd.mm.yy)',1x,a,1x,'(',a,')')
+      'Program',1x,a,', Version (yyyy.mm.dd)',1x,a,1x,'(',a,')')
       j=i+j+k
-      write(UNIT=iu,FMT='(132A1)') ('=',i=1,32+j)
+      write(UNIT=iu,FMT='(132A1)') ('=',i=1,34+j)
       call LABLA(task,i)
       write(iu,1001) task(1:i)
  1001 format(/,a,//, &

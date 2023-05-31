@@ -8,12 +8,10 @@
 
 #This makefile will work for building with the MinGW64 gfortran compiler,
 #or the Intel ifort and ifx compilers (OneAPI HP kit).
+# For versioning, set BUILDVERSION string in version.cmn
 
 
 ### developer set values based on preference
-
-## Set some unique value to print at top of program headers to identify build
-VERSIONSTR=2023.06.01x
 
 ## Select compiler: gfortran, or ifort/ifx for intel
 #COMPILER=gfortran
@@ -39,7 +37,7 @@ LQUADMATH=
 ifeq ($(COMPILER),gfortran)
   MOD_EXT=obj
   PLAT = platf-win2
-  BFLAGS= -cpp -J$(ODIR) -D_CURRCMPLR_="'$(COMPILER)'"  -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
+  BFLAGS= -J$(ODIR) 
 
           #-static-libgfortran -static-libgcc -nodefaultlibs \
           
@@ -54,8 +52,7 @@ else ifeq ($(COMPILER),ifort)
   MOD_EXT=obj
   PLAT = platf-win2
   BFLAGS= /fpp /fp:strict /module:$(ODIR) /I$(ODIR)  \
-		/Qdiag-disable:8577 \
-        /D_CURRCMPLR_="'$(COMPILER)'" /D_CURRBUILDNAME_="'$(VERSIONSTR)'"
+		/Qdiag-disable:8577 
   ifeq ($(BUILDTYPE),release)
     CFLAGS = /O2 /nodebug $(BFLAGS) 
   else
@@ -66,8 +63,7 @@ else ifeq ($(COMPILER),ifx)
   MOD_EXT=obj
   PLAT = platf-win2
   BFLAGS= /fpp /fp:strict /module:$(ODIR) /I$(ODIR)  \
-          /Qdiag-disable:8577 \
-          /D_CURRCMPLR_="'$(COMPILER)'"  /D_CURRBUILDNAME_="'$(VERSIONSTR)'"
+          /Qdiag-disable:8577 
   ifeq ($(BUILDTYPE),release)
     CFLAGS = -O2 /nodebug $(BFLAGS) 
   else

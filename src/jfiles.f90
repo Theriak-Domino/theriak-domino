@@ -45,8 +45,7 @@
       INTEGER(4) I1,J,ierr
 !--
       progname='JFILES'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"read/write files in javathings/..."'
 !*****
       ierr=0

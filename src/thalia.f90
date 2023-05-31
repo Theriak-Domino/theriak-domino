@@ -54,8 +54,7 @@
 !-----END OF COMMON VARIABLES
 !*****
       progname='THALIA'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"Calculation and plot of thermodynamic functions"'
       ierr=0
       CALL initialize('$THALIA-FILES',ierr)

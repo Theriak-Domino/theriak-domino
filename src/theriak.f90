@@ -65,8 +65,7 @@
       CHARACTER(500) CH001,CH002,SYREC,CHIN(3),ZEITSTRING
 !*****
       progname='THERIAK'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"Computation of equilibrium assemblages at given PT"'
       EINS=1
       ierr=0

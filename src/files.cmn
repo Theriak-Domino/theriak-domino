@@ -16,6 +16,8 @@
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ! -----------------------------------------------------------------------
 !
+INCLUDE 'version.cmn'
+!
 !****  Common block variables introduced by kostas
 !
 !++++++ Block to edit in case a new I/O unit must be defined

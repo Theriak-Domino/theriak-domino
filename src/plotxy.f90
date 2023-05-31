@@ -82,8 +82,7 @@
       INFODA=.FALSE.
 !***** 
       progname='PLOTXY'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"XY-plots from tables of variables"'
 !      EINS=1
       ierr=0

@@ -88,8 +88,7 @@
       COPHASE(3),ICH
 !*****
       progname='THERTER'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"Computation of ternary phase diagrams"'
       ierr=0
       CALL initialize('$THERTER-FILES',ierr)

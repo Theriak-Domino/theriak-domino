@@ -55,8 +55,7 @@
       CHARACTER(500) XLINE
 !--
       progname='jphases'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"read/write files in javathings/..."'
 !-----
       LARG=0

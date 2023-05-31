@@ -107,8 +107,7 @@
 !-----
 !!!      CALL clearscreen
       progname='MAKEMAP'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='draw greymap images of phase diagrams'
       sdate=' '
       ierr=0

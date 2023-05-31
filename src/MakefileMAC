@@ -1,10 +1,8 @@
 # command line to use: make -fMakefileMAC all
+# For versioning, set BUILDVERSION string in version.cmn
 
 
 ### developer set values based on preference
-
-## Set some unique value to print at top of program headers to identify build
-VERSIONSTR=2023.06.01x
 
 ## Select compiler: gfortran for apple silicon, gfortran or ifort for intel mac
 #nag compilation is experimental and not working
@@ -36,9 +34,8 @@ LQUADMATH=/opt/homebrew/Cellar/gcc/13.1.0/lib/gcc/13/libquadmath.a
 ifeq ($(COMPILER),gfortran)
   MOD_EXT=o
   PLAT = platf-osx
-  BFLAGS= -cpp  -mmacosx-version-min=$(MINMACOS) \
-          -static-libgfortran -static-libgcc -nodefaultlibs \
-          -D_CURRCMPLR_="'$(COMPILER)'"  -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
+  BFLAGS= -mmacosx-version-min=$(MINMACOS) \
+          -static-libgfortran -static-libgcc -nodefaultlibs 
   ifeq ($(BUILDTYPE),release)
     CFLAGS = -O2  -mtune=generic  $(BFLAGS)
   else
@@ -50,8 +47,7 @@ else ifeq ($(COMPILER),ifort)
   PLAT = platf-osx
   BFLAGS= -fpp -fp-model strict -mp1 -module $(ODIR) -I$(ODIR) -I$(SRCDIR) \
           -qsimd-honor-fp-model -qsimd-serialize-fp-reduction \
-          -mmacosx-version-min=$(MINMACOS) \
-          -D_CURRCMPLR_="'$(COMPILER)'"  -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
+          -mmacosx-version-min=$(MINMACOS) 
   ifeq ($(BUILDTYPE),release)
     CFLAGS = -O3 $(BFLAGS) 
   else
@@ -62,12 +58,9 @@ else ifeq ($(COMPILER),nagfor)
   MOD_EXT=o
   PLAT = platf-osx
   BFLAGS =  -fpp -free -O2 -kind=byte -dusty -mdir $(ODIR) -I $(ODIR) -I $(SRCDIR) -C=undefined -f2003 -float-store \
-            -L/usr/local/lib/NAG_Fortran  -D_CURRCMPLR_="'$(COMPILER)'" \
+            -L/usr/local/lib/NAG_Fortran \
             -L/opt/homebrew/Cellar/gcc/12.2.0/lib/gcc/current/gcc/aarch64-apple-darwin21/12 \
-            -L/opt/homebrew/Cellar/gcc/12.2.0/lib/gcc/current \
-            -D_CURRBUILDNAME_="'$(VERSIONSTR)'" \
-            -D__DATE__="' '" \
-            -D__TIME__="'  '" 
+            -L/opt/homebrew/Cellar/gcc/12.2.0/lib/gcc/current 
 #-Bstatic
   CFLAGS=$(BFLAGS)
   LFLAGS = -lSystem -lf90_unix_dir -lf71rts -lgcc -lgcc_eh -lgfortran

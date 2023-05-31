@@ -73,8 +73,7 @@
 !--
       call clearscreen
       progname='DOMINO'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"Computation of phase diagrams in complex systems"'
       isimu=0
       sdate=' '
