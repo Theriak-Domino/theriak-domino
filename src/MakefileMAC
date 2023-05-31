@@ -4,7 +4,7 @@
 ### developer set values based on preference
 
 ## Set some unique value to print at top of program headers to identify build
-VERSIONSTR=2023.03.06
+VERSIONSTR=2023.06.01x
 
 ## Select compiler: gfortran for apple silicon, gfortran or ifort for intel mac
 #nag compilation is experimental and not working
@@ -13,8 +13,8 @@ COMPILER=gfortran
 #COMPILER=nagfor
 
 ## Select debug or release build 
-#BUILDTYPE=release
-BUILDTYPE=debug
+BUILDTYPE=release
+#BUILDTYPE=debug
 
 ##Select where to place build products, relative to src directory
 BUILDDIR=../build
@@ -23,7 +23,8 @@ BUILDDIR=../build
 MINMACOS=12.0
 
 ## Static gfortran build on mac requires specifying path to libquadmath.a
-LQUADMATH=/opt/homebrew/Cellar/gcc/12.2.0/lib/gcc/12/libquadmath.a
+## Your path will likely differ, so change below to correct path for you.
+LQUADMATH=/opt/homebrew/Cellar/gcc/13.1.0/lib/gcc/13/libquadmath.a
 #LQUADMATH=/usr/local/Cellar/gcc/12.2.0/lib/gcc/12/libquadmath.a
 #LQUADMATH=
 
@@ -316,8 +317,8 @@ pretherion : pretherion.o $(PLAT).o
 #flags.$(MOD_EXT) : flags.$(SEX) files.cmn SETUPDIRS
 #	$(COMP90) -c flags.$(SEX) -o $(ODIR)/flags.$(MOD_EXT)
 
-all : theriak domino guzzler explot therbin therter thermo thalia makemap theriag plotxy plotg jfiles jphases\
- cat2 theriakd therion pretherion
+all : theriak domino guzzler explot therbin therter thermo thalia makemap plotxy jfiles jphases\
+ cat2 therion pretherion
 
 release : RELEASEDIRS
 
@@ -325,6 +326,6 @@ release : RELEASEDIRS
 clean :
 	-rm  -f  $(ODIR)/*.o  flags.mod  $(ODIR)/flags.mod $(BDIR)/theriak $(BDIR)/domino \
  $(BDIR)/guzzler $(BDIR)/explot $(BDIR)/therbin $(BDIR)/therter $(BDIR)/thermo $(BDIR)/thalia \
- $(BDIR)/makemap $(BDIR)/theriag $(BDIR)/plotxy $(BDIR)/plotg $(BDIR)/jfiles $(BDIR)/jphases \
- $(BDIR)/cat2 $(BDIR)/theriakd $(BDIR)/therion $(BDIR)/pretherion
+ $(BDIR)/makemap $(BDIR)/plotxy $(BDIR)/jfiles $(BDIR)/jphases \
+ $(BDIR)/cat2 $(BDIR)/therion $(BDIR)/pretherion
   

@@ -13,7 +13,7 @@
 ### developer set values based on preference
 
 ## Set some unique value to print at top of program headers to identify build
-VERSIONSTR=2023.03.06
+VERSIONSTR=2023.06.01x
 
 ## Select compiler: gfortran, or ifort/ifx for intel
 #COMPILER="gfortran"
@@ -316,8 +316,8 @@ pretherion : pretherion.obj $(PLAT).obj
 	$(COMP90) -o $(BDIR)/pretherion.exe  $(ODIR)/pretherion.obj $(ODIR)/$(PLAT).obj $(LFLAGS)
 
 
-all : theriak domino guzzler explot therbin therter thermo thalia makemap theriag plotxy plotg jfiles jphases\
- cat2 theriakd therion pretherion
+all : theriak domino guzzler explot therbin therter thermo thalia makemap plotxy jfiles jphases\
+ cat2 therion pretherion
 
 release : RELEASEDIRS
 
@@ -326,6 +326,6 @@ release : RELEASEDIRS
 clean :
 	-del    $(ODIR)\*.obj  flags.mod  $(ODIR)\flags.mod $(BDIR)\theriak.exe $(BDIR)\domino.exe \
  $(BDIR)\guzzler.exe $(BDIR)\explot.exe $(BDIR)\therbin.exe $(BDIR)\therter.exe $(BDIR)\thermo.exe $(BDIR)\thalia.exe \
- $(BDIR)\makemap.exe $(BDIR)\theriag.exe $(BDIR)\plotxy.exe $(BDIR)\plotg.exe $(BDIR)\jfiles.exe $(BDIR)\jphases.exe \
- $(BDIR)\cat2.exe $(BDIR)\theriakd.exe $(BDIR)\therion.exe $(BDIR)\pretherion.exe
+ $(BDIR)\makemap.exe $(BDIR)\plotxy.exe $(BDIR)\jfiles.exe $(BDIR)\jphases.exe \
+ $(BDIR)\cat2.exe $(BDIR)\therion.exe $(BDIR)\pretherion.exe
   

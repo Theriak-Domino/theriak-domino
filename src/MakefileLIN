@@ -5,7 +5,7 @@
 ### developer set values based on preference
 
 ## Set some unique value to print at top of program headers to identify build
-VERSIONSTR=2023.03.06
+VERSIONSTR=2023.06.01x
 
 ## Select compiler: gfortran, or ifort/ifx for intel
 #COMPILER=gfortran
@@ -309,8 +309,8 @@ pretherion : pretherion.o $(PLAT).o
 
 
 
-all : theriak domino guzzler explot therbin therter thermo thalia makemap theriag plotxy plotg jfiles jphases\
- cat2 theriakd therion pretherion
+all : theriak domino guzzler explot therbin therter thermo thalia makemap plotxy jfiles jphases\
+ cat2 therion pretherion
 
 release : RELEASEDIRS
 
@@ -318,6 +318,6 @@ release : RELEASEDIRS
 clean :
 	-rm  -f  $(ODIR)/*.o  flags.mod  $(ODIR)/flags.mod $(BDIR)/theriak $(BDIR)/domino \
  $(BDIR)/guzzler $(BDIR)/explot $(BDIR)/therbin $(BDIR)/therter $(BDIR)/thermo $(BDIR)/thalia \
- $(BDIR)/makemap $(BDIR)/theriag $(BDIR)/plotxy $(BDIR)/plotg $(BDIR)/jfiles $(BDIR)/jphases \
- $(BDIR)/cat2 $(BDIR)/theriakd $(BDIR)/therion $(BDIR)/pretherion
+ $(BDIR)/makemap $(BDIR)/plotxy $(BDIR)/jfiles $(BDIR)/jphases \
+ $(BDIR)/cat2 $(BDIR)/therion $(BDIR)/pretherion
   
