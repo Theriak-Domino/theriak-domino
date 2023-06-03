@@ -1558,6 +1558,7 @@
 !-----
 !******************************
       SUBROUTINE NEWPH(IS)
+      USE FLAGS, ONLY : RIDICUT
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -1680,7 +1681,7 @@
 !18Mai2023 don't if ideal+Margules (set to 1D7)
 !---------------------------------------------------
 !      IF (FF.GT.1D6.AND.SUGCOD(0).NE.'idmn') THEN
-      L001=FF.GT.1D5.AND.MODELL(IS).EQ.'S'
+      L001=FF.GT.RIDICUT.AND.MODELL(IS).EQ.'S'
       IF (L001) THEN
 !==
 !     ridiculous phases are nowhere close to a minimum
@@ -3151,8 +3152,12 @@
             VEKTOR(I)=0.0D0
             BING=BING+1
           END IF
+          !IF (DABS(ARA(I)).LT.STPZAL.AND.ZEND(IS,I).GT.0) THEN
+            !VEKTOR(I)=0.0D0
+          !END IF
+          SUMME=SUMME+VEKTOR(I)*VEKTOR(I)
         END DO
-        SUMME=SUM( VEKTOR(1:NEM)*VEKTOR(1:NEM) )
+        !SUMME=SUM( VEKTOR(1:NEM)*VEKTOR(1:NEM) )
         !if pinned a pc vector to 0, normalize on bing fewer pc's
         !and recalc whole thing
         IF (BING.GT.0.AND.BING.LT.NEND(IS)) THEN
@@ -3181,24 +3186,29 @@
       END SUBROUTINE STEEP
 !-----
 !******************************
-      !This is an alternate steep that cuts out all tests
-      !of neg or very small phase proportions. For comparison
-      !to existing steep (now STEEP_ORIGINAL below).
+      !This is an alternate steep that does not do bing
+      !and neg ppn stuff.
       SUBROUTINE STEEP2(IS,ARA,MUE)
         !-----find direction of steepest descent.
+        USE FLAGS, ONLY : MINGRADPPN
         IMPLICIT NONE
         INCLUDE 'theriak.cmn'
         !-----END OF COMMON VARIABLES
         INTEGER(4), INTENT(IN) :: IS
         INTEGER(4)             :: NEM
         REAL(8), INTENT(IN)    :: ARA(EMAX)
-        REAL(8), INTENT(IN)    :: MUE(EMAX)
+        REAL(8), INTENT(INOUT) :: MUE(EMAX)
         REAL(8) :: DELMUE = 0.0D0
         REAL(8) :: SUMME  = 0.0D0
+        INTEGER(4) :: I
         !VEKTOR is global
         !-----
         NEM=NEND(IS)
         !=====
+        !2023.06.04 low ppn -> mue=0
+        DO I=1,NEM
+          IF(DABS(ARA(I)).LE.MINGRADPPN) MUE(I)=0.0D0
+        END DO
         !Calculate ave MUE
         DELMUE = (SUM(MUE(1:NEM))) / DBLE(NEM)
         !Make vec of diff of mue from ave. 
@@ -3207,7 +3217,7 @@
         SUMME = SUM( VEKTOR(1:NEM) * VEKTOR(1:NEM) )
         !add check for summe=0
         SUMME = DSQRT(SUMME)
-        !scale VEKTOR
+        !normalize VEKTOR
         VEKTOR(1:NEM) = VEKTOR(1:NEM) / SUMME
         RETURN
         END SUBROUTINE STEEP2      

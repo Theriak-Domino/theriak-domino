@@ -49,7 +49,10 @@ MODULE FLAGS
     REAL(8), SAVE :: PMINAAA   = TINY(0.0D0)*10.0D0 !2.22507D-305    !>tiny;
     REAL(8), SAVE :: PMINXELSI = 0.0D0 
     !
-    REAL(8), SAVE    :: EMDXSCALE     = 0.25D0
+    REAL(8), SAVE :: RIDICUT   = 1D5 
+    REAL(8), SAVE :: MINGRADPPN= EPSILON(0.0D0)
+    !
+    REAL(8), SAVE    :: EMDXSCALE     = 2D-1
     INTEGER(4), SAVE :: L1SCANMAX     = 5 
     REAL(8), SAVE    :: VAFFSCALE     = 3.0D-02
     REAL(8), SAVE    :: RLOWEXP       = -706.0D0
@@ -197,6 +200,14 @@ MODULE FLAGS
             case("PMINAAA")
               if(tstr2 /= '') then
                 READ(tstr2,*) PMINAAA
+              endif
+            case("RIDICUT")
+              if(tstr2 /= '') then
+                READ(tstr2,*) RIDICUT
+              endif
+            case("MINGRADPPN")
+              if(tstr2 /= '') then
+                READ(tstr2,*) MINGRADPPN
               endif
             case("EMDXSCALE")
               if(tstr2 /= '') then
