@@ -1305,7 +1305,7 @@
 !-----
 !******************************
       SUBROUTINE ADDPH(ADDCOD)
-      USE FLAGS, ONLY: L1SCANMAX, L1NEWSEED, NLOOPSDOSEED
+      USE FLAGS, ONLY: L1SCANMAX, L1NEWSEED, NLOOPSDOSEED, EMSTARTMOD
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -1405,7 +1405,7 @@
 !===========================================================
       SKIPEM=.TRUE.
       IF (LOO1.LE.3) SKIPEM=.FALSE.
-      IF (MOD(LOO1,10).EQ.0) SKIPEM=.FALSE.
+      IF (MOD(LOO1,EMSTARTMOD).EQ.0) SKIPEM=.FALSE.
       IF (LOO1A.EQ.1) SKIPEM=.FALSE.
       IF (.NOT.SKIPEM) THEN
         DO START=-NEND(IS),-1
