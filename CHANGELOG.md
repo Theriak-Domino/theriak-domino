@@ -1,3 +1,14 @@
+CHANGES IN THERIAK-DOMINO version 2023.06.06
+--------------------------------------------
+- increased MAXVARTBL from 500 to 750 to allow more columns
+of variables to be output to the table file during a theriak 
+driver file run 
+- updated versioning implementation to remove use of cpp
+preprocessor
+- updates to therion and pretherion
+- minor changes to minimization
+
+***
 CHANGES IN THERIAK-DOMINO version 2023.03.06
 --------------------------------------------
 - A beta version of this release was previously released as
