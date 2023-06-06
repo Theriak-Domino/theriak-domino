@@ -1,0 +1,17 @@
+project: Theriak-Domino
+project_github: https://github.com/Theriak-Domino
+output_dir: ./../build/docs
+graphs: true
+src_dir: ./../src
+include: ./../src
+exclude_dir: ./build
+exclude_dir: ./dist
+exclude: therion.f90
+exclude: jfiles.f90
+exclude: jphases.f90
+exclude: pretherion.f90
+exclude: cat2.f90
+exclude: MakefileMAC
+exclude: MakefileLIN
+exclude: MakefileWIN
+exclude: MakefileNMWIN
