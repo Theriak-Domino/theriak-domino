@@ -97,6 +97,7 @@ RELEASEDIRS:
 		@$(CHK_DIR_EXISTS) $(RDIR)/ || $(MKDIR) $(RDIR)/
 		$(CPDIR) $(DDIR)/Documentation $(RDIR)/Documentation
 		$(CPDIR) $(DDIR)/Examples $(RDIR)/Examples
+		rm -rfd $(RDIR)/Examples/theriag_2010c
 		$(CPDIR) $(DDIR)/Working $(RDIR)/Working
 		$(CPDIR) $(DDIR)/ReleaseNotes.txt  $(RDIR)/ReleaseNotes.txt
 		$(CPDIR) $(BUILDDIR) $(RDIR)/Programs
@@ -105,6 +106,7 @@ RELEASEDIRS:
 		rm -f $(RDIR)/Programs/obj/*.o
 		rm -f $(RDIR)/Programs/obj/*.mod
 		rm -d  $(RDIR)/Programs/obj/
+		rm -rfd $(RDIR)/Programs/docs
 		$(MKDIR) $(RDIR)/src
 		$(CPDIR) . $(RDIR)/src
 		rm -f $(RDIR)/src/*.mod

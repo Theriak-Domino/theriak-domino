@@ -103,6 +103,7 @@ RELEASEDIRS:
 	-@ if NOT EXIST "$(RDIR)" mkdir "$(RDIR)"
 	xcopy "$(DDIR)\Documentation\" "$(RDIR)\Documentation\" /E 
 	xcopy /E "$(DDIR)\Examples\" "$(RDIR)\Examples\"
+	rmdir /Q /S  "$(RDIR)\Examples\theriag_2010c"
 	xcopy /E "$(DDIR)\Working\" "$(RDIR)\Working\"
 	copy  "$(DDIR)\ReleaseNotes.txt"  "$(RDIR)\ReleaseNotes.txt"
 	-@ if NOT EXIST "$(RDIR)\Programs" mkdir "$(RDIR)\Programs"
@@ -110,6 +111,7 @@ RELEASEDIRS:
 	copy    "theriakPC.ini"  "$(RDIR)\Programs\theriak.ini"
 	copy    "thhelp.txt"  "$(RDIR)\Programs\thhelp.txt"
 	rmdir /Q /S  "$(RDIR)\Programs\obj"
+	rmdir /Q /S  "$(RDIR)\Programs\docs"
 	mkdir "$(RDIR)\src"
 	copy    "."  "$(RDIR)\src\"
 	del     "$(RDIR)\src\*.mod"
