@@ -3205,7 +3205,7 @@
         !-----
         NEM=NEND(IS)
         !=====
-        !2023.06.04 low ppn -> mue=0
+        !2023.06.04 low ppn -> mue=0, following original sr
         DO I=1,NEM
           IF(DABS(ARA(I)).LE.MINGRADPPN) MUE(I)=0.0D0
         END DO
@@ -3215,10 +3215,17 @@
         VEKTOR(1:NEM) = DELMUE - MUE(1:NEM)
         !L2
         SUMME = SUM( VEKTOR(1:NEM) * VEKTOR(1:NEM) )
-        !add check for summe=0
-        SUMME = DSQRT(SUMME)
-        !normalize VEKTOR
-        VEKTOR(1:NEM) = VEKTOR(1:NEM) / SUMME
+        !check for summe=0
+        !IF(TEST.LE.0.0D0) THEN
+        !  IF(.NOT.SUMME.GT.0.0D0) THEN
+        !    write(*,fmt="('VEKTOR=0. IS=',I3,1x,20(ES13.6))") IS, VEKTOR(1:NEM)
+        !  END IF
+        !END IF
+        IF(SUMME.GT.0.0D0) THEN
+          SUMME = DSQRT(SUMME)
+          !normalize VEKTOR
+          VEKTOR(1:NEM) = VEKTOR(1:NEM) / SUMME
+        END IF
         RETURN
         END SUBROUTINE STEEP2      
 !-----
