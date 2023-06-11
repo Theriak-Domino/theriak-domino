@@ -1,4 +1,4 @@
-C-----Version: 2023.06.06   of Theriak-Domino
+C-----Version: 2023.06.11   of Theriak-Domino
 
 ====================================================================================
 Getting started: Short instructions for installation are given below.
@@ -18,7 +18,7 @@ All programs provide some help with the "?" keyword in the input dialogues.
 1. List of distributed files and folders
 ====================================================================================
 
-In the Folder TheriakDomino.2023.03.06
+In the Folder TheriakDomino.2023.06.11
 
 Folders:
 	Documentation
@@ -220,9 +220,9 @@ Double-clicking the downloaded zip should unzip it; if not right/2-finger click 
 Open With one of the system-recommended unarchivers. If none are available, find a 
 freely available expander/unarchiver software to install and use.
 
-The instructions below assume you keep the default directory name of TheriakDominoMAC, 
-but if you rename the folder to a different name, all you need to do is substitute 
-that name below where TheriakDominoMAC appears. 
+The instructions below assume you use the default directory name of TheriakDominoMAC, 
+but if you rename the folder to a different name (e.g., with a version #), all you need 
+to do is substitute that name below where TheriakDominoMAC appears. 
 
 3. Prepare the Terminal application for use: 
 We assume a very basic level of understanding of use of the Terminal application.
@@ -261,7 +261,7 @@ are these 2 lines:
   export PATH="$PATH:$THERDOM"
 
 where you will change capi to your home directory name, and change TheriakDominoMAC if 
-you changed the unzipped directory name to something else:
+your root TheriakDominoMAC directory name is different:
 
 	export THERDOM=/Users/YourUserName/YourTheriakDominoDirectoryName/Programs
   export PATH="$PATH:$THERDOM"
@@ -318,7 +318,7 @@ exit            close the Terminal
 ============================================================================
 3. Installation on WIN
 ============================================================================
-Unstuff TheriakDominoWIN.2023.03.06.zip
+Unstuff TheriakDominoWIN.2023.06.11.zip
 
 Copy the resulting folder "TheriakDominoWIN" to a folder of your choice, for example C:\ 
 Note that in this case, the programs reside in the folder 

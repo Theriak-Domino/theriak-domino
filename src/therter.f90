@@ -1,4 +1,4 @@
-!therter.f90  Version: 2023.06.06
+!therter.f90  Version: 2023.06.11
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1989-2022  Christian de Capitani
 !

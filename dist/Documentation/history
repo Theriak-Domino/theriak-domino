@@ -1,4 +1,9 @@
-C-----Version: 2023.06.06
+C-----Version: 2023.06.11
+
+CHANGES IN THERIAK-DOMINO version 2023.06.11
+--------------------------------------------
+- fixed a bug introduced in 2023.06.06 in sr steep2.
+
 
 CHANGES IN THERIAK-DOMINO version 2023.06.06
 --------------------------------------------
