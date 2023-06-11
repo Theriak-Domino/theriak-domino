@@ -43,8 +43,9 @@ ifeq ($(COMPILER),gfortran)
 else ifeq ($(COMPILER),ifort)
   MOD_EXT=o
   PLAT = platf-osx
-  BFLAGS= -fpp -fp-model strict -mp1 -module $(ODIR) -I$(ODIR) -I$(SRCDIR) \
-          -qsimd-honor-fp-model -qsimd-serialize-fp-reduction 
+  BFLAGS= -fpp -mp1 -module $(ODIR) -I$(ODIR) -I$(SRCDIR) \
+  #-qsimd-honor-fp-model -qsimd-serialize-fp-reduction 
+  #-fp-model strict
   ifeq ($(BUILDTYPE),release)
     CFLAGS = -O3 $(BFLAGS) 
   else
@@ -54,8 +55,9 @@ else ifeq ($(COMPILER),ifort)
 else ifeq ($(COMPILER),ifx)
   MOD_EXT=o
   PLAT = platf-osx
-  BFLAGS= -fpp -fp-model strict -module $(ODIR) -I$(ODIR) -I$(SRCDIR) \
-          -qsimd-honor-fp-model -qsimd-serialize-fp-reduction 
+  BFLAGS= -fpp -module $(ODIR) -I$(ODIR) -I$(SRCDIR)
+  #-qsimd-honor-fp-model -qsimd-serialize-fp-reduction 
+  #-fp-model strict 
   ifeq ($(BUILDTYPE),release)
     CFLAGS = -O3 $(BFLAGS) 
   else

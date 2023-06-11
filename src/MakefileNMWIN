@@ -19,8 +19,8 @@ COMPILER="ifort"
 #COMPILER="ifx"
 
 ## Select debug or release build 
-#BUILDTYPE="release"
-BUILDTYPE="debug"
+BUILDTYPE="release"
+#BUILDTYPE="debug"
 
 ##Select where to place build products, relative to src directory
 BUILDDIR=..\build
