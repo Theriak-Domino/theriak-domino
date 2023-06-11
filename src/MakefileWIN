@@ -51,10 +51,11 @@ ifeq ($(COMPILER),gfortran)
 else ifeq ($(COMPILER),ifort)
   MOD_EXT=obj
   PLAT = platf-win2
-  BFLAGS= /fpp /fp:strict /module:$(ODIR) /I$(ODIR)  \
+  BFLAGS= /fpp /module:$(ODIR) /I$(ODIR)  \
 		/Qdiag-disable:8577 
+  # /fp:strict
   ifeq ($(BUILDTYPE),release)
-    CFLAGS = /O2 /nodebug $(BFLAGS) 
+    CFLAGS = /O3 /nodebug $(BFLAGS) 
   else
     CFLAGS = $(BFLAGS)
   endif
@@ -65,7 +66,7 @@ else ifeq ($(COMPILER),ifx)
   BFLAGS= /fpp /fp:strict /module:$(ODIR) /I$(ODIR)  \
           /Qdiag-disable:8577 
   ifeq ($(BUILDTYPE),release)
-    CFLAGS = -O2 /nodebug $(BFLAGS) 
+    CFLAGS = -O3 /nodebug $(BFLAGS) 
   else
     CFLAGS = $(BFLAGS)
   endif

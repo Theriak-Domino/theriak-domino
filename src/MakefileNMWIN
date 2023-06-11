@@ -19,8 +19,8 @@ COMPILER="ifort"
 #COMPILER="ifx"
 
 ## Select debug or release build 
-BUILDTYPE="release"
-#BUILDTYPE=debug
+#BUILDTYPE="release"
+BUILDTYPE="debug"
 
 ##Select where to place build products, relative to src directory
 BUILDDIR=..\build
@@ -51,12 +51,16 @@ LFLAGS=
 !ELSE IF $(COMPILER) == "ifort"
 MOD_EXT=obj
 PLAT = platf-win2
-BFLAGS= /fpp /fp:strict /module:$(ODIR) /I$(ODIR)  \
-        /Qdiag-disable:8577 
+BFLAGS= /fpp  /module:$(ODIR) /I$(ODIR)  \
+        /Qdiag-disable:8577  
+  # /fp:strict
+  # /fpconstant
+  # /Qopt-report
 !IF $(BUILDTYPE) == "release"
-CFLAGS = /O2 /nodebug $(BFLAGS) 
+CFLAGS = /O3 /nodebug $(BFLAGS) 
+  # /QxHost
 !ELSE
-CFLAGS = $(BFLAGS)
+CFLAGS = /debug:all /Qtrapuv /RTCu $(BFLAGS)
 !ENDIF
 LFLAGS =
 !ELSE IF $(COMPILER) == "ifx"
@@ -65,7 +69,7 @@ PLAT = platf-win2
 BFLAGS= /fpp /fp:strict /module:$(ODIR) /I$(ODIR)  \
           /Qdiag-disable:8577 
 !IF $(BUILDTYPE) == "release"
-CFLAGS = /O2 /nodebug $(BFLAGS) 
+CFLAGS = /O3 /nodebug $(BFLAGS) 
 !ELSE
 CFLAGS = $(BFLAGS)
 !ENDIF
