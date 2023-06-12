@@ -1,3 +1,9 @@
+CHANGES IN THERIAK-DOMINO version 2023.06.11
+--------------------------------------------
+- v2023.06.11 is a bugfix release that fixed a bug introduced late
+in the 2023.06.06 release.
+
+***
 CHANGES IN THERIAK-DOMINO version 2023.06.06
 --------------------------------------------
 - increased MAXVARTBL from 500 to 750 to allow more columns
