@@ -7,15 +7,17 @@
 
 ## Select compiler: gfortran, or ifort/ifx for intel
 #COMPILER=gfortran
-COMPILER=ifort
-#COMPILER=ifx
+#COMPILER=ifort
+COMPILER=ifx
 
 ## Select debug or release build 
 BUILDTYPE=release
 #BUILDTYPE=debug
 
 ##Select where to place build products, relative to src directory
-BUILDDIR=../build
+BUILDDIR=./../build
+ODIR=$(BUILDDIR)/obj
+SRCDIR=.
 
 ## Static gfortran build requires specifying path to libquadmath.a; not working on LIN
 #LQUADMATH=/usr/lib/gcc/x86_64-linux-gnu/11/libquadmath.a
@@ -29,9 +31,7 @@ LQUADMATH=
 ifeq ($(COMPILER),gfortran)
   MOD_EXT=o
   PLAT = platf-osx
-  BFLAGS= -J$(ODIR) 
-
-          #-static-libgfortran -static-libgcc -nodefaultlibs \
+  BFLAGS= -J$(ODIR) -static-libgfortran -static-libgcc -nodefaultlibs
           
   ifeq ($(BUILDTYPE),release)
     CFLAGS = -O2  -mtune=generic  $(BFLAGS)
@@ -43,7 +43,8 @@ ifeq ($(COMPILER),gfortran)
 else ifeq ($(COMPILER),ifort)
   MOD_EXT=o
   PLAT = platf-osx
-  BFLAGS= -fpp -mp1 -module $(ODIR) -I$(ODIR) -I$(SRCDIR) \
+  BFLAGS= -fpp -cpp -module $(ODIR) -I$(ODIR) -I$(SRCDIR)
+  #-cpp -mp1 -module
   #-qsimd-honor-fp-model -qsimd-serialize-fp-reduction 
   #-fp-model strict
   ifeq ($(BUILDTYPE),release)
