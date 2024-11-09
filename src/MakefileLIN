@@ -6,9 +6,9 @@
 ### developer set values based on preference
 
 ## Select compiler: gfortran, or ifort/ifx for intel
-#COMPILER=gfortran
+COMPILER=gfortran
 #COMPILER=ifort
-COMPILER=ifx
+#COMPILER=ifx
 
 ## Select debug or release build 
 BUILDTYPE=release
@@ -19,9 +19,9 @@ BUILDDIR=./../build
 ODIR=$(BUILDDIR)/obj
 SRCDIR=.
 
-## Static gfortran build requires specifying path to libquadmath.a; not working on LIN
-#LQUADMATH=/usr/lib/gcc/x86_64-linux-gnu/11/libquadmath.a
-LQUADMATH=
+## Static gfortran build requires specifying your specific path to libquadmath.a
+LQUADMATH=/usr/lib/gcc/x86_64-redhat-linux/14/libquadmath.a
+#LQUADMATH=
 
 
 ############################################################################
@@ -34,12 +34,13 @@ ifeq ($(COMPILER),gfortran)
   BFLAGS= -J$(ODIR) -static-libgfortran -static-libgcc -nodefaultlibs
           
   ifeq ($(BUILDTYPE),release)
-    CFLAGS = -O2  -mtune=generic  $(BFLAGS)
+    #CFLAGS = -O2  -mtune=generic  $(BFLAGS)
+	CFLAGS = -O2 -march=x86-64-v2 -mtune=generic -fno-plt -flto $(BFLAGS)
   else
     CFLAGS = -g -Og -fbounds-check -fbacktrace -ffpe-trap=invalid,zero,underflow,overflow $(BFLAGS)
   endif
-  LFLAGS=
-  #LFLAGS = -nodefaultlibs -lSystem -lgcc -lgcc_eh -lgfortran $(LQUADMATH)
+  #LFLAGS=
+  LFLAGS = -nodefaultlibs -lgcc -lgcc_s -lgcc_eh -static-libgcc -static-libgfortran $(LQUADMATH) -lc -lm
 else ifeq ($(COMPILER),ifort)
   MOD_EXT=o
   PLAT = platf-osx
