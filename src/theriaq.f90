@@ -1,4 +1,4 @@
-!theriaq.f90  Version: 2023.03.06
+!theriaq.f90  Version: 2023.06.11
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1984-2022  Christian de Capitani
 !
@@ -73,8 +73,7 @@
 !----
       INTEGER(4) ierr,j
       progname='THERIAQ'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"Computation of aqueous equilibriua"'
       call initialize('$THERIAQ-FILES',ierr)
       if(ierr.ne.0) STOP

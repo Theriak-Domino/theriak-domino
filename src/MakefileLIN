@@ -1,15 +1,13 @@
 # command line to use: make -fMakefileLIN all
 # essentially identical to MAC, minus mac-specific flags
+# For versioning, set BUILDVERSION string in version.cmn
 
 
 ### developer set values based on preference
 
-## Set some unique value to print at top of program headers to identify build
-VERSIONSTR=2023.03.06
-
 ## Select compiler: gfortran, or ifort/ifx for intel
-#COMPILER=gfortran
-COMPILER=ifort
+COMPILER=gfortran
+#COMPILER=ifort
 #COMPILER=ifx
 
 ## Select debug or release build 
@@ -17,11 +15,13 @@ BUILDTYPE=release
 #BUILDTYPE=debug
 
 ##Select where to place build products, relative to src directory
-BUILDDIR=../build
+BUILDDIR=./../build
+ODIR=$(BUILDDIR)/obj
+SRCDIR=.
 
-## Static gfortran build requires specifying path to libquadmath.a; not working on LIN
-#LQUADMATH=/usr/lib/gcc/x86_64-linux-gnu/11/libquadmath.a
-LQUADMATH=
+## Static gfortran build requires specifying your specific path to libquadmath.a
+LQUADMATH=/usr/lib/gcc/x86_64-redhat-linux/14/libquadmath.a
+#LQUADMATH=
 
 
 ############################################################################
@@ -31,23 +31,23 @@ LQUADMATH=
 ifeq ($(COMPILER),gfortran)
   MOD_EXT=o
   PLAT = platf-osx
-  BFLAGS= -cpp -J$(ODIR) -D_CURRCMPLR_="'$(COMPILER)'"  -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
-
-          #-static-libgfortran -static-libgcc -nodefaultlibs \
+  BFLAGS= -J$(ODIR) -static-libgfortran -static-libgcc -nodefaultlibs
           
   ifeq ($(BUILDTYPE),release)
-    CFLAGS = -O2  -mtune=generic  $(BFLAGS)
+    #CFLAGS = -O2  -mtune=generic  $(BFLAGS)
+	CFLAGS = -O2 -march=x86-64-v2 -mtune=generic -fno-plt -flto $(BFLAGS)
   else
     CFLAGS = -g -Og -fbounds-check -fbacktrace -ffpe-trap=invalid,zero,underflow,overflow $(BFLAGS)
   endif
-  LFLAGS=
-  #LFLAGS = -nodefaultlibs -lSystem -lgcc -lgcc_eh -lgfortran $(LQUADMATH)
+  #LFLAGS=
+  LFLAGS = -nodefaultlibs -lgcc -lgcc_s -lgcc_eh -static-libgcc -static-libgfortran $(LQUADMATH) -lc -lm
 else ifeq ($(COMPILER),ifort)
   MOD_EXT=o
   PLAT = platf-osx
-  BFLAGS= -fpp -fp-model strict -mp1 -module $(ODIR) -I$(ODIR) -I$(SRCDIR) \
-          -qsimd-honor-fp-model -qsimd-serialize-fp-reduction \
-          -D_CURRCMPLR_="'$(COMPILER)'"  -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
+  BFLAGS= -fpp -cpp -module $(ODIR) -I$(ODIR) -I$(SRCDIR)
+  #-cpp -mp1 -module
+  #-qsimd-honor-fp-model -qsimd-serialize-fp-reduction 
+  #-fp-model strict
   ifeq ($(BUILDTYPE),release)
     CFLAGS = -O3 $(BFLAGS) 
   else
@@ -57,9 +57,9 @@ else ifeq ($(COMPILER),ifort)
 else ifeq ($(COMPILER),ifx)
   MOD_EXT=o
   PLAT = platf-osx
-  BFLAGS= -fpp -fp-model strict -module $(ODIR) -I$(ODIR) -I$(SRCDIR) \
-          -qsimd-honor-fp-model -qsimd-serialize-fp-reduction \
-          -D_CURRCMPLR_="'$(COMPILER)'"  -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
+  BFLAGS= -fpp -module $(ODIR) -I$(ODIR) -I$(SRCDIR)
+  #-qsimd-honor-fp-model -qsimd-serialize-fp-reduction 
+  #-fp-model strict 
   ifeq ($(BUILDTYPE),release)
     CFLAGS = -O3 $(BFLAGS) 
   else
@@ -101,6 +101,7 @@ RELEASEDIRS:
 		@$(CHK_DIR_EXISTS) $(RDIR)/ || $(MKDIR) $(RDIR)/
 		$(CPDIR) $(DDIR)/Documentation $(RDIR)/Documentation
 		$(CPDIR) $(DDIR)/Examples $(RDIR)/Examples
+		rm -rfd $(RDIR)/Examples/theriag_2010c
 		$(CPDIR) $(DDIR)/Working $(RDIR)/Working
 		$(CPDIR) $(DDIR)/ReleaseNotes.txt  $(RDIR)/ReleaseNotes.txt
 		$(CPDIR) $(BUILDDIR) $(RDIR)/Programs
@@ -109,6 +110,7 @@ RELEASEDIRS:
 		rm -f $(RDIR)/Programs/obj/*.o
 		rm -f $(RDIR)/Programs/obj/*.mod
 		rm -d  $(RDIR)/Programs/obj/
+		rm -rfd $(RDIR)/Programs/docs
 		$(MKDIR) $(RDIR)/src
 		$(CPDIR) . $(RDIR)/src
 		rm -f $(RDIR)/src/*.mod
@@ -309,8 +311,8 @@ pretherion : pretherion.o $(PLAT).o
 
 
 
-all : theriak domino guzzler explot therbin therter thermo thalia makemap theriag plotxy plotg jfiles jphases\
- cat2 theriakd therion pretherion
+all : theriak domino guzzler explot therbin therter thermo thalia makemap plotxy jfiles jphases\
+ cat2 therion pretherion
 
 release : RELEASEDIRS
 
@@ -318,6 +320,6 @@ release : RELEASEDIRS
 clean :
 	-rm  -f  $(ODIR)/*.o  flags.mod  $(ODIR)/flags.mod $(BDIR)/theriak $(BDIR)/domino \
  $(BDIR)/guzzler $(BDIR)/explot $(BDIR)/therbin $(BDIR)/therter $(BDIR)/thermo $(BDIR)/thalia \
- $(BDIR)/makemap $(BDIR)/theriag $(BDIR)/plotxy $(BDIR)/plotg $(BDIR)/jfiles $(BDIR)/jphases \
- $(BDIR)/cat2 $(BDIR)/theriakd $(BDIR)/therion $(BDIR)/pretherion
+ $(BDIR)/makemap $(BDIR)/plotxy $(BDIR)/jfiles $(BDIR)/jphases \
+ $(BDIR)/cat2 $(BDIR)/therion $(BDIR)/pretherion
   

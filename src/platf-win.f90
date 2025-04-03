@@ -1,4 +1,4 @@
-!platf-win.f90  Version: 2023.03.06
+!platf-win.f90  Version: 2023.06.11
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1984-2022  Christian de Capitani
 !

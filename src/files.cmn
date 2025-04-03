@@ -1,4 +1,4 @@
-!files.cmn  Version: 2023.03.06
+!files.cmn  Version: 2023.06.11
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1984-2022  Christian de Capitani
 !
@@ -15,6 +15,8 @@
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ! -----------------------------------------------------------------------
+!
+INCLUDE 'version.cmn'
 !
 !****  Common block variables introduced by kostas
 !

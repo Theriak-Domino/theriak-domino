@@ -1,4 +1,4 @@
-!thalia.f90  Version: 2023.03.06
+!thalia.f90  Version: 2023.06.11
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1989-2022  Christian de Capitani
 !
@@ -54,8 +54,7 @@
 !-----END OF COMMON VARIABLES
 !*****
       progname='THALIA'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"Calculation and plot of thermodynamic functions"'
       ierr=0
       CALL initialize('$THALIA-FILES',ierr)

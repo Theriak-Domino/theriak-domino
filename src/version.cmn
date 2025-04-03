@@ -1,0 +1,5 @@
+!this file holds 1 value only, the version of the programs you are building.
+!change this value when building programs to provide a build-specific
+!version name in the program header section during program startup. 
+
+CHARACTER(LEN=30), PARAMETER :: BUILDVERSION = '2023.06.11'

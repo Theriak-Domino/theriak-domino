@@ -1,4 +1,4 @@
-!jfiles.f90  Version: 2023.03.06
+!jfiles.f90  Version: 2023.06.11
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1989-2022  Christian de Capitani
 !
@@ -45,8 +45,7 @@
       INTEGER(4) I1,J,ierr
 !--
       progname='JFILES'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"read/write files in javathings/..."'
 !*****
       ierr=0

@@ -1,4 +1,4 @@
-!plotxy.f90  Version: 2023.03.06
+!plotxy.f90  Version: 2023.06.11
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1984-2022  Christian de Capitani
 !
@@ -82,8 +82,7 @@
       INFODA=.FALSE.
 !***** 
       progname='PLOTXY'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"XY-plots from tables of variables"'
 !      EINS=1
       ierr=0

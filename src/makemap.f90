@@ -1,4 +1,4 @@
-!makemap.f90  Version: 2023.03.06
+!makemap.f90  Version: 2023.06.11
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1984-2022  Christian de Capitani
 !
@@ -107,8 +107,7 @@
 !-----
 !!!      CALL clearscreen
       progname='MAKEMAP'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='draw greymap images of phase diagrams'
       sdate=' '
       ierr=0

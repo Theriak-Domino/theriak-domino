@@ -1,4 +1,4 @@
-!theriak.f90  Version: 2023.03.06
+!theriak.f90  Version: 2023.06.11
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1984-2022  Christian de Capitani
 !
@@ -65,8 +65,7 @@
       CHARACTER(500) CH001,CH002,SYREC,CHIN(3),ZEITSTRING
 !*****
       progname='THERIAK'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"Computation of equilibrium assemblages at given PT"'
       EINS=1
       ierr=0
@@ -709,7 +708,8 @@
       ALLES=NSOL
       CALL GIBBSTEST(EINS,ALLES)
 !----
-      DDX=1D-7
+!---- DDX was 1D-7. Changed 2025.03.25
+      DDX=1D-4
       FF=DBLE(NPTS)
       DO 500,JX=0,NPTS
       YWERT(JX)=0.0D0

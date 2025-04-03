@@ -1,4 +1,4 @@
-!therbin.f90  Version: 2023.03.06
+!therbin.f90  Version: 2023.06.11
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1989-2022  Christian de Capitani
 !
@@ -87,8 +87,7 @@
 !*****
 !CCCC      CALL CPUTIME(ZEITSTRING)
       progname='THERBIN'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"Computation of binary phase diagrams"'
       ierr=0
       call initialize('$THERBIN-FILES',ierr)

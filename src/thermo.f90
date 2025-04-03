@@ -1,4 +1,4 @@
-!thermo.f90  Version: 2023.03.06
+!thermo.f90  Version: 2023.06.11
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1989-2022  Christian de Capitani
 !
@@ -54,8 +54,7 @@
 !*****
       CALL CPUTIME(ZEITSTRING)
       progname='THERMO'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"Computation of thermodynamic functions"'
       ierr=0
       call initialize('$THERMO-FILES',ierr)

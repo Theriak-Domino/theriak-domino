@@ -1,4 +1,4 @@
-!domino.f90  Version: 2023.03.06
+!domino.f90  Version: 2023.06.11
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1984-2022  Christian de Capitani
 !
@@ -73,8 +73,7 @@
 !--
       call clearscreen
       progname='DOMINO'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"Computation of phase diagrams in complex systems"'
       isimu=0
       sdate=' '

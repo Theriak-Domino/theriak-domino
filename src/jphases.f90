@@ -1,4 +1,4 @@
-!jphases.f90  Version: 2023.03.06
+!jphases.f90  Version: 2023.06.11
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1989-2022  Christian de Capitani
 !
@@ -55,8 +55,7 @@
       CHARACTER(500) XLINE
 !--
       progname='jphases'
-      vers='whatever'
-!      vers = _CURRBUILDNAME_
+      vers=BUILDVERSION
       task='"read/write files in javathings/..."'
 !-----
       LARG=0

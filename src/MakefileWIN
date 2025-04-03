@@ -8,12 +8,10 @@
 
 #This makefile will work for building with the MinGW64 gfortran compiler,
 #or the Intel ifort and ifx compilers (OneAPI HP kit).
+# For versioning, set BUILDVERSION string in version.cmn
 
 
 ### developer set values based on preference
-
-## Set some unique value to print at top of program headers to identify build
-VERSIONSTR=2023.03.06
 
 ## Select compiler: gfortran, or ifort/ifx for intel
 #COMPILER=gfortran
@@ -39,7 +37,7 @@ LQUADMATH=
 ifeq ($(COMPILER),gfortran)
   MOD_EXT=obj
   PLAT = platf-win2
-  BFLAGS= -cpp -J$(ODIR) -D_CURRCMPLR_="'$(COMPILER)'"  -D_CURRBUILDNAME_="'$(VERSIONSTR)'"
+  BFLAGS= -J$(ODIR) 
 
           #-static-libgfortran -static-libgcc -nodefaultlibs \
           
@@ -53,11 +51,11 @@ ifeq ($(COMPILER),gfortran)
 else ifeq ($(COMPILER),ifort)
   MOD_EXT=obj
   PLAT = platf-win2
-  BFLAGS= /fpp /fp:strict /module:$(ODIR) /I$(ODIR)  \
-		/Qdiag-disable:8577 \
-        /D_CURRCMPLR_="'$(COMPILER)'" /D_CURRBUILDNAME_="'$(VERSIONSTR)'"
+  BFLAGS= /fpp /module:$(ODIR) /I$(ODIR)  \
+		/Qdiag-disable:8577 
+  # /fp:strict
   ifeq ($(BUILDTYPE),release)
-    CFLAGS = /O2 /nodebug $(BFLAGS) 
+    CFLAGS = /O3 /nodebug $(BFLAGS) 
   else
     CFLAGS = $(BFLAGS)
   endif
@@ -66,10 +64,9 @@ else ifeq ($(COMPILER),ifx)
   MOD_EXT=obj
   PLAT = platf-win2
   BFLAGS= /fpp /fp:strict /module:$(ODIR) /I$(ODIR)  \
-          /Qdiag-disable:8577 \
-          /D_CURRCMPLR_="'$(COMPILER)'"  /D_CURRBUILDNAME_="'$(VERSIONSTR)'"
+          /Qdiag-disable:8577 
   ifeq ($(BUILDTYPE),release)
-    CFLAGS = -O2 /nodebug $(BFLAGS) 
+    CFLAGS = -O3 /nodebug $(BFLAGS) 
   else
     CFLAGS = $(BFLAGS)
   endif
@@ -107,6 +104,7 @@ RELEASEDIRS:
 	-@ if NOT EXIST "$(RDIR)" mkdir "$(RDIR)"
 	xcopy "$(DDIR)\Documentation\" "$(RDIR)\Documentation\" /E 
 	xcopy /E "$(DDIR)\Examples\" "$(RDIR)\Examples\"
+	rmdir /Q /S  "$(RDIR)\Examples\theriag_2010c"
 	xcopy /E "$(DDIR)\Working\" "$(RDIR)\Working\"
 	copy  "$(DDIR)\ReleaseNotes.txt"  "$(RDIR)\ReleaseNotes.txt"
 	-@ if NOT EXIST "$(RDIR)\Programs" mkdir "$(RDIR)\Programs"
@@ -114,6 +112,7 @@ RELEASEDIRS:
 	copy    "theriakPC.ini"  "$(RDIR)\Programs\theriak.ini"
 	copy    "thhelp.txt"  "$(RDIR)\Programs\thhelp.txt"
 	rmdir /Q /S  "$(RDIR)\Programs\obj"
+	rmdir /Q /S  "$(RDIR)\Programs\docs"
 	mkdir "$(RDIR)\src"
 	copy    "."  "$(RDIR)\src\"
 	del     "$(RDIR)\src\*.mod"
@@ -315,8 +314,8 @@ pretherion : pretherion.obj $(PLAT).obj
 	$(COMP90) -o $(BDIR)/pretherion.exe $(ODIR)/pretherion.obj $(ODIR)/$(PLAT).obj $(LFLAGS)
 
 
-all : theriak domino guzzler explot therbin therter thermo thalia makemap theriag plotxy plotg jfiles jphases\
- cat2 theriakd therion pretherion
+all : theriak domino guzzler explot therbin therter thermo thalia makemap plotxy jfiles jphases\
+ cat2 therion pretherion
 
 release : RELEASEDIRS
 
@@ -325,6 +324,6 @@ release : RELEASEDIRS
 clean :
 	-del    $(ODIR)\*.obj  flags.mod  $(ODIR)\flags.mod $(BDIR)\theriak.exe $(BDIR)\domino.exe \
  $(BDIR)\guzzler.exe $(BDIR)\explot.exe $(BDIR)\therbin.exe $(BDIR)\therter.exe $(BDIR)\thermo.exe $(BDIR)\thalia.exe \
- $(BDIR)\makemap.exe $(BDIR)\theriag.exe $(BDIR)\plotxy.exe $(BDIR)\plotg.exe $(BDIR)\jfiles.exe $(BDIR)\jphases.exe \
- $(BDIR)\cat2.exe $(BDIR)\theriakd.exe $(BDIR)\therion.exe $(BDIR)\pretherion.exe
+ $(BDIR)\makemap.exe $(BDIR)\plotxy.exe $(BDIR)\jfiles.exe $(BDIR)\jphases.exe \
+ $(BDIR)\cat2.exe $(BDIR)\therion.exe $(BDIR)\pretherion.exe
   

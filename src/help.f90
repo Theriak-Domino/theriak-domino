@@ -1,4 +1,4 @@
-!help.f90  Version: 2023.03.06
+!help.f90  Version: 2023.06.11
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1984-2022  Christian de Capitani
 !
@@ -88,8 +88,8 @@
       WRITE (iu,1000) progname(1:i),vers(1:j),os(1:k)
       j=i+j+k
 1000  FORMAT (/, &
-      ' Program',1x,a,', Version (dd.mm.yyyy)',1x,a,1x,'(',a,')')
-      write(iu,2) ('=',i=1,32+2+j)
+      ' Program',1x,a,', Version (yyyy.mm.dd)',1x,a,1x,'(',a,')')
+      write(iu,2) ('=',i=1,34+j)
 2     format(1x,130a1)
       call LASTCHAR(task,i)
       write(iu,101) task(1:i)
@@ -101,18 +101,13 @@
       /,11x,'Konstantin Petrakakis (Vienna, Austria)', &
       /,11x,'E-mail: Konstantin.Petrakakis@univie.ac.at'/)
       write(iu,2) ('=',j=1,80)
-      !bdkt - write compilation info
+      !write compiler version
       CALL getdate(cdateandtime)
       compver = COMPILER_VERSION()
-      !compopt=compiler_options()
-!!!      PRINT *, 'Compile date:     '//__DATE__//'  '//__TIME__
-      PRINT *, 'Compiler version: '//trim(adjustl(compver))
-!      PRINT *, 'Compiler options: '
-!      PRINT *, 'Compiler flags:   '//_CURRCFLAGSTR_
-!      PRINT *, 'Linker flags:     '//_CURRLFLAGSTR_
+      write(iu,102) 'Compiler version: '//trim(adjustl(compver))
+102   format(1x,a)      
+      !PRINT *, 'Compiler version: '//trim(adjustl(compver))
       DEALLOCATE(compver)
-      !deallocate(compopt)
-      !edkt
       if(iu.eq.6.and.ghelp.eq.1) then
           i=clear
           if(clear.eq.1) clear=0
