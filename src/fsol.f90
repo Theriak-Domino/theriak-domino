@@ -337,10 +337,17 @@
       NAME(8)='h2oL'
       NAME(9)='anoL' !not named an1L b/c it is not made from anL
       END IF
-  !-----**HPds6 Holland et al. 2018 NCKFMASHTOCr melt model**
-      !-----**Coded by dkt**
-      !     Gives nearly identical results as TC in some cases, but prob not all.
-      IF (SOLNAM.EQ.'LIQH18') THEN
+  !-----**HPds633 Holland et al. 2018 NCKFMASHTOCr melt model and **
+  !-----**HPds636 Green   et al. 2025 NCKFMASHTOCr melt model**
+      !     LIQH18 gave nearly identical results to TC 350 2018 ax models, 
+      !     but the TC ax codings for liquid had a typo in the site fractions.
+      !     That bug did not impact TD at all, and the original LiqHGP18 used
+      !     in TD did not contain the bug in the TC ax codings.
+      !     LIQG25 gives the same results as TC 351 and Green et al. 2025 ig ax
+      !     models. Since the 2018 site fraction bug in TC codings do not impact
+      !     TD (the TD version was correct), the same LiqHGP18 subroutine
+      !     is used for both LIQH18 and LIQG25 models
+      IF (SOLNAM.EQ.'LIQH18' .OR. SOLNAM.EQ.'LIQG25') THEN
       N=12
       NAME(1)='q4L'    !NAME(1)='qL1'
       NAME(2)='sl1L'   !NAME(2)='slL1'
@@ -744,9 +751,12 @@
       MODELL='Jennings and Holland (2015). JPet, 869-892. NCFMASOCr peridotite melting.'
       END IF
 !-----**hopo liquid - Holland et al '18 Liq**
-      !-----**Coded by dkt. OK but not perfect.**
       IF (SOLNAM.EQ.'LIQH18') THEN
       MODELL='Holland et al. 2018. JPet, 881-900. NCKFMASHTOCr peridotite melting.'
+      END IF
+!-----**hopo liquid - Holland et al '18 Liq**
+      IF (SOLNAM.EQ.'LIQG25') THEN
+      MODELL='Green et al. 2025. JPet. Corrigendum to NCKFMASHTOCr melting.'
       END IF
 !-----**hopo liquid - Tomlinson & Holland '21 Liq**
       !-----**Coded by dkt. Known to not reproduce TC yet.**
@@ -1247,9 +1257,9 @@
       CALL LiqJH15(X,A,N)
       RETURN
       END IF
-!-----** Liquid, HGP (2018) **
+!-----** Liquid, HGP (2018), Green et al. 2025 **
       !Coded by D.K. Tinkham, Aug? 2018
-      IF (SOLNAM.EQ.'LIQH18') THEN
+      IF (SOLNAM.EQ.'LIQH18' .OR. SOLNAM.EQ.'LIQG25') THEN
       CALL LiqHGP18(X,A,N)
       RETURN
       ENDIF

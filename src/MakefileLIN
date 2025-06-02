@@ -6,9 +6,9 @@
 ### developer set values based on preference
 
 ## Select compiler: gfortran, or ifort/ifx for intel
-COMPILER=gfortran
+#COMPILER=gfortran
 #COMPILER=ifort
-#COMPILER=ifx
+COMPILER=ifx
 
 ## Select debug or release build 
 BUILDTYPE=release
@@ -20,7 +20,7 @@ ODIR=$(BUILDDIR)/obj
 SRCDIR=.
 
 ## Static gfortran build requires specifying your specific path to libquadmath.a
-LQUADMATH=/usr/lib/gcc/x86_64-redhat-linux/14/libquadmath.a
+#LQUADMATH=/usr/lib/gcc/x86_64-redhat-linux/14/libquadmath.a
 #LQUADMATH=
 
 
@@ -57,7 +57,7 @@ else ifeq ($(COMPILER),ifort)
 else ifeq ($(COMPILER),ifx)
   MOD_EXT=o
   PLAT = platf-osx
-  BFLAGS= -fpp -module $(ODIR) -I$(ODIR) -I$(SRCDIR)
+  BFLAGS= -fpp -static-intel -module $(ODIR) -I$(ODIR) -I$(SRCDIR)
   #-qsimd-honor-fp-model -qsimd-serialize-fp-reduction 
   #-fp-model strict 
   ifeq ($(BUILDTYPE),release)
