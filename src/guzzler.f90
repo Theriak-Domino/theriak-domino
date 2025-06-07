@@ -97,9 +97,7 @@
 !...... FILE  7: NEW NPLOIG-INPUT   ---> unit= cln
 !...... FILE  9: GITTER(0,...)      ---> unit= grd
 !...... FILE 10: TABLE OF REACTIONS ---> unit= rxn
-!
 !---------------------------------------------------------------------
-!
       CHARACTER(500) wpath,tpath,CPLNAME,FNAME,LOGFNAME
       INTEGER(4) iwpath,itpath
       character filetype(8)*3
@@ -114,8 +112,7 @@
       data largum /5*' '/
       data filetype /'hlp','kbd','scr','log','cln','plt','rxn','grd'/
 !-----
-
-
+!
       DO I0=0,1
         DO I1=-1,MAXGRD
           DO I2=-1,MAXGRD
@@ -137,8 +134,7 @@
         Y=0.0D0
         IP=0
       END DO
-
-
+!
 !      DATA GITTER/20808*0/
 !      DATA XX/50000*0.0D0/
 !      DATA YY/50000*0.0D0/
@@ -378,7 +374,6 @@
       END IF
 !=====
 !=====
-!
 !----- INITIALIZE USEFUL VARIABLES
 !
 !...... GRS: SIZE OF LABELS         GRZ: SIZE OF NUMBERS
@@ -615,7 +610,8 @@
   510 CONTINUE
       ANGE(N1,1)=DMOD(ANGE(N1,1),360.0D0)
       IF (ANGE(N1,1).GT.180.0D0) ANGE(N1,1)=ANGE(N1,1)-360.0D0
-      IF ((DABS(ANGE(N1,1))-90.0D0).LT.1D-12) THEN
+!!eq      IF (DABS(ANGE(N1,1)).EQ.90.0D0) THEN
+      IF (DABS((DABS(ANGE(N1,1))-90.0D0)).LT.1D-12) THEN
       ANGE(N1,1)=ANGE(N1,1)/DEGRAD
       ELSE
       ANGE(N1,1)=DATAN(DTAN(ANGE(N1,1)/DEGRAD)*YFAC/XFAC)
@@ -634,7 +630,8 @@
       XPOS(N1,1)=XPOS(N1,1)+F1*XKOR-F2*YKOR
       YPOS(N1,1)=YPOS(N1,1)+F2*XKOR+F1*YKOR
       LINKS(N1)=1
-      IF ((DABS(ANGE(N1,1))-90.0).LT.1D-12) THEN
+!!eq      IF (DABS(ANGE(N1,1)).EQ.90.0) THEN
+      IF (DABS((DABS(ANGE(N1,1))-90.0)).LT.1D-12) THEN
       IF (XPOS(N1,1).GT.XPOS(N1,2)) LINKS(N1)=2
       ELSE
       FF=YPOS(N1,2)-DTAN(ANGE(N1,1))*(XPOS(N1,2)-XPOS(N1,1))
@@ -986,7 +983,8 @@
       DO 600,LL=1,NL
 !-----
       IF (CODE(LL).EQ.3) THEN
-      IF ((DABS(ANGE(LL,1))-PI2).LT.1D-12) THEN
+!!eq      IF (DABS(ANGE(LL,1)).EQ.PI2) THEN
+      IF (DABS((DABS(ANGE(LL,1))-PI2)).LT.1D-12) THEN
       FF1=1.0D0
       ELSE
       FF1=DSIGN(1.0D0,ANGE(LL,1))*DSIGN(1.0D0,DTAN(ANGE(LL,1)))
@@ -1039,7 +1037,8 @@
       F2=DSIN(THE)
       X1=((X1+F1*XKOR-F2*YKOR)/XFAC)+XMIN
       Y1=((Y1+F2*XKOR+F1*YKOR)/YFAC)+YMIN
-      IF ((DABS(THE)-PI2).LT.1D-12) THEN
+!!eq      IF (DABS(THE).EQ.PI2) THEN
+      IF (DABS((DABS(THE)-PI2)).LT.1D-12) THEN
       THEP=THE*DEGRAD
       ELSE
       THEP=DATAN(DTAN(THE)*XFAC/YFAC)*DEGRAD
@@ -1067,7 +1066,8 @@
  2008 FORMAT (6I5)
       X1=(XPOS(LL,1)/XFAC)+XMIN
       Y1=(YPOS(LL,1)/YFAC)+YMIN
-      IF ((DABS(ANGE(LL,1))-PI2).LT.1D-12) THEN
+!!eq      IF (DABS(ANGE(LL,1)).EQ.PI2) THEN
+      IF (DABS((DABS(ANGE(LL,1))-PI2)).LT.1D-12) THEN
       THE=ANGE(LL,1)*DEGRAD
       ELSE
       THE=DATAN(DTAN(ANGE(LL,1))*XFAC/YFAC)*DEGRAD
@@ -1090,7 +1090,8 @@
       ELSE
       F1=GRZ*1.5D0/(2.0D0*DSIN(ANGE(LL,2)))
       END IF
-      IF ((DABS(ANGE(LL,2))-PI2).LT.1D-12) THEN
+!!eq      IF (DABS(ANGE(LL,2)).EQ.PI2) THEN
+      IF (DABS((DABS(ANGE(LL,2))-PI2)).LT.1D-12) THEN
       F2=1D50
       ELSE
       F2=(SIZE+GRZ*0.5D0)/(2.0D0*DCOS(ANGE(LL,2)))
@@ -1714,14 +1715,14 @@
 !********************************
       SUBROUTINE writetit(iu,os)
       implicit none
-      INCLUDE 'version.cmn'
       integer  hlp,kbd,scr,log,cln,plt,rxn,grd
       common /iounits/ hlp,kbd,scr,log,cln,plt,rxn,grd
       character progname*30,vers*30,task*80
       character *(*) os
       integer i, j, k, iu
       progname='GUZZLER'
-      vers=BUILDVERSION
+      vers='2025_03_20'
+!      vers = _CURRBUILDNAME_
       task='"Labeling reactions in graphics files"'
       call LABLA(progname,i)
       call LABLA(vers,j)

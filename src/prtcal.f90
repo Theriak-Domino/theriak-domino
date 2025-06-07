@@ -65,6 +65,9 @@
 !      SECO=.TRUE.
       VCHECK=.FALSE.
 !!!      VCHECK=.TRUE.
+      ASSOK=.TRUE.
+      MUEOK=.TRUE.
+!
       J=0
       ZERO=0.0D0
       DXP=P/1.0D5
@@ -83,119 +86,34 @@
         MUE(II)=0.0D0
         AR001(II)=0.0D0
       END DO
-!----
-
-
-!     goto 987
-
-
-!---- check for stable endmembers
-!---- was for some time in 'CLEAN' in gmini
-!      IF(.FALSE.) THEN
-      DO I=1,NUN
-        IF (EMCODE(I).EQ.0) THEN
-          IF (EMSOL(NUMMER(I)).NE.0) THEN
-            WRITE (UNIT=6,FMT='(''stable endmember at I='',I3,2x,A16)') I,NAME(NUMMER(I))
-            IS=EMSOL(NUMMER(I))
-            DO II=1,NEND(IS)
-              XXEM(II)=0.0D0
-            END DO
-            XXEM(EMNR(NUMMER(I)))=1.0D0
-            CALL NEWPH(IS)
-            IF (DABS(G(I)-G(NMAX)).GT.1D-12) THEN
-              WRITE (UNIT=6,FMT='(''Gi, Gnmax  '',1PE14.7,2X,1PE14.7)') &
-                G(I),G(NMAX)
-            END IF
-            I001=I
-            I002=NMAX
-            CALL COLCHG(I001,I002)
-            NN(I)=NN(NMAX)
-            NN(NMAX)=0.0D0
-          END IF
-        END IF
-      END DO
-!      END IF
-!---- end check for stable endmembers
-!----
-
-
-!  987 continue
-
-
-!---- ordnen nach Nummern (Solutions first)
-      I=1
-! GE replaced with GT, aug2009
-   10 IF (I.GT.NUN-1) GOTO 1
-      IF ((NUMMER(I+1).LT.NUMMER(I)).OR.(NUMMER(I).EQ.0.AND. &
-      NUMMER(I+1).EQ.0.AND.EMCODE(I+1).LT.EMCODE(I))) THEN
-      I001=I+1
-      CALL COLCHG(I,I001)
-      I=I-1
-      ELSE
-      I=I+1
-      END IF
-      IF (I.EQ.0) I=2
-      GOTO 10
-    1 CALL MULCHK
-      CALL NAMESTPH
-!cdcmar08
-! GE replaced with GT, aug2009
-!---- ordnen Solutions
-      I=1
-   11 IF (I.GT.NUN2-1) GOTO 2
-      IF (EMCODE(I).EQ.EMCODE(I+1).AND. &
-      STSOLCOD(I+1).LT.STSOLCOD(I)) THEN
-      I001=I+1
-      CALL COLCHG(I,I001)
-      I002=STSOLCOD(I)
-      STSOLCOD(I)=STSOLCOD(I001)
-      STSOLCOD(I001)=I002
-      CH24=STPHNAM(I)
-      STPHNAM(I)=STPHNAM(I001)
-      STPHNAM(I001)=CH24
-      CH24=SHORTNAM(I)
-      SHORTNAM(I)=SHORTNAM(I001)
-      SHORTNAM(I001)=CH24
-!     STPHCOD ist sowieso gleich
-      I=I-1
-      ELSE
-      I=I+1
-      END IF
-      IF (I.EQ.0) I=2
-      GOTO 11
-    2 CONTINUE
-!-----
+!-----------------------------------------
+!---- calculate total G(system) for output
+!-----------------------------------------
       GGTOT=0.0D0
       DO I=1,NUN
         SUMME=0.0D0
         DO II=1,NUN2
           SUMME=SUMME+NN(II)*X(II,I)
         END DO
-
-
-!987
-!        WRITE (UNIT=scr,FMT='(''NAM,GG '',A,1PE12.5)')  SHORTNAM(I),GG(I)
-
-
         GGTOT=GGTOT+SUMME*GG(I)
       END DO
-!DC09okt06      GGTOT=-GGTOT
       GGTOT=-GGTOT
       TOTAL=GGTOT
 !*****
-!*****
-!      tests with 5 and 3 points
+!      tests with 5 and 3 points (subroutines commented out)
 !      CALL DSDVTEST5
 !      CALL DSDVTEST3
 !*****
-!*****
+!************************
+!---- if PRTLOG(9): table
+!************************
 !---- with prtlog(11) (short table) the following has to be made 
 !---- by the main program
 !---- PRTLOG(9): print table
       IF (PRTLOG(9)) THEN
       NROWTBL=NROWTBL+1
       IF (NROWTBL.GT.MAXTBL) THEN
-      WRITE (UNIT=6,FMT='(''too many rows: calculation stopped'')')
+      WRITE (UNIT=6,FMT='(''too many rows: calculation stopped ?'')')
       NROWTBL=NROWTBL-1
 !C      CALL PRTTBL
       PRTLOG(9)=.FALSE.
@@ -231,9 +149,12 @@
         CALL SETTBL(CH16,X16)
       END DO
       END IF
+!---- end PRTLOG(9): table
+!*************************
 !*****
-!*****
+!**************************
 !---- PRTLOG(10): pixelmaps
+!**************************
       IF (PRTLOG(10)) THEN
        NROWTBL=NROWTBL+1
        CH16='G_system'
@@ -243,6 +164,8 @@
 !----  for use with PRTLOG(10) pixelmaps
        CALL DSDV10
       END IF
+!---- end PRTLOG(10): pixelmaps
+!******************************
 !*****
       IF (TEST.LT.0.0D0) THEN
       DO IS=1,NSOL
@@ -262,6 +185,9 @@
 !----  PRTLOG(9): print table
 !      IF (PRTLOG(9)) CALL DSDV
 !=====
+!****************************************************************
+!---- PRTLOG(6),PRTLOG(7),PRTLOG(8) print "normal" theriak output
+!****************************************************************
       IF (PRTLOG(6).OR.PRTLOG(7).OR.PRTLOG(8)) THEN
       SPACE=.TRUE.
       DO 502,I=1,NUN2
@@ -277,6 +203,7 @@
       IF (DRU) THEN
 !-----
 !----- determine which headers to print
+!-----
       DO I=1,NUN2
         IF (ISASOLID(I)) THEN
           WHS=.TRUE.
@@ -293,7 +220,9 @@
         END IF
       END DO
 !-----
-!----- hier Volumen mit dG/dP, volume check
+!----- Volume check with dG/dP
+!----- only if VCHECK is true (defined at beginning of PRTCAL)
+!-----
       IF (VCHECK) THEN
       PVOR=P
       DO I=1,NUN2
@@ -315,6 +244,7 @@
 !      DO I=1,NUN
 !       WRITE (UNIT=6,FMT='(A2,2X,F20.10)') CHNAME(I),BULK(I)
 !      END DO
+!-----
       write (unit=6,fmt='('''')')
       write (unit=out,fmt='('''')')
 !
@@ -360,8 +290,10 @@
       ' loops. Compare columns "activity" and "act.(x)" below')
       END IF
 !10-B-
+      IF ((LOO1-1).GE.LO1MAX) ASSOK=.FALSE.
       IF (NUN2.LE.0) RETURN
       END IF
+!end if (PRTLOG(6).OR.PRTLOG(7).OR.PRTLOG(8))
       IF (PRTLOG(6)) THEN
 !10-A-
       IF (DRU) THEN
@@ -452,6 +384,8 @@
       CALL MUECAL(IS,AR001,MUE)
 !+++++
 !*****
+!----- SECO is used to print solution compositions for ini
+!----- is set false in PROREAD. True if prtcod>10
 !cdcFeb2011
       IF (SECO) THEN
 !      IF (STPHNAM(I)(1:5).EQ.'ClAMP') THEN
@@ -461,10 +395,7 @@
 !      CLOSE (UNIT=60)
 !      END IF
 !=====Jul2011
-
 !     statt ACCESS='APPEND':  POSITION='APPEND'
-
-
       CALL LABLA(SOLNAM(IS),I001)
       OPEN (UNIT=60,FILE='seco_'//SOLNAM(IS)(1:I001), &
       STATUS='UNKNOWN',POSITION='APPEND')
@@ -508,6 +439,7 @@
       CH2='**'
       SPACE=.TRUE.
       AFAIL(II)=.TRUE.
+      MUEOK=.FALSE.
       ELSE
       IF (ZEND(IS,II).EQ.0) THEN
        CH2='  '
@@ -721,6 +653,9 @@
 !+++++
 !+++++
   510 CONTINUE
+!**********************************************************************
+!---- end of PRTLOG(6),PRTLOG(7),PRTLOG(8) print "nomal" theriak output
+!**********************************************************************
 !
 !+++++ check for KD (Fe-Mg)
 !      DO I=1,NUN2
@@ -1508,7 +1443,145 @@
       RETURN
       END
 !-----
-!******************************
+!*************************************************************
+!*************************************************************
+      SUBROUTINE PRTCHECK
+      IMPLICIT NONE
+      INCLUDE 'theriak.cmn'
+      include 'files.cmn'
+!-----END OF COMMON VARIABLES
+      INTEGER(4) I,II,IS,I001,I002
+      CHARACTER(24) CH24
+      REAL(8) EXPO,ACT,XACT,AR001(EMAX),MUE(EMAX)
+      VCHECK=.FALSE.
+      ASSOK=.TRUE.
+      MUEOK=.TRUE.
+!
+      DO II=1,EMAX
+        MUE(II)=0.0D0
+        AR001(II)=0.0D0
+      END DO
+!--------------------------------
+!---- check for stable endmembers
+!--------------------------------
+!---- was for some time in 'CLEAN' in gmini
+!      IF(.FALSE.) THEN
+      DO I=1,NUN
+        IF (EMCODE(I).EQ.0) THEN
+          IF (EMSOL(NUMMER(I)).NE.0) THEN
+            WRITE (UNIT=6,FMT='(''stable endmember at I='',I3,2x,A16)') I,NAME(NUMMER(I))
+            IS=EMSOL(NUMMER(I))
+            DO II=1,NEND(IS)
+              XXEM(II)=0.0D0
+            END DO
+            XXEM(EMNR(NUMMER(I)))=1.0D0
+            CALL NEWPH(IS)
+            IF (DABS(G(I)-G(NMAX)).GT.1D-12) THEN
+              WRITE (UNIT=6,FMT='(''Gi, Gnmax  '',1PE14.7,2X,1PE14.7)') &
+                G(I),G(NMAX)
+            END IF
+            I001=I
+            I002=NMAX
+            CALL COLCHG(I001,I002)
+            NN(I)=NN(NMAX)
+            NN(NMAX)=0.0D0
+          END IF
+        END IF
+      END DO
+!      END IF
+!---- end check for stable endmembers
+!------------------------------------------
+!---- ordering by numbers (Solutions first)
+!------------------------------------------
+      I=1
+! GE replaced with GT, aug2009
+   10 IF (I.GT.NUN-1) GOTO 1
+      IF ((NUMMER(I+1).LT.NUMMER(I)).OR.(NUMMER(I).EQ.0.AND. &
+      NUMMER(I+1).EQ.0.AND.EMCODE(I+1).LT.EMCODE(I))) THEN
+      I001=I+1
+      CALL COLCHG(I,I001)
+      I=I-1
+      ELSE
+      I=I+1
+      END IF
+      IF (I.EQ.0) I=2
+      GOTO 10
+    1 CALL MULCHK
+      CALL NAMESTPH
+!cdcmar08
+! GE replaced with GT, aug2009
+!---- Solutions
+      I=1
+   11 IF (I.GT.NUN2-1) GOTO 2
+      IF (EMCODE(I).EQ.EMCODE(I+1).AND. &
+      STSOLCOD(I+1).LT.STSOLCOD(I)) THEN
+      I001=I+1
+      CALL COLCHG(I,I001)
+      I002=STSOLCOD(I)
+      STSOLCOD(I)=STSOLCOD(I001)
+      STSOLCOD(I001)=I002
+      CH24=STPHNAM(I)
+      STPHNAM(I)=STPHNAM(I001)
+      STPHNAM(I001)=CH24
+      CH24=SHORTNAM(I)
+      SHORTNAM(I)=SHORTNAM(I001)
+      SHORTNAM(I001)=CH24
+!     STPHCOD ist sowieso gleich
+      I=I-1
+      ELSE
+      I=I+1
+      END IF
+      IF (I.EQ.0) I=2
+      GOTO 11
+    2 CONTINUE
+!----------------------------------------------------------
+!-----
+      IF ((LOO1-1).GE.LO1MAX) ASSOK=.FALSE.
+      IF (NUN2.LE.0) RETURN
+!-----
+!+++++
+      DO 510,I=1,NUN2
+!+++++
+      IF (EMCODE(I).GT.0) THEN
+!-----
+      IS=EMCODE(I)
+      DO I001=1,EMAX
+        AR001(I001)=XEM(I,I001)
+      END DO
+      CALL MUECAL(IS,AR001,MUE)
+!-----
+      DO 505,II=1,NEND(IS)
+!-----
+      EXPO=-GG(EM(IS,II))/RT
+      IF (EXPO.LT.-150) THEN
+        ACT=0.0D0
+      ELSE
+        ACT=DEXP(EXPO)
+      END IF
+      EXPO=(MUE(II)-GG(EM(IS,II)))/RT
+        IF (EXPO.LT.-150) THEN
+        XACT=0.0D0
+      ELSE
+        XACT=DEXP(EXPO)
+      END IF
+      IF (DABS(ACT-XACT).GT.1D-4) THEN
+      MUEOK=.FALSE.
+      GOTO 666
+      END IF
+!-----
+  505 CONTINUE
+!-----
+      END IF
+!+++++
+  510 CONTINUE
+!+++++
+  666 CONTINUE
+!=====
+      RETURN
+      END
+!-----
+!*************************************************************
+!*************************************************************
       SUBROUTINE FINCLEAN
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -1556,7 +1629,8 @@
       RETURN
       END
 !-----
-!******************************
+!*************************************************************
+!*************************************************************
       SUBROUTINE COMPOS01
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -1751,7 +1825,8 @@
       RETURN
       END
 !-----
-!******************************
+!*************************************************************
+!*************************************************************
       SUBROUTINE COMPOS
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -1902,7 +1977,8 @@
       RETURN
       END
 !-----
-!******************************
+!*************************************************************
+!*************************************************************
       SUBROUTINE MULCHK
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -1989,7 +2065,8 @@
    11 RETURN
       END
 !-----
-!******************************
+!*************************************************************
+!*************************************************************
 !      SUBROUTINE PRPRPR(NROW,NCOL,RNR,CNR,ARR)
 !!----- only used to test NAMESTPH
 !      IMPLICIT NONE
@@ -2007,7 +2084,8 @@
 !      RETURN
 !      END
 !-----
-!******************************
+!*************************************************************
+!*************************************************************
       SUBROUTINE NAMESTPH
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -2151,7 +2229,8 @@
       RETURN
       END
 !-----
-!******************************
+!*************************************************************
+!*************************************************************
       SUBROUTINE PRTSTR(N1,N2)
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -2232,7 +2311,8 @@
       RETURN
       END
 !-----
-!******************************
+!*************************************************************
+!*************************************************************
       SUBROUTINE PRTAAA(N1,N2)
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -2309,7 +2389,8 @@
       RETURN
       END
 !-----
-!******************************
+!*************************************************************
+!*************************************************************
       SUBROUTINE VOLCALC
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -2533,7 +2614,8 @@
       RETURN
       END
 !-----
-!******************************
+!*************************************************************
+!*************************************************************
       SUBROUTINE RECHG2(I,DGX)
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -2568,7 +2650,8 @@
       RETURN
       END
 !-----
-!******************************
+!*************************************************************
+!*************************************************************
       SUBROUTINE RECHG(DGX)
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -3271,8 +3354,9 @@
       RETURN
       END
 !
-!!-----
-!!******************************
+!-----
+!*************************************************************
+!*************************************************************
 !      SUBROUTINE DSDVTEST5
 !      IMPLICIT NONE
 !      INCLUDE 'theriak.cmn'
@@ -3336,8 +3420,9 @@
 !!*****
 !      RETURN
 !      END
-!!-----
-!!******************************
+!-----
+!*************************************************************
+!*************************************************************
 !      SUBROUTINE DSDVTEST3
 !      IMPLICIT NONE
 !      INCLUDE 'theriak.cmn'
@@ -3402,7 +3487,8 @@
 !      RETURN
 !      END
 !-----
-!******************************
+!*************************************************************
+!*************************************************************
       SUBROUTINE DSDV
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -3469,7 +3555,8 @@
       RETURN
       END
 !-----
-!******************************
+!*************************************************************
+!*************************************************************
       SUBROUTINE DSDV10
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -3537,7 +3624,8 @@
       RETURN
       END
 !-----
-!******************************
+!*************************************************************
+!*************************************************************
       SUBROUTINE SORTOFNURVONPT
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -3599,7 +3687,8 @@
       RETURN
       END
 !-----
-!********************************
+!*************************************************************
+!*************************************************************
       SUBROUTINE SETTBL(CH16,X16)
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -3652,7 +3741,8 @@
       RETURN
       END
 !-----
-!********************************
+!*************************************************************
+!*************************************************************
       SUBROUTINE SETMAP(CH16,X16)
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -3723,7 +3813,9 @@
       END IF
       RETURN
       END
-!********************************
+!-----
+!*************************************************************
+!*************************************************************
       SUBROUTINE PRTTBL
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -3796,7 +3888,8 @@
       RETURN
       END
 !-----
-!******************************
+!*************************************************************
+!*************************************************************
       SUBROUTINE MINIREA(NP)
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
@@ -3897,7 +3990,8 @@
       RETURN
       END
 !-----
-!******************************
+!*************************************************************
+!*************************************************************
       SUBROUTINE MINIMAT2(AA,NCOL,NROW,CONR,RANG,HEAD)
       IMPLICIT NONE
       include 'files.cmn'
@@ -4042,6 +4136,3 @@
 !
       RETURN
       END
-!-----
-!*************************************************************
-!*************************************************************

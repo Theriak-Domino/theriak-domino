@@ -2,4 +2,4 @@
 !change this value when building programs to provide a build-specific
 !version name in the program header section during program startup. 
 
-CHARACTER(LEN=30), PARAMETER :: BUILDVERSION = '2023.06.11'
+CHARACTER(LEN=30), PARAMETER :: BUILDVERSION = '2025.06.05'

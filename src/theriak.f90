@@ -708,7 +708,8 @@
       ALLES=NSOL
       CALL GIBBSTEST(EINS,ALLES)
 !----
-      DDX=1D-7
+!---- DDX was 1D-7. Changed 2025.03.25
+      DDX=1D-4
       FF=DBLE(NPTS)
       DO 500,JX=0,NPTS
       YWERT(JX)=0.0D0

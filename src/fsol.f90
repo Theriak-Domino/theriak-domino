@@ -176,6 +176,12 @@
       NAME(1)='FAYALITE'
       NAME(2)='FORSTERITE'
       END IF
+!-----**Olivine deliberately violating the Gibbs-Duhem equation**
+      IF (SOLNAM.EQ.'OLIV_W') THEN
+      N=2
+      NAME(1)='FAYALITE'
+      NAME(2)='FORSTERITE'
+      END IF
 !-----**Quasi-Chemical models (Pelton (19..))**
       IF (SOLNAM.EQ.'MGSI.L') THEN
       N=2
@@ -686,6 +692,10 @@
       IF (SOLNAM.EQ.'G-OLIV') THEN
       MODELL='Olivine: (Ghiorso (1984))'
       END IF
+!-----**Olivine deliberately violating the Gibbs-Duhem equation**
+      IF (SOLNAM.EQ.'OLIV_W') THEN
+      MODELL='Olivine: invalid model'
+      END IF
 !-----**Quasi-Chemical models (Pelton (19..))**
       IF (SOLNAM.EQ.'MGSI.L') THEN
       MODELL='quasi-chemical model (Pelton (19..))'
@@ -1127,6 +1137,13 @@
       F2=DEXP((8.3638D3*(1.0D0-X(2))*(1.0D0-X(2))**2)/(R*T))
       A(1)=(X(1)*F1)**2
       A(2)=(X(2)*F2)**2
+!-----
+      RETURN
+      END IF
+!-----**Olivine deliberately violating the Gibbs-Duhem equation**
+      IF (SOLNAM.EQ.'OLIV_W') THEN
+      A(1)=X(1)
+      A(2)=X(2)*X(2)
 !-----
       RETURN
       END IF

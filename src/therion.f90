@@ -265,6 +265,7 @@
       ELSE
       CHIN(3)=CH001
       END IF
+      CHIN3=CHIN(3)
 !----for therion
       CALL UPLOW2(CH001)
       CALL TAXI(CH001,KEYW)
@@ -423,7 +424,7 @@
       CALL CPU_TIME(FF)
       CALL LABLA(ZEITSTRING,I001)
       WRITE (scr,150) ZEITSTRING(1:I001)
-  150 FORMAT (/,' exit THERIAK',/,1X,A)
+  150 FORMAT (/,' exit THERION',/,1X,A)
       END
 !-----
 !*************************************************************
@@ -477,7 +478,9 @@
 !---- UNIT=51
 !             checkphases_database | lists phases not found in database
 !---- UNIT=55
-!             check_missing-phases | summary of all phases not found in database
+!             check_missing_phases | summary of all phases not found in database
+!---- UNIT=57
+!             check_summary | summary for database
 !----
 
 !     make a list of all folders beginning with "_"
@@ -522,8 +525,9 @@
 !----
 ! does some additional printing
       PRTEST=.TRUE.
+! symbol for calculated point in diagram
       PTSYMB=1
-!
+! text angle (not used)
       TANG=0.0D0
       FICOM=0
 !----
@@ -568,25 +572,33 @@
 ! make a list of colors
 
       NCOLORS=6
-      DO I=1,20
+      DO I=1,PLAUTMAX
         LCOLOR(I)=' '
         FCOLOR(I)=' '
       END DO
+!-----gray
       FGRAU='LCOLOR  0.5  0.5  0.5'
+!-----black
       LCOLOR(1)='LCOLOR   0   0   0'
       FCOLOR(1)='FCOLOR   0   0   0'
+!-----red
       LCOLOR(2)='LCOLOR   1   0   0'
       FCOLOR(2)='FCOLOR   1   0   0'
-      LCOLOR(3)='LCOLOR   0   1   0'
-      FCOLOR(3)='FCOLOR   0   1   0'
-      LCOLOR(3)='LCOLOR   0   0   1'
-      FCOLOR(3)='FCOLOR   0   0   1'
-      LCOLOR(4)='LCOLOR   0   1   1'
-      FCOLOR(4)='FCOLOR   0   1   1'
-      LCOLOR(5)='LCOLOR   1   0.5   0'
-      FCOLOR(5)='FCOLOR   1   0.5   0'
+!-----dark green
+      LCOLOR(3)='LCOLOR   0   0.6   0'
+      FCOLOR(3)='FCOLOR   0   0.6   0'
+!-----blue
+      LCOLOR(4)='LCOLOR   0   0   1'
+      FCOLOR(4)='FCOLOR   0   0   1'
+!-----orange-brown
+      LCOLOR(5)='LCOLOR  0.7  0.4  0.2'
+      FCOLOR(5)='FCOLOR  0.7  0.4  0.2'
+!-----pink
       LCOLOR(6)='LCOLOR   1   0   1'
       FCOLOR(6)='FCOLOR   1   0   1'
+!-----green
+      LCOLOR(7)='LCOLOR   0   1   0'
+      FCOLOR(7)='FCOLOR   0   1   0'
 !----
       DO I=1,6
        CHLINE(I)=' '
@@ -629,6 +641,24 @@
       TITLE='no TITLE'
       CALL CHECKNAME1(DBNAME,DBUSED)
       REAOK=.FALSE.
+!---
+      ALLEXPCOUNTED=.FALSE.
+      EXINREA=0
+      ASSCODE=-1
+      VALCODE=-1
+      EXCCODE=-1
+      COMCODE=-1
+!
+      NEXPTOT=0
+      NEXPASS=0
+      NEXPVAL=0
+      NEXPCOM=0
+      NEXPEXC=0
+!--
+      NASSINC=0
+      NCOMINC=0
+      NVALINC=0
+      NEXCINC=0
 !--
       CALL EXEXT(BATEX)
       IF (BATEX.EQ.' ') THEN
@@ -640,6 +670,9 @@
 !--
       CALL LABLA(DBUSED,I2)
       OPEN (UNIT=55,FILE='check_missing_phases_'//DBUSED(1:I2),STATUS='UNKNOWN')
+      OPEN (UNIT=57,FILE='check_summary_'//DBUSED(1:I2),STATUS='UNKNOWN')
+      CALL LABLA(sdate,I1)
+      WRITE (UNIT=57,FMT='(A,3X,A)') 'check_summary_'//DBUSED(1:I2),sdate(1:I1)
 !!-open reatable_database
 !      CALL LABLA(DBNAME,I1)
 !      OPFILE=NEWDIR(1:LDIR)//'reatable_'//DBNAME(1:I1)
@@ -774,6 +807,7 @@
       ENO(4)=1
       ENO(1)=1
 !
+!     for a series to be read all ENOs must be 1 (1 and 4 is set to 1)
 !--   ENO(1)=1 if REAC (or ev synonym EXPTXT) not used
 !     ENO(2)=1 if REAID
 !     ENO(3)=1 if PHASES
@@ -797,9 +831,9 @@
 !      WRITE (UNIT=6,FMT='(''REAID AT THE MOMENT: '',A)') REAID(1:I1)
 !      END IF
 
-      IF (I001.EQ.4) THEN
-        WRITE (UNIT=6,FMT='(''     REAID '',a,''  new dir '',a)') REAID(1:I1),NEWDIR(1:LDIR)
-      END IF
+!!      IF (I001.EQ.4) THEN
+!!        WRITE (UNIT=6,FMT='(''     REAID '',a,''  new dir '',a)') REAID(1:I1),NEWDIR(1:LDIR)
+!!      END IF
 
 
       IF ('_'//REAID(1:I1)//dir(1:1).NE.NEWDIR(1:LDIR)) THEN
@@ -808,20 +842,20 @@
         IF (I001.EQ.4) THEN
         CH80='_'//REAID
         CALL LABLA(CH80,I1)
-          WRITE (UNIT=6,FMT='('' LOOKING FOR '',A)') CH80(1:I1)
+!!          WRITE (UNIT=6,FMT='('' LOOKING FOR '',A)') CH80(1:I1)
           I002=0
           DO I=1,NFOLD
             IF (CH80(1:I1).EQ.FOLDERLIST(I)(1:I1)) I002=I
 !            write (unit=6,fmt='('' searching '',A,i4)') CH80(1:I1),I002
           END DO
           IF (I002.GT.0) THEN
-            WRITE (UNIT=6,FMT='('' folder already exists: '',A,A)') CH80(1:I1),FOLDERLIST(I002)(1:LDIR)
+!!            WRITE (UNIT=6,FMT='('' folder already exists: '',A,A)') CH80(1:I1),FOLDERLIST(I002)(1:LDIR)
             NEWDIR=CH80(1:I1)//dir(1:1)
             LDIR=I1+1
 !           call newreadir anyway
             CALL NEWREADIR
           ELSE
-            WRITE (UNIT=6,FMT='('' folder must be made: '',A)') CH80(1:I1)
+!!            WRITE (UNIT=6,FMT='('' folder must be made: '',A)') CH80(1:I1)
             NFOLD=NFOLD+1
             FOLDERLIST(NFOLD)=NEWDIR(1:LDIR)
             NEWDIR=CH80(1:I1)
@@ -830,8 +864,8 @@
           END IF
         END IF
 
-      ELSE
-        WRITE (UNIT=6,FMT='(''     REAID is equal'',a,''  new dir '',a)') REAID(1:I1),NEWDIR(1:LDIR)
+!!      ELSE
+!!        WRITE (UNIT=6,FMT='(''     REAID is equal '',a,''  new dir '',a)') REAID(1:I1),NEWDIR(1:LDIR)
       END IF
 !!      WRITE (UNIT=6,FMT='(//,'' NEWDIR IS '',A,//)') NEWDIR(1:LDIR)
 !------------------------------------------
@@ -854,7 +888,14 @@
       L002=.NOT.VERGL(KEYWORD(1:7),'TITLE2')
       IF (L001.AND.L002.AND.ISU.EQ.1) GOTO 1
 !
-      IF (PRTEST) WRITE (UNIT=6,FMT='(/,'' keyword = '',A)') KEYWORD
+      CALL FIBLA(CH001,I1)
+      CALL LABLA(CH001,I2)
+      IF (I1.EQ.0) THEN
+        I1=1
+        I2=1
+      END IF
+      CALL LABLA(KEYWORD,I3)
+      IF (PRTEST) WRITE (UNIT=6,FMT='(/,'' keyword = '',A,'': '',A)') KEYWORD(1:I3),CH001(I1:I2)
 !
 !======================================================================
 !======================================================================
@@ -868,11 +909,21 @@
 !      NCHOOSE: number of chosen phases (= pick)
 !      NPICK: number of chosen phases
 !      ALLP: if true read all phases from database (by setting all elemets n=1)
+!      EXINREA number of experiments in current series
+!      CCODE: is 0 if experiment is considered consistent
+!      ASSCODE: =0 if tested assemblages or lnk are OK, -1 if not tested
+!      VALCODE: =0 if all tested values are OK
+!      EXCCODE: =0 if exchage reaction or KD is OK
+!      COMCODE: =0 if all compositions are OK
+!      
 !
     3 IF (VERGL(KEYWORD,'TITLE')) THEN
+       WRITE (UNIT=scr,FMT='(//,117A1,A)') ('=',J=1,117),' new reaction'
        IF (NPLOTS.GT.0) THEN
          CALL MAKEPLOT
        END IF
+       IF (EXINREA.GT.0) CALL WRAPEXP
+       EXINREA=0
        CALL MAKESHORT
        TITLE=CH001(1:200)
        DO I=1,4
@@ -923,12 +974,13 @@
        NINC=0
        EXPER='no experiments'
 !
-       WRITE (UNIT=scr,FMT='(//,130A1)') ('=',J=1,130)
 !!!       WRITE (UNIT=35,FMT='(//,130A1)') ('=',J=1,130)
       END IF
 !======================================================================
 !======================================================================
       IF (VERGL(KEYWORD,'TITLE2')) THEN
+       IF (EXINREA.GT.0) CALL WRAPEXP
+       EXINREA=0
        CALL MAKESHORT
        TITLE=CH001(1:200)
        DO I=1,4
@@ -961,6 +1013,10 @@
        TABAUT=CH002(1:I2)
        REFER=TABAUT
        NPLAUT=NPLAUT+1
+       IF (NPLAUT.GT.PLAUTMAX) THEN
+         WRITE (UNIT=6,FMT='(''NPLAUT TOO LARGE'')')
+         CALL EXIT
+       END IF
        PLAUT(NPLAUT)=REFER
        TABBUL=' '
        TABPHA=' '
@@ -1020,7 +1076,7 @@
         CH80='_'//REAID(1:I1)
         IF ('_'//REAID(1:I1)//dir(1:1).NE.NEWDIR(1:LDIR)) THEN
 
-          WRITE (UNIT=6,FMT='('' new directory name would be '',a)') '_'//REAID(1:I1)//dir(1:1)
+!          WRITE (UNIT=6,FMT='('' new directory name would be '',a)') '_'//REAID(1:I1)//dir(1:1)
 !          DO NOT CALL YET READIR, WAIT FOR 'EXP' OR ALL ENO'S=1
 !          CALL NEWREADIR
 
@@ -1088,7 +1144,7 @@
 !      ENO(3)=1
 
        DO I1=1,NKEYWS
-         WRITE (UNIT=6,FMT='(I3,''  PHA: KEYWS(I)'',A)') I1,KEYWS(I1)
+         WRITE (UNIT=6,FMT='(I3,''  PHA: KEYWS(I) '',A)') I1,KEYWS(I1)
        END DO
 
       ENO(3)=1
@@ -1857,11 +1913,18 @@
 !======================================================================
       IF (VERGL(KEYWORD,'EXP')) THEN
        CALL CHECKENO
+!--
        NEXP=NEXP+1
-
+       IF (EXINREA.GT.0) CALL WRAPEXP
+       EXINREA=EXINREA+1
+       ASSCODE=-1
+       VALCODE=-1
+       EXCCODE=-1
+       COMCODE=-1
+!---
        IF (ISINC.EQ.1) NINC=NINC+1
 
-       WRITE (UNIT=6,FMT='(''CCODE IN EXP='',I4)') CCODE
+       WRITE (UNIT=6,FMT='('' CCODE IN EXP='',I4)') CCODE
 !!         WRITE (UNIT=39,FMT='(''ISINC='',I3)') ISINC
 !!         WRITE (UNIT=39,FMT='(''NINC= '',I3)') NINC
 
@@ -1986,11 +2049,10 @@
       CALL DBREAD
 !+++
       IF (PRTEST) THEN
-      WRITE (scr,2052) ('-',J=1,130)
-!!!      WRITE (35,2052) ('-',J=1,130)
- 2052 FORMAT (/130A1)
+!!       WRITE (UNIT=scr,FMT='(/,130A1,A)') ('-',J=1,130),'BULK'
       CALL LABLA(BUFORMUL0,I1)
       WRITE (UNIT=6,FMT='('' new bulk: '',A)') BUFORMUL0(1:I1)
+!!       WRITE (UNIT=scr,FMT='(130A1,A)') ('=',J=1,130),'end BULK'
       END IF
       XCO2=0.0D0
       XCO2ERR=0.0D0
@@ -2059,7 +2121,9 @@
       CALL GELI(CH001,FF)
       CALL TAXI(CH001,CH16)
       CALL MINMAX(FF,CH16,CHKMIN,CHKMAX)
+!-
       CALL CHECKVAL
+!-
       GOTO 1
       END IF
 !
@@ -2073,7 +2137,9 @@
       CALL GELI(CH001,FF)
       CALL TAXI(CH001,CH16)
       CALL MINMAX(FF,CH16,CHKMIN,CHKMAX)
+!-
       CALL CHECKBIVA(F1,F2)
+!-
 !---
       GOTO 1
       END IF
@@ -2092,6 +2158,7 @@
       CALL GELI(CH001,FF)
       CALL TAXI(CH001,CH16)
       CALL MINMAX(FF,CH16,CHKMIN,CHKMAX)
+!-
       CALL CHECKKREA
 !==
       GOTO 1
@@ -2102,6 +2169,7 @@
       CALL TAXI(CH001,CH16)
       CALL TRANSL(CH16)
       CALL TAXI(CH001,CH1)
+!-
       CALL STABILITY(CH16,CH1)
 !==
       GOTO 1
@@ -2133,7 +2201,9 @@
       END IF
       GOTO 40
    41 CONTINUE
+   
       CALL CHECKASS(NFEHL)
+   
       SHOW=0
       IF (SHOWALL) SHOW=1
 !==
@@ -2156,6 +2226,8 @@
       L003=VERGL(KEYWORD,'CHECKCOM+')
       IF (L001.OR.L002.OR.L003) & 
       THEN
+      WRITE (UNIT=scr,FMT='(/,112A1,A)') ('=',J=1,112),' check composition'
+      WRITE (UNIT=35,FMT='(/,130A1)') ('=',J=1,130)
 !TEST       IF (VERGL(KEYWORD,'SHOWCOM')) PRISUM=.FALSE.
 !       FICOM=FICOM+1
 !       IF (FICOM.EQ.1) THEN
@@ -2172,6 +2244,7 @@
        CALL MINMAX(FF,CH16,CHKMIN,CHKMAX)
        
        CHKLIM=0
+!------IF CHECKCOM+
        IF (L003)THEN
 !!       CALL GELI(CH001,FF2)
 !!       CHKLIM=IDINT(FF2)
@@ -2194,7 +2267,7 @@
         GOTO 1
        END IF
        IF (NFEHL.GT.0) THEN
-        CH002='     '//CHKPH//' assemblage not stable <'
+        CH002='     '//CHKPH//' assemblage not stable(1) <'
         CALL LABLA(CH002,I1)
         DO J=I1+1,129
          CH002(J:J)='-'
@@ -2208,7 +2281,19 @@
 !==
         KEY1='TC'
         CTUNIT='TC'
+   
+        NEXPCOM=NEXPCOM+1
+        IF (COMCODE.EQ.-1) COMCODE=0
+
+
+      WRITE (UNIT=6,FMT='(''call checkvalpt from checkcom etc'')')
+
         CALL CHECKVALPT(TEXTQ,I001)
+      WRITE (UNIT=6,FMT='(''CCODE after checkvalpt from checkcom etc '',i4)') CCODE
+        IF (CCODE.GT.0) THEN
+          COMCODE=COMCODE+1
+          NCOMINC=NCOMINC+1
+        END IF
 
 !-----q-summary
 
@@ -2225,6 +2310,7 @@
 
 
         PRISUM=.TRUE.
+        WRITE (UNIT=scr,FMT='(108A1,A)') ('=',J=1,108),' end check composition'
 !==
       END IF
 !
@@ -2257,7 +2343,7 @@
         GOTO 1
        END IF
        IF (NFEHL.GT.0) THEN
-        CH002='     '//CHKPH//' assemblage not stable <'
+        CH002='     '//CHKPH//' assemblage not stable(2) <'
         CALL LABLA(CH002,I1)
         DO J=I1+1,129
          CH002(J:J)='-'
@@ -2270,6 +2356,7 @@
 !--
        F1=PLYMIN
        F2=PLYMAX
+   
        CALL CHECKEXCH
 !--
       END IF
@@ -2292,8 +2379,8 @@
       IF (VERGL(KEYWORD,'PRTVAL')) THEN
        FICOM=FICOM+1
        IF (FICOM.EQ.1) THEN
-       WRITE (scr,FMT='(5X,49A1)') ('-',I=1,19)
-       WRITE (35,FMT='(5X,49A1)') ('-',I=1,19)
+         WRITE (scr,FMT='(5X,49A1)') ('-',I=1,19)
+         WRITE (35,FMT='(5X,49A1)') ('-',I=1,19)
        END IF
        CALL TAXI(CH001,CH16)
        CALL TRANSL(CH16)
@@ -2360,14 +2447,17 @@
 !  998 CONTINUE
 !      WRITE (UNIT=6,FMT='(/,'' START not found'')')
   999 CONTINUE
+!
+! this is the end of KONSI
+!
+      IF (EXINREA.GT.0) CALL WRAPEXP
       CALL MAKESHORT
 !===
        IF (NPLOTS.GT.0) THEN
          CALL MAKEPLOT
        END IF
 !===
-
-      WRITE (UNIT=6,FMT='('' now closing 35'')')
+      CALL MAKESUMMARY
 
       CLOSE (UNIT=35)
 !!      CLOSE (UNIT=36)
@@ -2376,6 +2466,7 @@
 !!      CLOSE (UNIT=38)
       CLOSE (UNIT=39)
       CLOSE (UNIT=55)
+      CLOSE (UNIT=57)
 !===
       RETURN
       END
@@ -2391,7 +2482,7 @@
 !-----END OF COMMON VARIABLES
       REAL(8) PRZ
 !
-      IF (PRTEST) WRITE (UNIT=6,FMT='(''->MAKESHORT'')')
+      IF (PRTEST) WRITE (UNIT=6,FMT='(''-> MAKESHORT'')')
       WRITE (UNIT=6,FMT='('' NEXP    ='',I4)') NEXP
       CALL PUST(6,' REAID   = '//REAID)
       CALL PUST(6,' NICREAC = '//NICREAC)
@@ -2424,7 +2515,46 @@
 !===
       RETURN
       END
+!-----
+!*************************************************************
+!*************************************************************
+      SUBROUTINE WRAPEXP
+      IMPLICIT NONE
+      INCLUDE 'theriak.cmn'
+      include 'files.cmn'
+      include 'checkdb.cmn'
+!-----END OF COMMON VARIABLES
+      INTEGER(4) I1,IA,J
+      IF (ALLEXPCOUNTED) THEN
+        ALLEXPCOUNTED=.FALSE.
+        RETURN
+      END IF
+      NEXPTOT=NEXPTOT+1
+      I1=INDEX(EXPER,'  ')
+      WRITE (UNIT=6,FMT='(130A1)') ('-',J=1,130)
+      WRITE (UNIT=6,FMT='(''summary for experiment'',I5,2x,A)') EXINREA,EXPER(1:I1)
+      WRITE (UNIT=6,FMT='(''code for assembage test   '',I4)') ASSCODE
+      WRITE (UNIT=6,FMT='(''code for composition test '',I4)') COMCODE
+      WRITE (UNIT=6,FMT='(''code for value test       '',I4)') VALCODE
+      WRITE (UNIT=6,FMT='(''code for exchKD           '',I4)') EXCCODE
+      
+      WRITE (6,1000) NEXPASS,(NEXPASS-NASSINC)
+ 1000 FORMAT (' tested assemblages  :',i5,3x,'consistent:',i5)
+      WRITE (6,1010) NEXPCOM,(NEXPCOM-NCOMINC)
+ 1010 FORMAT (' tested compositions :',i5,3x,'consistent:',i5)
+      WRITE (6,1020) NEXPVAL,(NEXPVAL-NVALINC)
+ 1020 FORMAT (' tested values       :',i5,3x,'consistent:',i5)
+      WRITE (6,1030) NEXPEXC,(NEXPEXC-NEXCINC)
+ 1030 FORMAT (' tested exch-KD      :',i5,3x,'consistent:',i5)
+      IA=NEXPASS+NEXPVAL+NEXPCOM+NEXPEXC
+      WRITE (UNIT=6,FMT='(/,'' total number of tests '',I4)') IA
+      WRITE (UNIT=6,FMT='(/,'' number of experiments '',I4)') NEXPTOT
+      WRITE (UNIT=6,FMT='(130A1)') ('-',J=1,130)
 !
+!===
+      RETURN
+      END
+!-----
 !-----
 !*************************************************************
 !*************************************************************
@@ -2527,7 +2657,9 @@
       REAL(8) FF
 !=====
       IF (PRTEST) WRITE (UNIT=6,FMT='(''-> CHECKASS nfehl ='',I4)')NFEHL
-      IF (PRTEST) WRITE (UNIT=35,FMT='(''-> CHECKASS nfehl ='',I4)')NFEHL
+!      IF (PRTEST) WRITE (UNIT=35,FMT='(''-> CHECKASS nfehl ='',I4)')NFEHL
+      WRITE (UNIT=scr,FMT='(/,113A1,A)') ('=',J=1,113),' check assemblage'
+      WRITE (UNIT=35,FMT='(/,130A1)') ('=',J=1,130)
 !
       CTUNIT='TC'
       IF (BUFORMUL.EQ.' ') THEN
@@ -2551,12 +2683,15 @@
       NP=0
       NNPICK=NPICK
       ISSTAB=0
+      IF (ASSCODE.EQ.-1) ASSCODE=0
+      NEXPASS=NEXPASS+1
 !=====
       DO DURCH=1,2
 !----D1 bis D1, nur im 1. Durchgang
 !======================
 !==== DURCH=1, was sowieso gemacht werden muss
 !======================
+!!      WRITE (UNIT=6,FMT='(''DURCH = '',I3)') DURCH
       IF (DURCH.EQ.1) THEN
       FORMUL=BUFORMUL
       USE=BULKUSE
@@ -2632,7 +2767,7 @@
        PHNOT(NPHNOT)=CHOOSE(I)
 !       CALL PUST(51,CH001)
       END IF
-      RETURN
+       RETURN
       END IF
 !==
       IF (I1.EQ.-1) THEN
@@ -2677,6 +2812,10 @@
        PRTLOG(8)=.TRUE.
 !       PRTLOG(4)=.TRUE.
        DRU=.TRUE.
+       out=35
+       WRITE (UNIT=scr,FMT='(115A1,A)') ('-',J=1,115),' theriak output'
+       WRITE (UNIT=35,FMT='(115A1,A)') ('-',J=1,115),' theriak output'
+!       WRITE (UNIT=35,FMT='(130A1)') ('-',J=1,130)
       END IF
 !=====================
 !==== DURCH=1 und 2
@@ -2696,10 +2835,14 @@
       CALL THERIA
 !---- to stop print assemblage etc.
       IF (SHOW.EQ.1) THEN
+       WRITE (UNIT=scr,FMT='(108A1,A)') ('-',J=1,108),' end of theriak output'
+       WRITE (UNIT=35,FMT='(108A1,A)') ('-',J=1,108),' end of theriak output'
+!       WRITE (UNIT=35,FMT='(130A1)') ('-',J=1,130)
        DO I=1,11
         PRTLOG(I)=.FALSE.
        END DO
        DRU=.FALSE.
+       out=10
       END IF
       END IF
 !====
@@ -2810,7 +2953,7 @@
        CALL PUST(35,CHTAG(I)(I1:))
       END DO
       CH001='bulk: '//BUFORMUL(1:244)
-      CALL PUSTCOL(scr,'35:'//CH001,6,129)
+      CALL PUSTCOL(scr,CH001,6,129)
       CALL PUSTCOL(35,CH001,6,129)
 !      CH001='     database used: '//filename(dbs)
 !      CALL PUST(scr,CH001)
@@ -2841,7 +2984,8 @@
       DO J=I1+1,107
        CH001(J:J)='.'
       END DO
-      CH001(109:)='assemblage not stable'
+      CH001(109:)='assemblage not stable(3)'
+      ASSCODE=ASSCODE+1
       MCODE=1
       ELSE
        CH001(I1:)='(OK)'
@@ -2908,8 +3052,10 @@
       WRITE (CH001,FMT='(5X,A)') 'assemblage is metastable (OK)'
       CALL PUST(scr,CH001)
       CALL PUST(35,CH001)
-!cdcmay2021
+!cdcmay2021 if not stable MCODE is set to 1 and ASSCODE =+1
+!           is reset here if metastable
       MCODE=0
+      ASSCODE=ASSCODE-1
 
       CH001=' '
       CALL LABLA(EXPER,I1)
@@ -2924,13 +3070,16 @@
       PEXP=PEXP+1
 
       END IF
+      
+      IF (ASSCODE.GT.0) NASSINC=NASSINC+1
+      
       END IF
 !=====================
 !==== DURCH=2 und NFEHL>0
 !=====================
-!-----------------------------------------------
+!---------------------------------------------------------------------
 !---- if NFEHL>0, print G of unstable phases (unstable: may be dG=0!!)
-!-----------------------------------------------
+!---------------------------------------------------------------------
       IF (DURCH.EQ.2.AND.NFEHL.GT.0) THEN
       WRITE (UNIT=scr,FMT='('' '')')
       WRITE (UNIT=35,FMT='('' '')')
@@ -2973,9 +3122,10 @@
       IF (DABS(XCO2).LT.1D-12) CALL SEARCHASS(NFEHL)
       IF (DABS(XCO2).GT.1D-12) CALL SEARCHPTX(NFEHL)
       END IF
-!=====DURCH
+!=====DURCH=1,2
       END DO
-
+!     this is the end of CHECKASS
+      WRITE (UNIT=scr,FMT='(109A1,A)') ('=',J=1,109),' end check assemblage'
 
 !==
 !      DO I=1,NPLOTS
@@ -3012,6 +3162,7 @@
         IF (ENO(2).EQ.0) WRITE (UNIT=6,FMT='('' eno: missing REAID'')') 
         IF (ENO(3).EQ.0) WRITE (UNIT=6,FMT='('' eno: missing PHASES'')') 
         IF (ENO(4).EQ.0) WRITE (UNIT=6,FMT='('' eno: missing SYSEL'')')
+        write (unit=6,fmt='(''l001 is true'')')
         CALL EXIT
       END IF
 !
@@ -3038,7 +3189,7 @@
       REAL(8) WERT,FS,FF
 !
       IF (PRTEST) WRITE (UNIT=6,FMT='(''-> STABILITY '',A,1X,A)') CH16,CH1
-      IF (PRTEST) WRITE (UNIT=35,FMT='(''-> STABILITY '',A,1X,A)') CH16,CH1
+!      IF (PRTEST) WRITE (UNIT=35,FMT='(''-> STABILITY '',A,1X,A)') CH16,CH1
 !
       NPICK=NCHOOSE
       DO I=1,NCHOOSE
@@ -3050,7 +3201,7 @@
 !==== exclude phase CH16
       CH001=' '
       DO J=6,31
-      CH001(J:J)='-'
+       CH001(J:J)='-'
       END DO
       CALL PUST(6,CH001)
       CALL PUST(35,CH001)
@@ -3067,14 +3218,16 @@
  1010 FORMAT (6X,'check stability of: ',A,1X,A)
 !
       DO IP=1,NPHA
-        IF (NAME(IP).EQ.CH16) THEN
+!!        IF (NAME(IP).EQ.CH16) THEN
+        IF (VERGL(NAME(IP),CH16)) THEN
           PEXCL=PEXCL+1
           NULL(IP)=.TRUE.
           NAME(IP)='$'//CH16(1:15)
         END IF
       END DO
       DO IS=1,NSOL
-        IF (SOLNAM(IS).EQ.CH16) THEN
+!!        IF (SOLNAM(IS).EQ.CH16) THEN
+        IF (VERGL(SOLNAM(IS),CH16)) THEN
           SEXCL=SEXCL+1
           EXSOL(IS)=.TRUE.
           DO II=1,NEND(IS)
@@ -3091,10 +3244,16 @@
        PRTLOG(8)=.TRUE.
 !       PRTLOG(4)=.TRUE.
        DRU=.TRUE.
+       out=35
+       WRITE (UNIT=scr,FMT='(115A1,A)') ('-',J=1,115),' theriak output'
+       WRITE (UNIT=35,FMT='(115A1,A)') ('-',J=1,115),' theriak output'
+!       WRITE (UNIT=35,FMT='(130A1)') ('-',J=1,130)
+ 3052  FORMAT (/130A1)
       END IF
         CALL NURVONPT
         CALL CALSTR
         CALL THERIA
+       WRITE (6,3052) ('*',J=1,130)
 
        PRTLOG(3)=.FALSE.
        PRTLOG(6)=.FALSE.
@@ -3102,6 +3261,10 @@
 !       PRTLOG(4)=.FALSE.
        DRU=.FALSE.
        SHOW=0
+       WRITE (UNIT=scr,FMT='(108A1,A)') ('-',J=1,108),' end of theriak output'
+       WRITE (UNIT=35,FMT='(108A1,A)') ('-',J=1,108),' end of theriak output'
+!       WRITE (UNIT=35,FMT='(130A1)') ('-',J=1,130)
+       out=10
 !---- no need to set back, because database will be read for next exp. ?
 !---- set back in theriminos in GETF
 !====
@@ -3216,7 +3379,7 @@
       WERT,XAMIN,XAMAX,YAMIN,YAMAX
 !--
       IF (PRTEST) WRITE (UNIT=6,FMT='(''-> exchange reaction (CHECKEXCH)'')')
-      IF (PRTEST) WRITE (UNIT=35,FMT='(''-> exchange reaction (CHECKEXCH)'')')
+!      IF (PRTEST) WRITE (UNIT=35,FMT='(''-> exchange reaction (CHECKEXCH)'')')
       CTUNIT='TC'
 !+++
 !      IF (PRTEST) THEN
@@ -3229,6 +3392,8 @@
 ! ignore if unstable assembage
       ISINC=0
       MCODE=0
+      NEXPEXC=NEXPEXC+1
+      IF (EXCCODE.EQ.-1) EXCCODE=0
 !====
       KDMIN=(XCMIN/(1.0D0-XCMIN))/(YCMAX/(1.0D0-YCMAX))
       KDMAX=(XCMAX/(1.0D0-XCMAX))/(YCMIN/(1.0D0-YCMIN))
@@ -3369,6 +3534,8 @@
         TEXT1(55:)='KD too small'
         TEXTQ='------------------ KD too small'
         INKD=2
+        EXCCODE=EXCCODE+1
+        NEXCINC=NEXCINC+1
         IF (ISINC.EQ.0) THEN
           ISINC=1
 !!           NINC=NINC+1
@@ -3390,6 +3557,7 @@
         TEXT1(55:)='KD too large'
         TEXTQ='------------------ KD too large'
         INKD=2
+        EXCCODE=EXCCODE+1
         IF (ISINC.EQ.0) THEN
           ISINC=1
 !!           NINC=NINC+1
@@ -3510,7 +3678,7 @@
 !---  at the moment this does not make the experiment inconsistent.
       IF (MCODE.GT.0) THEN
         CALL PUST  &
-        (6,'     experiment inconsistent, assemblage not stable ')
+        (6,'     experiment inconsistent, assemblage not stable(4) ')
       END IF
 !====
 !      WRITE (scr,FMT='(5X,55A1)') ('-',I=1,55)
@@ -3620,7 +3788,7 @@
       REAL(8) ZERO,YPOS,FF
 !
       IF (PRTEST) WRITE (UNIT=6,FMT='(''-> PREPPLOT'')')
-      IF (PRTEST) WRITE (UNIT=35,FMT='(''-> PREPPLOT'')')
+!      IF (PRTEST) WRITE (UNIT=35,FMT='(''-> PREPPLOT'')')
 !
       XUNTEN(NPLOTS)=PLXMIN
       XOBEN(NPLOTS)=PLXMAX
@@ -3914,8 +4082,8 @@
       IF (PRTEST) THEN
       WRITE (UNIT=6,FMT='(''-> PLOTEXP plot Nr and type:'',I4,2X,A4)') &
       PLNR,AUTOTYP(PLNR)
-      WRITE (UNIT=35,FMT='(''-> PLOTEXP plot Nr and type:'',I4,2X,A4)') &
-      PLNR,AUTOTYP(PLNR)
+!      WRITE (UNIT=35,FMT='(''-> PLOTEXP plot Nr and type:'',I4,2X,A4)') &
+!      PLNR,AUTOTYP(PLNR)
 !      WRITE (UNIT=6,FMT='(''   CCODE = '',I4)') CCODE
 !      WRITE (UNIT=35,FMT='(''   CCODE = '',I4)') CCODE
       END IF
@@ -3988,7 +4156,7 @@
         J=0
         JJ=0
        
-        WRITE (UNIT=35,FMT='('' in plotexp(VAL): CCODE='',I4)') CCODE
+        WRITE (UNIT=6,FMT='('' in plotexp(VAL): CCODE='',I4)') CCODE
         
         CALL FIBLA(EXPEC,I1)
         IF (EXPEC(I1:I1).EQ.'+') J=2
@@ -4066,30 +4234,37 @@
         J=0
         JJ=0
        
-        WRITE (UNIT=35,FMT='('' in plotexp(BIV): CCODE='',I4)') CCODE
+        WRITE (UNIT=6,FMT='('' in plotexp(BIV): CCODE='',I4)') CCODE
         
         CALL FIBLA(EXPEC,I1)
         IF (EXPEC(I1:I1).EQ.'+') J=2
         IF (CCODE.GT.0) JJ=2
 ! draw box around observed point
-        WRITE (30,2010) J,XVAL-XERR,YU,XVAL+XERR,YU, &
-        XVAL+XERR,YO,XVAL-XERR,YO
-        WRITE (32,2010) J,XVAL-XERR,YU,XVAL+XERR,YU, &
-        XVAL+XERR,YO,XVAL-XERR,YO
-        WRITE (34,2010) JJ,XVAL-XERR,YU,XVAL+XERR,YU, &
-        XVAL+XERR,YO,XVAL-XERR,YO
-  2010  FORMAT ( &
-        'LINIEN    ',I2,2X,'1  0   0',8(2X,1PE15.8),'   999  999  0')
-! draw cross if experiment not used
+
+!!      WRITE (UNIT=6,FMT='(''plot fuer BIVAL'')')
+!!      WRITE (UNIT=6,FMT='(''XVAL,XERR,YU,YO,START'',5F20.10)') XVAL,XERR,YU,YO,CHKSTART
+!!      WRITE (UNIT=6,FMT='(''USEDFOR'',L4)') USEDFOR
+
+         WRITE (30,2010) J,XVAL-XERR,YU,XVAL+XERR,YU, &
+         XVAL+XERR,YO,XVAL-XERR,YO
+         WRITE (32,2010) J,XVAL-XERR,YU,XVAL+XERR,YU, &
+         XVAL+XERR,YO,XVAL-XERR,YO
+         WRITE (34,2010) JJ,XVAL-XERR,YU,XVAL+XERR,YU, &
+         XVAL+XERR,YO,XVAL-XERR,YO
+  2010   FORMAT ( &
+         'LINIEN    ',I2,2X,'1  0   0',8(2X,1PE15.8),'   999  999  0')
         IF (.NOT.USEDFOR) THEN
-        WRITE (30,2012) XVAL-XERR,YU,XVAL+XERR,YO
-        WRITE (30,2012) XVAL-XERR,YO,XVAL+XERR,YU
-        WRITE (32,2012) XVAL-XERR,YU,XVAL+XERR,YO
-        WRITE (32,2012) XVAL-XERR,YO,XVAL+XERR,YU
-        WRITE (34,2012) XVAL-XERR,YU,XVAL+XERR,YO
-        WRITE (34,2012) XVAL-XERR,YO,XVAL+XERR,YU
-  2012  FORMAT ( &
-        'LINIEN     0  0  0   0',4(2X,1PE15.8),'   999  999  0')
+! draw cross if experiment not used
+         WRITE (UNIT=34,FMT='(''LCOLOR   1   0.5   0'')')
+         WRITE (30,2012) XVAL-XERR,YU,XVAL+XERR,YO
+         WRITE (30,2012) XVAL-XERR,YO,XVAL+XERR,YU
+         WRITE (32,2012) XVAL-XERR,YU,XVAL+XERR,YO
+         WRITE (32,2012) XVAL-XERR,YO,XVAL+XERR,YU
+         WRITE (34,2012) XVAL-XERR,YU,XVAL+XERR,YO
+         WRITE (34,2012) XVAL-XERR,YO,XVAL+XERR,YU
+  2012   FORMAT ( &
+         'LINIEN     0  0  0   0',4(2X,1PE15.8),'   999  999  0')
+        WRITE (UNIT=34,FMT='(A)') LCOLOR(NPLAUT)
         END IF
 ! draw line from starting point to observed point
          F1=(CHKMIN+CHKMAX)/2.0D0
@@ -4115,7 +4290,7 @@
       JJ=0
 ! re-define CCODE (>1 if not consistent)
 !
-        WRITE (UNIT=35,FMT='('' in plotexp(EXCH): CCODE='',I4)') CCODE
+        WRITE (UNIT=6,FMT='('' in plotexp(EXCH): CCODE='',I4)') CCODE
         
        IF (CCODE.GT.0) JJ=2
        IF (MCODE.GT.0) JJ=2
@@ -4190,7 +4365,7 @@
 ! draw box around observed point
        IF (CHKLIM.GT.0) J=2
        
-        WRITE (UNIT=35,FMT='('' in plotexp(TX/PX): CCODE='',I4)') CCODE
+        WRITE (UNIT=6,FMT='('' in plotexp(TX/PX): CCODE='',I4)') CCODE
         
        IF (CCODE.GT.0) JJ=2
        WRITE (30,1030) J,XCMIN,YRE-YERR,XCMAX,YRE-YERR, &
@@ -4291,7 +4466,7 @@
 ! draw box around observed point
 !       IF (CHKLIM.GT.0) J=2
        
-        WRITE (UNIT=35,FMT='('' in plotexp(TX/PX): CCODE='',I4)') CCODE
+        WRITE (UNIT=6,FMT='('' in plotexp(TX/PX): CCODE='',I4)') CCODE
         
        IF (CCODE.GT.0) JJ=2
 ! draw box around observed point
@@ -4401,7 +4576,7 @@
       J=0
       JJ=0
        
-        WRITE (UNIT=35,FMT='('' in plotexp(EX2): CCODE='',I4)') CCODE
+        WRITE (UNIT=6,FMT='('' in plotexp(EX2): CCODE='',I4)') CCODE
         
 !      CALL FIBLA(EXPEC,I1)
 !      IF (EXPEC(I1:I1).EQ.'+') J=2
@@ -4486,7 +4661,7 @@
 !      IF (EXPEC(I1:I1).EQ.'+') J=2
 ! draw box around observed point
        
-        WRITE (UNIT=35,FMT='('' in plotexp(LKD): CCODE='',I4)') CCODE
+        WRITE (UNIT=6,FMT='('' in plotexp(LKD): CCODE='',I4)') CCODE
         
       IF (CCODE.GT.0) JJ=2
        WRITE (30,1050) J,XCMIN,YCMIN,XCMAX,YCMIN, &
@@ -4536,7 +4711,7 @@
       CALL FIBLA(EXPEC,I1)
       IF (EXPEC(I1:I1).EQ.'+') J=2
        
-        WRITE (UNIT=35,FMT='('' in plotexp(LKR): CCODE='',I4)') CCODE
+        WRITE (UNIT=6,FMT='('' in plotexp(LKR): CCODE='',I4)') CCODE
         
       IF (CCODE.GT.0) JJ=2
        WRITE (30,1060) J,TEM-TERR0,CHKMIN,TEM+TERR0,CHKMIN, &
@@ -4573,7 +4748,7 @@
       CALL FIBLA(EXPEC,I1)
       IF (EXPEC(I1:I1).EQ.'+') J=2
        
-        WRITE (UNIT=35,FMT='('' in plotexp(PT): CCODE='',I4)') CCODE
+        WRITE (UNIT=6,FMT='('' in plotexp(PT): CCODE='',I4)') CCODE
         
       IF (CCODE.GT.0) JJ=2
         WRITE (UNIT=6,FMT='(''WRITE 30'')')
@@ -4613,7 +4788,7 @@
       CALL FIBLA(EXPEC,I1)
       IF (EXPEC(I1:I1).EQ.'+') J=2
        
-        WRITE (UNIT=35,FMT='('' in plotexp(TXC): CCODE='',I4)') CCODE
+        WRITE (UNIT=6,FMT='('' in plotexp(TXC): CCODE='',I4)') CCODE
         
       IF (CCODE.GT.0) JJ=2
        WRITE (30,1080) J,XCO2-XCO2ERR,TEM-TERR0,XCO2+XCO2ERR, &
@@ -4650,7 +4825,7 @@
       CALL FIBLA(EXPEC,I1)
       IF (EXPEC(I1:I1).EQ.'+') J=2
        
-        WRITE (UNIT=35,FMT='('' in plotexp(ISO): CCODE='',I4)') CCODE
+        WRITE (UNIT=6,FMT='('' in plotexp(ISO): CCODE='',I4)') CCODE
         
       IF (CCODE.GT.0) JJ=2
        WRITE (30,1090) J,TC-TERR0,PRE-PERR0,TC+TERR0,PRE-PERR0, &
@@ -4725,7 +4900,7 @@
 !--    make domino script file 31   .txt
 !----------------------------------------------------------------
       IF (PRTEST) WRITE (UNIT=6,FMT='(''-> DOMSCRIPT'')')
-      IF (PRTEST) WRITE (UNIT=35,FMT='(''-> DOMSCRIPT'')')
+!      IF (PRTEST) WRITE (UNIT=35,FMT='(''-> DOMSCRIPT'')')
 !
 !       CALL LABLA(PLFILE,I1)
 !       CALL LABLA(DBUSED,I2)
@@ -4845,7 +5020,7 @@
 !+++
       IF (PRTEST) THEN
         WRITE (UNIT=scr,FMT='(''-> printing values (PRTVAL)'')')
-        WRITE (UNIT=35,FMT='(''-> printing values (PRTVAL)'')')
+!        WRITE (UNIT=35,FMT='(''-> printing values (PRTVAL)'')')
       END IF
 !+++
 !---- assign value
@@ -4965,21 +5140,22 @@
 !-----END OF COMMON VARIABLES
       CHARACTER(500) CH001
       CHARACTER(50) TWI(3),TEXT1,TEXTQ
-      INTEGER(4) I,II,IP,IS,IE,IFF,I1,I2,i4,I5,SIGI(2),PLNR
+      INTEGER(4) I,II,IP,IS,IE,IFF,I1,I2,i4,I5,SIGI(2),PLNR,J
       REAL(8) FBMIN,FBMAX,FA,FB,DDX,WERT(3),FF(3),XAV,XERR, &
       YAV,PROZ
 
-      WRITE (UNIT=6,FMT='(''->CHECKBIVA'')')
-      WRITE (UNIT=35,FMT='(''->CHECKBIVA'')')
+      WRITE (UNIT=6,FMT='(''-> CHECKBIVA'')')
+!      WRITE (UNIT=35,FMT='(''-> CHECKBIVA'')')
        CALL LABLA(DBUSED,I2)
-      WRITE (UNIT=6,FMT='(''->DBUSED'',A)') DBUSED(1:I2)
-      WRITE (UNIT=35,FMT='(''->DBUSED'',A)') DBUSED(1:I2)
+      WRITE (UNIT=6,FMT='(''-> DBUSED '',A)') DBUSED(1:I2)
+!      WRITE (UNIT=35,FMT='(''-> DBUSED '',A)') DBUSED(1:I2)
 
+      WRITE (UNIT=scr,FMT='(/,105A1,A)') ('=',J=1,105),' check value along binary'
+      WRITE (UNIT=35,FMT='(/,130A1)') ('=',J=1,130)
       CALL PRTFIRST
 
       ISINC=0
 !      NINC=0
-
       DDX=1D-7
       TWI(1)='too small            X  |-----|  '
       TWI(2)='too large               |-----|  X'
@@ -4988,6 +5164,9 @@
       FF(1)=FBMIN
       FF(2)=FBMAX
       FF(3)=(FBMIN+FBMAX)/2.0D0
+
+      NEXPVAL=NEXPVAL+1
+      IF (VALCODE.EQ.-1) VALCODE=0
 
       DO IFF=1,3
       FB=FF(IFF)
@@ -5019,33 +5198,41 @@
       CALL PRININ
       CALL THERIA
       CALL GETVAL(BIXPH,BIXEL,BIXELDIV,IP,IS,IE,WERT(IFF))
-      WRITE (UNIT=6,FMT='(''WERT(IFF)='',F20.10)') WERT(IFF)
+!!      WRITE (UNIT=6,FMT='(''WERT(IFF)='',F20.10)') WERT(IFF)
       CALL GETVAL(BIYPH,BIYEL,BIYELDIV,IP,IS,IE,WERT(IFF))
-      WRITE (UNIT=6,FMT='(''WERT(IFF)='',F20.10)') WERT(IFF)
+!!      WRITE (UNIT=6,FMT='(''WERT(IFF)='',F20.10)') WERT(IFF)
 
       END DO
+!---  end IFF=1,3
 
 
       XAV=FF(3)
       XERR=DABS(FBMIN-FBMAX)/2.0D0
       YAV=(CHKMIN+CHKMAX)/2.0D0
+      CHKSTART=YAV
 
       CALL BUBU(CH001)
       CALL LABLA(CH001,I1)
+      WRITE (6,1000) FF(3),CH001(1:I1)
       WRITE (35,1000) FF(3),CH001(1:I1)
  1000 FORMAT (5X,'bulk for x = ',F8.3,' : ',A)
       CALL LABLA(filename(dbs),I2)
+      WRITE (6,1002) TC,P,filename(dbs)(1:I2)
       WRITE (35,1002) TC,P,filename(dbs)(1:I2)
  1002 FORMAT (5X,'TC =',F8.2,'  P =',F9.2,5X, &
       'database  :  ',A)
+      WRITE (6,1004) TERR0,PERR0
       WRITE (35,1004) TERR0,PERR0
  1004 FORMAT (5X,'+-',2X,F8.2,5X,F9.2)
+      WRITE (6,FMT='(5X,55A1)') ('-',I=1,55)
       WRITE (35,FMT='(5X,55A1)') ('-',I=1,55)
 
+      WRITE (6,1050) XAV,XERR
       WRITE (35,1050) XAV,XERR
  1050 FORMAT (5X,'binary  X = ',2X,F8.3,'    +/- ',F8.3)
       CALL LABLA(BIYPH,I1)
       CALL LABLA(BIYELCH,I2)
+      WRITE (6,1052) BIYPH(1:I1),BIYELCH(1:I2),CHKMIN,CHKMAX
       WRITE (35,1052) BIYPH(1:I1),BIYELCH(1:I2),CHKMIN,CHKMAX
  1052 FORMAT(5X,'value: ',A,2X,A,' =    minimum:',F10.4,'    maximum:',F10.4)
 
@@ -5086,6 +5273,8 @@
 
       IF (ISINC.EQ.1) THEN
         CCODE=1
+        VALCODE=VALCODE+1
+        NVALINC=NVALINC+1
 !!        NINC=NINC+1
       END IF
 
@@ -5093,10 +5282,12 @@
       DO I=1,2
       PROZ=100.0D0*(WERT(I)-YAV)/YAV
       CALL LABLA(TWI(SIGI(I)),I1)
+      WRITE (6,1054) FF(I),WERT(I),PROZ,TWI(SIGI(I))(1:I1)
       WRITE (35,1054) FF(I),WERT(I),PROZ,TWI(SIGI(I))(1:I1)
  1054 FORMAT (5X,'X = ',F8.3,5X,'value =',F10.3,18X,F7.2,' % |',A)
       END DO
       CALL LABLA(TEXT1,I1)
+      WRITE (6,1056) TEXT1(1:I1)
       WRITE (35,1056) TEXT1(1:I1)
  1056 FORMAT (67X,A)
 
@@ -5115,11 +5306,13 @@
       CALL LABLA(EXPER,I1)
       IF (I1.LT.10) I1=10
         IF (PEXP.EQ.0) THEN
+          WRITE (6,4010) EXPER(1:I1),TEM,PRE,XAV,YAV,TEXTQ(1:I5)
           WRITE (39,4010) EXPER(1:I1),TEM,PRE,XAV,YAV,TEXTQ(1:I5)
  4010     FORMAT (/,3X,A,2X,'binary:  T = ',F8.1,'  P =',F10.1, &
           '   X =',F8.3,'   val = ',f10.3,20X,A)
         ELSE
           CALL LABLA(BLAN,I4)
+          WRITE (6,4011) BLAN(1:I4),TEM,PRE,XAV,YAV,TEXTQ(1:I5)
           WRITE (39,4011) BLAN(1:I4),TEM,PRE,XAV,YAV,TEXTQ(1:I5)
  4011     FORMAT (3X,A,2X,'binary:  T = ',F8.1,'  P =',F10.1, &
           '   X =',F8.3,'   val = ',f10.3,20X,A)
@@ -5131,6 +5324,15 @@
 !-------------------------------------------------------------
       DO I=1,NPLOTS
         IF (AUTOTYP(I).EQ.'BIV') THEN
+        
+        
+!!      WRITE (UNIT=6,FMT='(''CALL PLOTEXP FUER BIV'')')
+!!      WRITE (UNIT=6,FMT='(''FBMIN = '',F20.10)') FBMIN
+!!      WRITE (UNIT=6,FMT='(''FBMAX = '',F20.10)') FBMAX
+!!      WRITE (UNIT=6,FMT='(''WERT(1) = '',F20.10)') WERT(1)
+!!      WRITE (UNIT=6,FMT='(''WERT(2) = '',F20.10)') WERT(2)
+!!      WRITE (UNIT=6,FMT='(''WERT(3) = '',F20.10)') WERT(3)
+        
           PLNR=I
           XCHKMIN=FBMIN
           XCHKMAX=FBMAX
@@ -5138,6 +5340,7 @@
         END IF
       END DO
 
+       WRITE (UNIT=scr,FMT='(101A1,A)') ('=',J=1,101),' end check value along binary'
 !--
       RETURN
       END
@@ -5159,8 +5362,11 @@
 !-----
       IF (PRTEST) THEN
       WRITE (UNIT=6,FMT='(//,''-> check value (CHECKVAL)'')')
-      WRITE (UNIT=35,FMT='(//,''-> check value (CHECKVAL)'')')
+!      WRITE (UNIT=35,FMT='(//,''-> check value (CHECKVAL)'')')
       END IF
+!--
+      NEXPVAL=NEXPVAL+1
+      IF (VALCODE.EQ.-1) VALCODE=0
 !--
       CHECKWERT=0.0D0
       IF (.NOT.ALLP) THEN
@@ -5238,10 +5444,14 @@
          CH001(J:J)='+'
         END DO
         IF (FF.GT.0.0D0) THEN
-        CH001(110:)='(VAL)value too large'
+          CH001(110:)='(VAL) value too large'
         ELSE
-        CH001(110:)='(VAL)value too small'
+          CH001(110:)='(VAL) value too small'
         END IF
+        
+        VALCODE=VALCODE+1
+        NVALINC=NVALINC+1
+        
        END IF
        CALL PUST(scr,CH001)
        CALL PUST(35,CH001)
@@ -5273,7 +5483,7 @@
 !-----
       IF (PRTEST) THEN
       WRITE (UNIT=6,FMT='(''-> check value (CHECKVALPT)'')')
-      WRITE (UNIT=35,FMT='(''-> check value (CHECKVALPT)'')')
+!      WRITE (UNIT=35,FMT='(''-> check value (CHECKVALPT)'')')
       END IF
 
       ZERO=0.0D0
@@ -5323,6 +5533,7 @@
       END DO
       END DO
 !====
+!==== test for oversooting? (not very elegant)
       INQ=0
       IF (CHKLIM.NE.0) THEN
         F1=DABS(CHKSTART-CHKMIN)
@@ -5424,6 +5635,7 @@
        FF=(WERTMIN+WERTMAX)/2.0D0
        PTPROZ=(WERTMAX-FF)/FF*100.0D0
 
+!!!      IF (VALCODE.EQ.-1) VALCODE=0
 !====
       BPOS=19
       EBAR1='x--|--x'
@@ -5469,9 +5681,10 @@
         DO J=IC+1,43
          TEXT1(J:J)='+'
         END DO
-        TEXT1(45:)='(VALPT)value too small'
+        TEXT1(45:)='(VALPT) value too small'
         TEXTQ='value too small'
         COUNT=COUNT+1
+!!!        VALCODE=VALCODE+1
         INVAL=2
         IF (ISINC.EQ.0) THEN
 !!          NINC=NINC+1
@@ -5490,9 +5703,10 @@
         DO J=IC+1,43
          TEXT1(J:J)='+'
         END DO
-        TEXT1(45:)='(VALPT)value too large'
+        TEXT1(45:)='(VALPT) value too large'
         TEXTQ='value too large'
         COUNT=COUNT+1
+!!!        VALCODE=VALCODE+1
         INVAL=2
         IF (ISINC.EQ.0) THEN
 !!          NINC=NINC+1
@@ -5628,11 +5842,20 @@
       ELSE
          CCODE=1
       END IF
+! IQ=1 is overshooting?
       IF (CHKLIM.NE.0) THEN
         CCODE=0
         IF (INVAL.EQ.1) CCODE=0
         IF (INQ.EQ.1) CCODE=1
       END IF
+      IF (INVAL.EQ.2.AND.CCODE.EQ.0) THEN
+        WRITE (UNIT=6,FMT='(96X,''moving in the right direction (OK)'')')
+        WRITE (UNIT=35,FMT='(96X,''moving in the right direction (OK)'')')
+      END IF
+!
+      WRITE (UNIT=6,FMT='('' end of checkvalpt: INVAL = '',i5)') INVAL
+      WRITE (UNIT=6,FMT='('' end of checkvalpt: INQ   = '',i5)') INQ
+      WRITE (UNIT=6,FMT='('' end of checkvalpt: CCODE = '',i5)') CCODE
       
 !!      WRITE (UNIT=6,FMT='(''INVAL,INQ,CCODE='',3I4)') INVAL,INQ,CCODE
 !!      WRITE (UNIT=35,FMT='(''INVAL,INQ,CCODE='',3I4)') INVAL,INQ,CCODE
@@ -5800,7 +6023,7 @@
         DO J=IC+1,45
          TEXT1(J:J)='+'
         END DO
-        TEXT1(47:)='(REA)value too small'
+        TEXT1(47:)='(REA) value too small'
        END IF
        END IF
 
@@ -5812,7 +6035,7 @@
         DO J=IC+1,45
          TEXT1(J:J)='+'
         END DO
-        TEXT1(47:)='(REA)value too large'
+        TEXT1(47:)='(REA) value too large'
        END IF
        END IF
        CALL LABLA(TEXT1,IC)
@@ -6068,7 +6291,7 @@
  2002 FORMAT(A,2X,'database ZPFU = ',F4.1)
         WRITE (6,2000) CHKPH(1:I1),FF
  2000 FORMAT(A,2X,'guessed  ZPFU = ',F4.1)
-        CALL EXIT
+!        CALL EXIT
         CHKMIN=CHKMIN*ZPFU/FF
         CHKMAX=CHKMAX*ZPFU/FF
         ZPFU=FF
@@ -6076,8 +6299,20 @@
       END IF
 !==
       I1=0
+      CCODE=0
+      NEXPVAL=NEXPVAL+1
+      IF (VALCODE.EQ.-1) VALCODE=0
+      EXINREA=EXINREA+1
+      WRITE (UNIT=6,FMT='(''call checkvalpt from checktab'')')
       CALL CHECKVALPT(TEXTQ,I1)
+      WRITE (UNIT=6,FMT='(''CCODE after checkvalpt from checktab '',i4)') CCODE
+      IF (CCODE.GT.0) THEN
+        VALCODE=VALCODE+1
+        NVALINC=NVALINC+1
+      END IF
+      CALL WRAPEXP
       IF (I1.NE.0) COUNTIN=COUNTIN+1
+      
 
 !-----q-summary
 
@@ -6094,6 +6329,8 @@
       GOTO 37
 
   999 CONTINUE
+
+      ALLEXPCOUNTED=.TRUE.
 
       ISINC=0
       NINC=COUNTIN
@@ -6122,7 +6359,7 @@
 !----
 !==
       IF (PRTEST) WRITE (UNIT=6,FMT='(''-> SEARCHASS'')')
-      IF (PRTEST) WRITE (UNIT=35,FMT='(''-> SEARCHASS'')')
+!      IF (PRTEST) WRITE (UNIT=35,FMT='(''-> SEARCHASS'')')
 !
       TNOW=TC
       PNOW=P
@@ -6453,7 +6690,7 @@
       F1,F2,F3,F4,ITOK,IPOK,ICOK
 !----
       IF (PRTEST) WRITE (UNIT=6,FMT='(''-> SEARCHPTX'')')
-      IF (PRTEST) WRITE (UNIT=35,FMT='(''-> SEARCHPTX'')')
+!      IF (PRTEST) WRITE (UNIT=35,FMT='(''-> SEARCHPTX'')')
 
 !!      CALL PUST(35,BUFORMUL)
 !      CALL PUST(35,BUFORMUL0)
@@ -6674,7 +6911,7 @@
       CHARACTER(500) CH001
 !---
       IF (PRTEST) WRITE (UNIT=6,FMT='(''-> PRTFIRST'')')
-      IF (PRTEST) WRITE (CH001,FMT='(''-> PRTFIRST'')')
+!      IF (PRTEST) WRITE (CH001,FMT='(''-> PRTFIRST'')')
 !
       CALL LABLA(TITLE,LTI)
       CALL FIBLA(TITLE,I1)
@@ -6682,9 +6919,8 @@
       IF (LTI.EQ.0) LTI=1
       CALL LABLA(EXPER,LEX)
       CALL FIBLA(EXPER,I2)
-      WRITE (scr,1000) ('=',J=1,130)
-      WRITE (35,1000) ('=',J=1,130)
- 1000 FORMAT (/130A1)
+!!       WRITE (UNIT=scr,FMT='(130A1,A)') ('=',J=1,130),'PRTFIRST'
+!!       WRITE (UNIT=35,FMT='(130A1,A)') ('=',J=1,130),'PRTFIRST'
 !
       IF (.NOT.USEDFOR) THEN
       CH001=' '
@@ -6730,7 +6966,7 @@
       END IF
       IF (XCO2.GT.0.0D0) THEN
        CH001=' '
-       WRITE (UNIT=CH001,FMT='(''X(CO2) = '',2(2X,F7.4))') XCO2,XCO2ERR
+       WRITE (UNIT=CH001,FMT='('' X(CO2) = '',2(2X,F7.4))') XCO2,XCO2ERR
        CALL PUST(scr,CH001)
        CALL PUST(35,CH001)
       END IF
@@ -6743,6 +6979,12 @@
        END DO
       END IF
 
+      IF (PRTEST) WRITE (UNIT=6,FMT='(''-> end PRTFIRST'')')
+!      IF (PRTEST) WRITE (CH001,FMT='(''-> end PRTFIRST'')')
+      WRITE (UNIT=scr,FMT='('''')')
+      WRITE (UNIT=35,FMT='('''')')
+!!       WRITE (UNIT=scr,FMT='(130A1,A)') ('=',J=1,130),'end PRTFIRST'
+!!       WRITE (UNIT=35,FMT='(130A1,A)') ('=',J=1,130),'end PRTFIRST'
 !-----
       RETURN
       END
@@ -6756,13 +6998,13 @@
       include 'checkdb.cmn'
 !
 !-----END OF COMMON VARIABLES
-      INTEGER(4) I,IT,IFF
+      INTEGER(4) I,IT,IFF,I1
       REAL(8) FF
 !--
       DO I=1,NLOGA
        IFF=0
        DO IT=1,NPHA
-        IF (NAME(IT).EQ.ALOGA(I)) IFF=IT
+        IF (VERGL(NAME(IT),ALOGA(I))) IFF=IT
        END DO
        IF (IFF.NE.0) THEN
         FF=XLOGA(I)*2.302585093D0
@@ -6888,6 +7130,79 @@
       WRITE (35,1000) NN(I),TEXT(1:J)
  1000 FORMAT ('     n, phase :',F10.4,2X,A)
       END DO
+!---
+      RETURN
+      END
+!
+!*************************************************************
+!*************************************************************
+      SUBROUTINE MAKESUMMARY
+      IMPLICIT NONE
+      INCLUDE 'theriak.cmn'
+      include 'files.cmn'
+      include 'checkdb.cmn'
+!
+      CHARACTER(100) TEXT
+      INTEGER(4) I1,I2,I3,I,I01,I02,IA
+      REAL(8) FF
+!---
+
+      CALL LABLA(DBUSED,I1)
+      CALL LABLA(DRIVENAME,I2)
+      CALL LABLA(CHIN3,I3)
+      WRITE (57,2000) DBUSED(1:I1),DRIVENAME(1:I2),CHIN3(1:I3)
+ 2000 FORMAT (//,' thermodynamic database :  ',A, &
+               /,' reaction database      :  ',A, &
+               /,' chosen                 :  ',A)
+      IA=NEXPASS+NEXPVAL+NEXPCOM+NEXPEXC
+      WRITE (UNIT=57,FMT='(/,'' total number of tests '',I4)') IA
+      WRITE (UNIT=57,FMT='(/,'' number of experiments '',I4)') NEXPTOT
+      WRITE (UNIT=57,FMT='(/)')
+      WRITE (57,1000)
+ 1000 FORMAT (18X,'tested',10X,'consistent')
+!===
+      I01=NEXPASS
+      I02=(NEXPASS-NASSINC)
+      IF (I01.EQ.0) THEN
+        FF=0.0D0
+      ELSE
+        FF=DFLOAT(I02)/DFLOAT(I01)*100.0D0
+      END IF
+      WRITE (57,1010) I01,I02,FF
+ 1010 FORMAT (/,' assemblages',6X,I5,13X,I5,10X,F6.2,' %')
+!===
+!===
+      I01=NEXPCOM
+      I02=(NEXPCOM-NCOMINC)
+      IF (I01.EQ.0) THEN
+        FF=0.0D0
+      ELSE
+        FF=DFLOAT(I02)/DFLOAT(I01)*100.0D0
+      END IF
+      WRITE (57,1020) I01,I02,FF
+ 1020 FORMAT (/,' compositions',5X,I5,13X,I5,10X,F6.2,' %')
+!===
+      I01=NEXPVAL
+      I02=(NEXPVAL-NVALINC)
+      IF (I01.EQ.0) THEN
+        FF=0.0D0
+      ELSE
+        FF=DFLOAT(I02)/DFLOAT(I01)*100.0D0
+      END IF
+      WRITE (57,1035) I01,I02,FF
+ 1035 FORMAT (/,' values',11X,I5,13X,I5,10X,F6.2,' %')
+!===
+!===
+      I01=NEXPEXC
+      I02=(NEXPEXC-NEXCINC)
+      IF (I01.EQ.0) THEN
+        FF=0.0D0
+      ELSE
+        FF=DFLOAT(I02)/DFLOAT(I01)*100.0D0
+      END IF
+      WRITE (57,1025) I01,I02,FF
+ 1025 FORMAT (/,' exchange-KD',6X,I5,13X,I5,10X,F6.2,' %')
+!===
 !---
       RETURN
       END
@@ -7101,7 +7416,7 @@
       include 'files.cmn'
       include 'checkdb.cmn'
 !-----
-      INTEGER(4) ISU,I,II,IFOUND,I1,I2,I3,IO,I001
+      INTEGER(4) ISU,I,II,IFOUND,I1,I2,I3,IO,I001,J
       CHARACTER(200) CH001
 !-----
       ISU=0
@@ -7120,6 +7435,8 @@
         CALL LABLA(REAID,I3)
         CALL LABLA(DBUSED,I2)
         CALL LABLA(CHOOSE(I),I001)
+        WRITE (UNIT=6,FMT='(/,130A1)') ('!',J=1,130)
+        WRITE (6,1010) filename(drv)(1:I1),REAID(1:I3),DBUSED(1:I2),CHOOSE(I)(1:I001)
         WRITE (55,1010) filename(drv)(1:I1),REAID(1:I3),DBUSED(1:I2),CHOOSE(I)(1:I001)
         ISU=1
       END IF
@@ -7277,7 +7594,7 @@
 !
 !-open check_database_reafile
 
-      WRITE (UNIT=6,FMT='('' now opening 35 '')') 
+!!      WRITE (UNIT=6,FMT='('' now opening 35 '')') 
 
       CALL LABLA(filename(drv),I1)
       CALL LABLA(DBUSED,I2)

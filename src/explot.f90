@@ -1,4 +1,4 @@
-!explot.f90  Version: 2023.06.11
+!explot.f90  Version: 2025.03.20
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1984-2022  Christian de Capitani
 !
@@ -1966,7 +1966,8 @@
       ANGE=DMOD(ANGE,360.0D0)
       IF (ANGE.GT.180.0D0) ANGE=ANGE-360.0D0
       F1=ANGE
-      IF ((DABS(ANGE)-90.0D0).GT.1D-12) THEN
+!! following line corrected 2025.03.20
+      IF (DABS((DABS(ANGE)-90.0D0)).GT.1D-12) THEN
       ANGE=DATAN(DTAN(ANGE/57.29577951D0)*H*(R-L)/B/(O-U)) &
       *57.29577951D0
       IF (F1.GT.0D0.AND.ANGE.LT.0D0) ANGE=ANGE+180.0D0
@@ -3017,12 +3018,11 @@
       SUBROUTINE writetit(iu,os)
       implicit none
       INCLUDE 'expl.cmn'
-      INCLUDE 'version.cmn'
       character progname*30,vers*30,task*80
       character *(*) os
       integer i, j, k, iu
       progname='EXPLOT'
-      vers=BUILDVERSION
+      vers='2025.03.20'
       task='"Create a PostScritp(TM) file from graphics input"'
       call LABLA(progname,i)
       call LABLA(vers,j)

@@ -1,4 +1,4 @@
-!gmini.f90  Version: 2023.06.11
+!gmini.f90  Version: 2022.05.28
 ! -----------------------------------------------------------------------
 ! Copyright (C) 1984-2022  Christian de Capitani
 !
@@ -114,7 +114,6 @@
 !-----
 !******************************
       SUBROUTINE THERIA
-      USE FLAGS, ONLY: L1NEWSEED,DOAONNSEED
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -233,7 +232,6 @@
 !DC      IF (GTOT.LE.GTEST.OR.DISTAMAX.LT.DXMIN) THEN
       CLCOD=1
       ADDCOD=0
-      !ADDCOD is only used in write statements, in sr addph.
       IF (LOO1.EQ.2) ADDCOD=1
 !==
       IF (TEST.LT.0.0D0) THEN
@@ -261,18 +259,11 @@
 !cdc2020  ev. nur IF (AOK) TRYMORE=.TRUE. ???
 !      IF (.NOT.AFAIL.AND.GTOT.LE.GTEST) TRYMORE=.TRUE.
       IF (AOK.AND.GTOT.LE.GTEST) TRYMORE=.TRUE.
-      !dkt 2023-02-14: when SAMEAS is true, added requirement that 
-      !  AOK is also req'd to be true for trymore to be true; 
-      !  will reduce early stops on failed min's with AOK=false, but 
-      !  increases time on such cases when calc is driven all
-      !  the way to max loops for really touch cases.
-      IF (SAMEAS.AND.AOK) TRYMORE=.TRUE.   
+!! Baustelle dkt:      IF (SAMEAS.AND.AOK) TRYMORE=.TRUE.   
+      IF (SAMEAS) TRYMORE=.TRUE.
       IF (AOK.AND.MOK) TRYMORE=.TRUE.
       IF (LOO1.LE.10) TRYMORE=.FALSE.
-      !if trymore==true, we are potentially at a solution.
-      !now, don't clean any phases from main array, but 
-      !do a round of adding (addcod) and if remain 
-      !a potential solution twice, at minimum
+
       IF (TRYMORE.AND.LOO1.GT.10) THEN
 
         TRYMORE=.FALSE.
@@ -301,12 +292,9 @@
 !==
       CALL REBULK
       IF (LOO1.GT.1) THEN
-!====
-      !dkt: default was to add seeds on L001=2, with sr addph doing seeds (111) up to
-      !     loo1=5. Added flag l1newseed to specify which loop to add seeds through
-      !     sr newph; delaying addition of seeds to later loops (4-12) helps in larger systems
-      IF (LOO1.EQ.L1NEWSEED.AND.NSED.GT.0) THEN !def was LOO1.EQ.2, 
-        IF (DOAONNSEED) CALL ADDPH(ADDCOD)
+!==== add seeds without minimization
+!! Baustelle dkt: loo1 4 bis 12 e.g. 10
+      IF (LOO1.EQ.2.AND.NSED.GT.0) THEN
         DO ISE=1,NSED
           IS=SIS(ISE)
           DO IE=1,NEND(IS)
@@ -316,7 +304,7 @@
           CALL NEWPH(IS)
         END DO
       ELSE
-        CALL ADDPH(ADDCOD)
+      CALL ADDPH(ADDCOD)
       END IF
 !===
 !----- for LOO1=1------
@@ -387,18 +375,12 @@
         GOTO 630
       END IF
 !-----
-
-
       IF (TEST.LT.0.0D0) THEN
         WRITE (scr,1017) (SUGG(I),I=1,NUN)
         WRITE (out,1017) (SUGG(I),I=1,NUN)
- 1017 FORMAT (' new ass:  ',7(I7,10X),100( /8X,7(I7,10X)))
+ 1017 FORMAT (' new ass:  ',7(I7,10X),100(/8X,7(I7,10X)))
       END IF
-
-
-
-
-
+!-----
       CALL REDUCE(IIX)
 !----- the following two lines add to robustness??, but slow down
 !CCCC      CALL FULLRES
@@ -530,6 +512,8 @@
      END IF
 !--
 !====
+      CALL PRTCHECK
+!!      IF (ASSOK.AND..NOT.MUEOK) WRITE (UNIT=6,FMT='(''ASSOK.AND..NOT.MUEOK'')')
       CALL PRTCAL
       RETURN
       END
@@ -786,7 +770,7 @@
         IF (ISTAB(K).NE.1) ISTAB(K)=LOO1
         G(K)=0.0D0
       END DO
-!-----this next do is superfluous as done in above do
+!! Baustelle dkt: -----this next do is superfluous as done in above do
       DO K=1,NUN
         IF (ISTAB(K).NE.1) ISTAB(K)=LOO1
       END DO
@@ -807,7 +791,8 @@
       DO II=1,NUN
         X(K,II)=XX(NUMMER(K),II)
       END DO
-      GG(NUMMER(K))=G(K)  !GG(k) for nummer(k)>0 case is 0 as G(1:NUN) set to 0 above
+! Baustelle dkt: GG(k) for nummer(k)>0 case is 0 as G(1:NUN) set to 0 above
+      GG(NUMMER(K))=G(K)
 !-----
       IF (ISOFIX(NUMMER(K)).NE.0.AND.K.LE.NUN) THEN
       IS=ISOFIX(NUMMER(K))
@@ -817,7 +802,7 @@
       END DO
       END IF
 !=====
-      ELSE  !NUMMER(K)<=0
+      ELSE
       IS=EMCODE(K)
 !CCC      IF (K.GT.NUN.AND.(GTOT.GT.GTEST.OR.TRY.EQ.1)) THEN
       IF (K.GT.NUN.AND.CLCOD.EQ.1) THEN
@@ -877,13 +862,8 @@
         WRITE (UNIT=out,FMT='('' NMAX ='',I9)') NMAX
       END IF
 !==
-
-
-
-
+!====================
       DO 520,I=1,NMAX
-
-
       IF (EMCODE(I).GT.0) THEN
       IS=EMCODE(I)
       DO J=1,NEND(IS)
@@ -892,9 +872,7 @@
       CALL GNONID(IS,XXSC,GSC)
 !==
 !==
-
 !      goto 987
-
 !----- check if G(I) are OK
       IF (TEST.LT.0.0D0) THEN
        IF (DABS(G(I)-GSC).GT.1D-10) THEN
@@ -904,17 +882,16 @@
        ,I6,I6,2X,A,2X,1PE15.8)
        END IF
       END IF
-
 !  987 continue
-
-
 !==CDCJUNE2020 why not??
 !==
       G(I)=GSC
       ELSE
       G(I)=GG(NUMMER(I))
-
+!==
       END IF
+!==
+!==
 !
 !      cdc 2020.06.17. do not do that check
 !
@@ -956,7 +933,7 @@
 !==
 !==
   520 CONTINUE
-
+!====================
 !+++++
       RETURN
       END
@@ -1266,20 +1243,20 @@
       IF (TEST.LT.0.0D0) THEN
       WRITE (scr,1010) SUGG(IEX),(WARUM(I),I=1,NUN)
       WRITE (out,1010) SUGG(IEX),(WARUM(I),I=1,NUN)
- 1010 FORMAT (' dG < 0 : ',I7,2X,11A12,100( /,12X,11A12))
+ 1010 FORMAT (' dG < 0 : ',I7,2X,11A12,100(/,12X,11A12))
       IF (IFOUND.NE.0) THEN
         WRITE (scr,1012) IEX,SUGG(IEX),IFOUND,SUGG(IFOUND), &
         (DX0(I),I=1,NUN)
         WRITE (out,1012) IEX,SUGG(IEX),IFOUND,SUGG(IFOUND), &
         (DX0(I),I=1,NUN)
  1012 FORMAT (' exchange col:',I4,' (sug',I7,') col',I4,' (sug',I7, &
-      ') |',/,' new NN:',7(2X,1PE15.8),100( /8X,7(2X,1PE15.8)))
+      ') |',/,' new NN:',7(2X,1PE15.8),100(/8X,7(2X,1PE15.8)))
         WRITE (scr,1016) (TEXT(I),I=1,NUN)
         WRITE (out,1016) (TEXT(I),I=1,NUN)
- 1016 FORMAT (' old ass:  ',7(1X,A16),100( /8X,7(1X,A16)))
+ 1016 FORMAT (' old ass:  ',7(1X,A16),100(/8X,7(1X,A16)))
         WRITE (scr,1017) (SUGG(I),I=1,NUN)
         WRITE (out,1017) (SUGG(I),I=1,NUN)
- 1017 FORMAT (' old ass:  ',7(I7,10X),100( /8X,7(I7,10X)))
+ 1017 FORMAT (' old ass:  ',7(I7,10X),100(/8X,7(I7,10X)))
       ELSE
         WRITE (scr,1014) NULWERT
         WRITE (out,1014) NULWERT
@@ -1305,7 +1282,6 @@
 !-----
 !******************************
       SUBROUTINE ADDPH(ADDCOD)
-      USE FLAGS, ONLY: L1SCANMAX, L1NEWSEED, NLOOPSDOSEED, EMSTARTMOD
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -1405,7 +1381,7 @@
 !===========================================================
       SKIPEM=.TRUE.
       IF (LOO1.LE.3) SKIPEM=.FALSE.
-      IF (MOD(LOO1,EMSTARTMOD).EQ.0) SKIPEM=.FALSE.
+      IF (MOD(LOO1,10).EQ.0) SKIPEM=.FALSE.
       IF (LOO1A.EQ.1) SKIPEM=.FALSE.
       IF (.NOT.SKIPEM) THEN
         DO START=-NEND(IS),-1
@@ -1418,7 +1394,8 @@
 !===========================================================
       IF (DXSCAN.LT.1.0D0.OR.WSCAN.GT.0) THEN
       SKIPSCAN=.TRUE.
-      IF (LOO1.LE.L1SCANMAX) SKIPSCAN=.FALSE. !def was 3; 5 helps some solns
+!! Baustelle dkt: loo1.le.5 was 3
+      IF (LOO1.LE.5) SKIPSCAN=.FALSE.
       IF (MOD(LOO1,10).EQ.0) SKIPSCAN=.FALSE.
       IF (LOO1A.EQ.1) SKIPSCAN=.FALSE.
       IF (.NOT.SKIPSCAN) THEN
@@ -1443,13 +1420,10 @@
 !      DO I=1,NEND(IS)
 !       XXSC(I)=0.0D0
 !      END DO
-!
-      !IF (NSED.GT.0.AND.LOO1.LT.5) THEN  !def is LT.5
-      IF (NSED.GT.0.AND.LOO1.GE.L1NEWSEED.AND.LOO1.LE.(L1NEWSEED+NLOOPSDOSEED)) THEN
-      !presence of seeds causes failure at times (liq); needs
-      !reconsideration at some point, but L1NEWSEED=2 and NLOOPSDOSEED=1 works ok.
-       DO I=1,NSED                                     
-        IF (SIS(I).EQ.IS) THEN                         
+!! Baustelle dkt: loo1 zwischen 12 und 13
+      IF (NSED.GT.0.AND.LOO1.GE.10.AND.LOO1.LT.11) THEN
+       DO I=1,NSED
+        IF (SIS(I).EQ.IS) THEN
          DO J=1,NEND(IS)
           XXSC(J)=SXX(I,J)
          END DO
@@ -1558,7 +1532,6 @@
 !-----
 !******************************
       SUBROUTINE NEWPH(IS)
-      USE FLAGS, ONLY : RIDICUT
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -1567,7 +1540,6 @@
 !      INTEGER(4) II,I001,IC
       REAL(8) XXSC(EMAX),GSC,FF,MUE2(EMAX),MUE0(EMAX),GG0,GAIN
 !      REAL(8) AR001(EMAX),AR002(EMAX)
-      LOGICAL(4) L001,L002
 !-----
       PROB=0
 !+++++ below added for security
@@ -1677,12 +1649,10 @@
         WRITE (UNIT=scr,FMT='(''  average gradient  ='',1PE15.8)') FF
       END IF
 !---------------------------------------------------
-!23MAI2022 don't if ideal solution !!! (was 1D5)
+!23MAI2022 don't if ideal solution
 !18Mai2023 don't if ideal+Margules (set to 1D7)
-!---------------------------------------------------
-!      IF (FF.GT.1D6.AND.SUGCOD(0).NE.'idmn') THEN
-      L001=FF.GT.RIDICUT.AND.MODELL(IS).EQ.'S'
-      IF (L001) THEN
+!! Baustelle dkt: 1d5  FF.GT.RIDICUT.AND.MODELL(IS).EQ.'S'
+      IF (FF.GT.1D5.AND.SUGCOD(0).NE.'idmn') THEN
 !==
 !     ridiculous phases are nowhere close to a minimum
 !     with a huge gradient, but are stuck in the minimization
@@ -1905,7 +1875,6 @@
 !-----START = 222:Initial gess from ideal solution
 !-----START = 777:reserved for test !!!
 !-----
-      USE flags, ONLY: ZEROEM,EMDXSCALE
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -1913,7 +1882,6 @@
       INTEGER(4) I,IS,START,STEP,STEP2,NSTEP,L3,L1,II,I001,I002, &
       I1,FRAC,COMBO(10),IC,BESTN,BESTS,ANUMBER,IPM,VERSUCH, &
       GNOMSOFAR,DOMEM
-      INTEGER(4) VACODE
       REAL(8) XXSC(EMAX),GSC,XXX(3,EMAX),GGG(3),AR001(EMAX), &
       AR002(EMAX),SUMME,F001,FF,LESCAN,MUE(EMAX), &
       AR003(EMAX),REFX(EMAX),REFG,BESTG,REFG0,PLUMI,DDX,GAIN
@@ -1921,7 +1889,6 @@
       CHARACTER(500) CH001
       CHARACTER(36) STARTEXT
       CHARACTER(6) MINKOM
-      LOGICAL :: NEGOK
 !==
       NSTEP=10
       BESTG=1D30
@@ -2060,8 +2027,8 @@
 !
 !-----half scan for weird solutions
       GSOL=1D30
-      IF (START.EQ.0.AND.NNEGEM(IS).GT.0.AND.WSCAN.GT.0 &
-         .AND.MODELL(IS).NE.'F') THEN
+!! Baustelle eventuell auch MODELL(IS).NE.'F')
+      IF (START.EQ.0.AND.NNEGEM(IS).GT.0.AND.WSCAN.GT.0) THEN
 !
        FRAC=WSCAN
        DO I=1,FRAC-1
@@ -2085,22 +2052,9 @@
        DO I1=1,FRAC
         DO I=1,NEND(IS)
          XXSC(I)=XXSC(I)+ALLEM(IS,COMBO(I1),I)/DBLE(FRAC)
-         !dkt introduce check to exclude em's going neg that are 
-         !not in NEGEM
-         IF(XXSC(I).LT.0.0D0) THEN
-          NEGOK=.FALSE.
-          negcheckdo: DO II=1,NNEGEM(IS)
-           IF(NEGEM(IS,II).EQ.I) THEN
-            NEGOK=.TRUE.
-            EXIT negcheckdo
-           END IF
-          END DO negcheckdo
-          IF(NEGOK.EQV..FALSE.) THEN
-            !print*,'NEGOK.EQV..FALSE.', SOLNAM(IS)
-            GOTO 90
-          END IF
-         END IF
-         !
+! Baustelle dkt: introduce check to exclude em's going neg that are 
+! not in negem
+! comment: check with MINEM(IS,I)
         END DO
        END DO
        SUMME=1.0D0+DBLE(NEND(IS))*1D-3
@@ -2130,7 +2084,8 @@
       END DO
       XXEM(II)=1.0D0
       GSOL=GG(EM(IS,II))
-      DELTAX=DXSTAR*EMDXSCALE
+! Baustelle dkt: DELTAX=DXSTAR*0.2
+      DELTAX=DXSTAR
       NSTEP=STPSTA
       SUGCOD(0)='endm'
       END IF
@@ -2290,13 +2245,9 @@
 !CDC2020
 !!!       IF (XXEM(I001).GT.0.0D0.AND.DABS(AR001(I001)).LT.1D-9) THEN
 !!!        ZEND(IS,I001)=ZEND(IS,I001)+1
-
-
-!          IF (XXEM(I001).LT.1D-9.AND.AR001(I001).LT.1D-9 &
-!          .AND.DABS(MINEM(IS,I001)).LT.1D-20) THEN
-!          ZEND(IS,I001)=ZEND(IS,I001)+1
-          IF (XXEM(I001).LT.ZEROEM.AND.AR001(I001).LT.ZEROEM &
-          .AND.DABS(MINEM(IS,I001)).LT.ZEROEM) THEN                
+!! Baustelle dkt: 1d-24 for all
+          IF (XXEM(I001).LT.1D-9.AND.AR001(I001).LT.1D-9 &
+          .AND.DABS(MINEM(IS,I001)).LT.1D-20) THEN
           ZEND(IS,I001)=ZEND(IS,I001)+1
 
 !
@@ -2309,9 +2260,8 @@
        END IF
 
        IF (ZEND(IS,I001).GT.0) THEN
-!       IF (XXEM(I001).GT.0.0D0.AND.DABS(AR001(I001)).GT.1D-9) THEN
-!        ZEND(IS,I001)=0
-       IF (XXEM(I001).GT.0.0D0.AND.DABS(AR001(I001)).GT.ZEROEM) THEN
+!! Baustelle dkt: 1d-24
+       IF (XXEM(I001).GT.0.0D0.AND.DABS(AR001(I001)).GT.1D-9) THEN
         ZEND(IS,I001)=0
 !
         IF (TEST.LT.0.0D0) THEN
@@ -2346,9 +2296,7 @@
       DO STEP2=1,NEND(IS)
         IF (STEP2.NE.1) VEKTOR(STEP2-1)=-AR001(STEP2-1)
         VEKTOR(STEP2)=1.0D0-AR001(STEP2)
-        VACODE=1
-        CALL VECADD(IS,AR001,F001,XXSC,VACODE)
-        IF(VACODE == 0) CYCLE
+        CALL VECADD(IS,AR001,F001,XXSC)
         CALL GNONID(IS,XXSC,GSC)
         IF (GSC.LT.GGG(L1)) THEN
         MINKOM='endm.'
@@ -2363,9 +2311,7 @@
         DO I=1,NEND(IS)
           VEKTOR(I)=STREM(IS,II,I)-AR001(I)
         END DO
-        VACODE=1
-        CALL VECADD(IS,AR001,F001,XXSC,VACODE)
-        IF(VACODE == 0) CYCLE
+        CALL VECADD(IS,AR001,F001,XXSC)
         CALL GNONID(IS,XXSC,GSC)
         IF (GSC.LT.GGG(L1)) THEN
         MINKOM='str.em'
@@ -3026,11 +2972,11 @@
       WRITE (scr,1031) IMEGA,FFX,BREMS,(DX0(I),I=1,N1)
       WRITE (out,1031) IMEGA,FFX,BREMS,(DX0(I),I=1,N1)
  1031 FORMAT (1X,I4,' FFX,BREMS,DX0:',6(2X,1PE15.8), &
-      :,100( /,54X,4(2X,1PE15.8)))
+      :,100(/,54X,4(2X,1PE15.8)))
       WRITE (scr,1032) IMEGA,GG0,GPROG,(XX0N(I),I=1,N0)
       WRITE (out,1032) IMEGA,GG0,GPROG,(XX0N(I),I=1,N0)
  1032 FORMAT (1X,I4,' G,DG,last Xi :',6(2X,1PE15.8), &
-      :,100( /,54X,4(2X,1PE15.8)))
+      :,100(/,54X,4(2X,1PE15.8)))
       END IF
 !==
       IF (IMEGA.EQ.1) RETURN
@@ -3097,198 +3043,27 @@
       END
 !-----
 !******************************
-      !This is another steep that is essentially the same as original steep
-      !but uses the following user set flags:
-      !  STPZAL: sets pc mues to 0 if pc ARA < STPZAL on entry (1st loop).
-      !          - should be tied to values controlling zend in marmin. Try ZEROEM,
-      !          - defaults CdC is 1D-09. Current ZEROEM down to D-54.
-      !  STPNN:  sets pc vektor to 0 if pc ARA < STPNN AND NNEGEM=0.
-      !          This only applies to NNEGEM=0 soln models. Currently setting to
-      !          PMINXXX value of D-55.
-      !  STPVMIN:Cutoff for mue's nearly same as average mue; if within cutoff
-      !          from 0, don't calc new diff in bing case.
-      !For some reason this is more stable than steep_original even though
-      !they are essentially the same (with hard-coded values in original). Must
-      !be array syntax operations or compiler optimizations with hard-coded values.
+!-----
+!******************************
       SUBROUTINE STEEP(IS,ARA,MUE)
-        !-----find direction of steepest descent.
-        USE flags, ONLY: STPZAL, STPZNN, STPVMIN, DOSTP
-        IMPLICIT NONE
-        INCLUDE 'theriak.cmn'
-        !-----END OF COMMON VARIABLES
-        INTEGER(4) IS, I, NEM, BING
-        REAL(8) DELMUE, SUMME, ARA(EMAX), MUE(EMAX)
-        !-----
-        IF(DOSTP.EQ.2) THEN
-          CALL STEEP2(IS,ARA,MUE)
-          RETURN 
-        ELSE IF(DOSTP.EQ.0) THEN
-          CALL STEEP_ORIGINAL(IS,ARA,MUE)
-          RETURN 
-        END IF
-        !-----
-        NEM=NEND(IS)
-        DELMUE = 0.0D0
-        SUMME = 0.0D0
-        BING = 0
-        !=====
-        !most pc's with very very low (non-neg) ppn will have very low mue's, 
-        !so when several are present, delmue (ave) much lower than otherwise,
-        !and that will drive vecktor towards them (unless otherwise checked).
-        !
-        !set mue's low when ara(i) very low or neg. Why set neg ppn mues to 0
-        !Keep STPZAL=ZEROEM, and very low is fine (D-54)
-        DO I=1,NEND(IS)
-          IF (ARA(I).LE.STPZAL) MUE(I)=0.0D0
-        END DO
-        !Calculate ave MUE
-        DELMUE = SUM(MUE(1:NEM)) / DBLE(NEM)
-        !Make vec of diff of mue from ave. 
-        VEKTOR(1:NEM) = DELMUE - MUE(1:NEM)
-        !if very low ppn, is uphill, and nnegem=0, then pin by setting vektor=0
-        !cdc uses 1.0D-50. Set STPZNN=PMINXXX (D-55)
-        DO I=1,NEND(IS)
-          IF (ARA(I).LE.STPZNN.AND.VEKTOR(I).LT.0.0D0.AND.NNEGEM(IS).EQ.0) THEN
-            VEKTOR(I)=0.0D0
-            BING=BING+1
-          END IF
-          !IF (DABS(ARA(I)).LT.STPZAL.AND.ZEND(IS,I).GT.0) THEN
-            !VEKTOR(I)=0.0D0
-          !END IF
-          SUMME=SUMME+VEKTOR(I)*VEKTOR(I)
-        END DO
-        !SUMME=SUM( VEKTOR(1:NEM)*VEKTOR(1:NEM) )
-        !if pinned a pc vector to 0, normalize on bing fewer pc's
-        !and recalc whole thing
-        IF (BING.GT.0.AND.BING.LT.NEND(IS)) THEN
-          SUMME=0.0D0
-          DELMUE=0.0D0
-          DO I=1,NEND(IS)
-            DELMUE=DELMUE+VEKTOR(I)
-          END DO
-          DELMUE=DELMUE/DBLE(NEND(IS)-BING)
-          DO I=1,NEND(IS)
-            !IF (DABS(VEKTOR(I)).GT.1D-20) VEKTOR(I)=DELMUE-VEKTOR(I)
-            !Check helps a bit. STPVMIN currently same as def 1D-20
-            !If VEKTOR(I) is zero or very close on first calc of VEK above, then
-            !leave it as-is, otherwise (most cases), recalc it.
-            IF (DABS(VEKTOR(I)).GT.STPVMIN) VEKTOR(I)=DELMUE-VEKTOR(I)
-            SUMME=SUMME+VEKTOR(I)*VEKTOR(I)
-          END DO
-        END IF
-        !sqrt of sum of square (of diffs from ave); always pos; assume>0
-        SUMME = DSQRT(SUMME)
-        IF(SUMME>0.0D0) THEN
-          !scale VEKTOR
-          VEKTOR(1:NEM) = VEKTOR(1:NEM) / SUMME
-        END IF
-        RETURN
-      END SUBROUTINE STEEP
-!-----
-!******************************
-      !This is an alternate steep that does not do bing
-      !and neg ppn stuff.
-      SUBROUTINE STEEP2(IS,ARA,MUE)
-        !-----find direction of steepest descent.
-        USE FLAGS, ONLY : MINGRADPPN
-        IMPLICIT NONE
-        INCLUDE 'theriak.cmn'
-        !-----END OF COMMON VARIABLES
-        INTEGER(4), INTENT(IN) :: IS
-        INTEGER(4)             :: NEM
-        REAL(8), INTENT(IN)    :: ARA(EMAX)
-        REAL(8), INTENT(INOUT) :: MUE(EMAX)
-        REAL(8) :: DELMUE = 0.0D0
-        REAL(8) :: SUMME  = 0.0D0
-        INTEGER(4) :: I
-        !VEKTOR is global
-        !-----
-        NEM=NEND(IS)
-        !=====
-        !2023.06.04 low ppn -> mue=0, following original sr
-        DO I=1,NEM
-          IF(DABS(ARA(I)).LE.MINGRADPPN) MUE(I)=0.0D0
-        END DO
-        !Calculate ave MUE
-        DELMUE = (SUM(MUE(1:NEM))) / DBLE(NEM)
-        !Make vec of diff of mue from ave. 
-        VEKTOR(1:NEM) = DELMUE - MUE(1:NEM)
-        !L2
-        SUMME = SUM( VEKTOR(1:NEM) * VEKTOR(1:NEM) )
-        !check for summe=0
-        !IF(TEST.LE.0.0D0) THEN
-        !  IF(.NOT.SUMME.GT.0.0D0) THEN
-        !    write(*,fmt="('VEKTOR=0. IS=',I3,1x,20(ES13.6))") IS, VEKTOR(1:NEM)
-        !  END IF
-        !END IF
-        IF(SUMME.GT.0.0D0) THEN
-          SUMME = DSQRT(SUMME)
-          !normalize VEKTOR
-          VEKTOR(1:NEM) = VEKTOR(1:NEM) / SUMME
-        END IF
-        RETURN
-        END SUBROUTINE STEEP2      
-!-----
-!******************************
-      SUBROUTINE STEEP_ORIGINAL(IS,ARA,MUE)
 !-----find direction of steepest descent.
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
 !-----END OF COMMON VARIABLES
-      INTEGER(4) IS,I,BING
+      INTEGER(4) IS,I
       REAL(8) DELMUE,SUMME,ARA(EMAX),MUE(EMAX)
 !-----
       DELMUE=0.0D0
       SUMME=0.0D0
-      BING=0
 !=====
-!CDC2020 987
-      DO I=1,NEND(IS)
-        IF (ARA(I).LT.1D-9) MUE(I)=0.0D0
-      END DO
-!
       DO I=1,NEND(IS)
         DELMUE=DELMUE+MUE(I)
       END DO
       DELMUE=DELMUE/DBLE(NEND(IS))
       DO I=1,NEND(IS)
         VEKTOR(I)=DELMUE-MUE(I)
-!cdcjun09
-!        IF (G(EM(IS,I)).GT.1D5) VEKTOR(I)=0.0D0
-!cdc
-!        IF (ARA(I).LE.1D-20.AND.VEKTOR(I).LT.0.0D0) THEN
-        IF (ARA(I).LE.1D-50.AND.VEKTOR(I).LT.0.0D0 &
-        .AND.NNEGEM(IS).EQ.0) THEN
-!-
-         VEKTOR(I)=0.0D0
-         BING=BING+1
-        END IF
-!
-!---- check for zero em
-        IF (DABS(ARA(I)).LT.1D-9.AND.ZEND(IS,I).GT.0) THEN
-!         VEKTOR(I)=0.0D0
-!!!CDC2020         VEKTOR(I)=0.0D0
-        END IF
-!
         SUMME=SUMME+VEKTOR(I)*VEKTOR(I)
       END DO
-!cdc
-      IF (BING.GT.0.AND.BING.LT.NEND(IS)) THEN
-!      WRITE (6,1000) SOLNAM(IS),(ARA(I),I=1,NEND(IS))
-! 1000 FORMAT (A10,
-!     >'  negative gradient for x(i)<10D-20: x ='
-!     >,20E13.4)
-      SUMME=0.0D0
-      DELMUE=0.0D0
-      DO I=1,NEND(IS)
-        DELMUE=DELMUE+VEKTOR(I)
-      END DO
-      DELMUE=DELMUE/DBLE(NEND(IS)-BING)
-      DO I=1,NEND(IS)
-        IF (DABS(VEKTOR(I)).GT.1D-20) VEKTOR(I)=DELMUE-VEKTOR(I)
-        SUMME=SUMME+VEKTOR(I)*VEKTOR(I)
-      END DO
-      END IF
 !-----
       SUMME=DSQRT(SUMME)
       IF (SUMME.GT.0.0D0) THEN
@@ -3297,7 +3072,7 @@
       END DO
       END IF
       RETURN
-      END SUBROUTINE STEEP_ORIGINAL
+      END
 !-----
 !******************************
       SUBROUTINE DISTAN(IS,X1,X2)
@@ -3312,7 +3087,8 @@
         DIFF=X2(I)-X1(I)
         DISTA=DISTA+DIFF*DIFF
       END DO
-      DISTA=DSQRT(DISTA)/DFLOAT(NEND(IS))
+!! Baustelle dkt: DISTA=DSQRT(DISTA)/DFLOAT(NEND(IS))
+      DISTA=DSQRT(DISTA)
       RETURN
       END
 !-----
@@ -3322,7 +3098,6 @@
       INCLUDE 'theriak.cmn'
 !-----END OF COMMON VARIABLES
       INTEGER(4) IS,I,II,I001
-      INTEGER(4) VACODE
       REAL(8) XSTART(EMAX),GSTART,XOLD(EMAX),GOLD,XNEW(EMAX), &
       GNEW,DELIX
 !-----
@@ -3331,22 +3106,16 @@
       DO I001=1,NEND(IS)
         XOLD(I001)=XSTART(I001)
       END DO
-      VACODE=1
-      CALL VECADD(IS,XSTART,DELIX,XNEW,VACODE)
-      IF(VACODE == 0) THEN
-        VACODE=1
-        GOTO 1
-      END IF
+      CALL VECADD(IS,XSTART,DELIX,XNEW)
       CALL GNONID(IS,XNEW,GNEW)
       DO II=1,GCMAX
-        IF (GNEW.GE.GOLD.OR.VACODE.EQ.0) GO TO 1
+        IF (GNEW.GE.GOLD) GO TO 1
         DELIX=DELIX+DELTAX
         GOLD=GNEW
         DO I001=1,NEND(IS)
           XOLD(I001)=XNEW(I001)
         END DO
-        VACODE=1
-        CALL VECADD(IS,XOLD,DELIX,XNEW,VACODE)
+        CALL VECADD(IS,XOLD,DELIX,XNEW)
         CALL GNONID(IS,XNEW,GNEW)
       END DO
     1 GNEW=GOLD
@@ -3356,12 +3125,7 @@
       DO I=1,GCMAX
         IF (GNEW.LT.GSTART.OR.DELIX.LE.DXMIN) GO TO 2
         DELIX=DELIX/2.0D0
-        VACODE=1
-        CALL VECADD(IS,XSTART,DELIX,XNEW,VACODE)
-        IF(VACODE == 0) THEN
-          !VACODE=1
-          CYCLE
-        END IF
+        CALL VECADD(IS,XSTART,DELIX,XNEW)
         CALL GNONID(IS,XNEW,GNEW)
       END DO
     2 IF (GNEW.GT.GSTART) THEN
@@ -3374,108 +3138,12 @@
       END
 !-----
 !******************************
-    !added return code VACODE. Called by sr marmin, etc
-    SUBROUTINE VECADD(IS,X1,DELIX,X2,VACODE)
-      USE flags, ONLY : DOEXTRAPPNSVA, VAFFSCALE
-      IMPLICIT NONE
-      INCLUDE 'theriak.cmn'
-      !-----END OF COMMON VARIABLES
-      INTEGER(4) IS,I,CODE
-      REAL(8) X1(EMAX),X2(EMAX),DELIX,SUMME,FF
-      INTEGER(4), INTENT(OUT) :: VACODE
-      !-----
-
-      !return if x1 fails spacetest on entry
-      CODE=1
-      CALL SPACETEST(IS,X1,CODE)
-      IF (CODE.EQ.0) THEN
-        !      WRITE (6,1000) SOLNAM(IS),(X1(I),I=1,NEND(IS))
-        ! 1000 FORMAT (1X,A16,' x1 in VECADD is outside space ',20(1PE12.5))
-        !X2(I)=1.0D0/DBLE(NEND(IS))
-        X2(1:NEND(IS)) = X1(1:NEND(IS)) !set back to X1 instead of center comp
-        VACODE=0
-        RETURN
-      END IF
-      
-      !calc FF scale factor on vektor before adding;
-      !use largest magnitude of delix,dxmin (or most 
-      !neg if delix neg)
-      FF=DMAX1(DELIX,DXMIN)
-      IF (DELIX.LT.0.0D0) FF=DMIN1(DELIX,-DXMIN)
-      X2(1:NEND(IS)) = X1(1:NEND(IS)) + VEKTOR(1:NEND(IS))*FF
-      !IF(DOEXTRAPPNSVA.EQV..TRUE.) CALL NORMPPNS
-
-    !-----
-    1 CODE=2
-      CALL SPACETEST(IS,X2,CODE)
-      IF (CODE.EQ.0) THEN
-        !reset to last x1 if st failed, and scale if ff<dxmin
-        IF (DABS(FF).LT.DXMIN) THEN
-          X2(1:NEND(IS)) = X1(1:NEND(IS))
-          VACODE = CODE
-          RETURN
-        END IF
-        !otherwise dec ff if st failed and try again
-        FF=FF*VAFFSCALE
-        X2(1:NEND(IS)) = X1(1:NEND(IS)) + VEKTOR(1:NEND(IS))*FF
-        IF(DOEXTRAPPNSVA.EQV..TRUE.) CALL NORMPPNS
-        !DC
-        IF (NNEGEM(IS).GT.0) THEN
-          CODE=2
-          CALL SPACETEST(IS,X2,CODE)
-          IF (CODE.EQ.0) THEN
-            DO I=1,NEND(IS)
-              IF (X2(I).GT.FF) THEN  !dkt testing on FF instead of default 1D-2
-                X2(I)=X2(I)-FF       !dkt trying FF instead of default 1D-3
-              ELSE
-                X2(I)=X2(I)+FF       !dkt trying FF instead of default 1D-2
-              END IF
-            END DO
-            CALL NORMPPNS            !dkt needed since arbritrary shift above
-            !CALL GETSTINFO          !dkt uncomment if LTCODE=0
-          END IF
-        END IF
-        !DC
-        GOTO 1 !trying again with adjusted X2
-      END IF 
-      !---
-      !-----
-      !dkt need to norm ppns if NORMPPNS not called above 
-      IF(DOEXTRAPPNSVA .EQV. .FALSE.)  CALL NORMPPNS
-      VACODE = CODE
-      RETURN
-
-      CONTAINS
-      
-        !bdkt Adding sub-subroutine to normalize ppns to 1
-        SUBROUTINE NORMPPNS
-          SUMME = 0.0D0
-          DO I = 1, NEND(IS)
-            SUMME = SUMME + X2(I)
-          END DO
-          !print*,' summe in vecadd normppns = ',SUMME
-          IF (DABS(1.0D0-SUMME) .GT. 1.0D-20) THEN
-          !IF (SUMME.LT.1.0D0 .OR. SUMME.GT.1.0D0) THEN
-            DO I = 1, NEND(IS)
-                X2(I) = X2(I)/(SUMME)
-            END DO
-          END IF
-          RETURN
-        END SUBROUTINE NORMPPNS
-
-      END SUBROUTINE VECADD
-!-----
-!******************************
-      !This is original 28.09.2022 VECADD, but with VACODE added, that
-      !does nothing in this case; this is here for comparison later 
-      !with VECADD above.
-      SUBROUTINE VECADD_ORIGINAL(IS,X1,DELIX,X2,VACODE)
+      SUBROUTINE VECADD(IS,X1,DELIX,X2)
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
 !-----END OF COMMON VARIABLES
       INTEGER(4) IS,I,CODE
       REAL(8) X1(EMAX),X2(EMAX),DELIX,SUMME,FF
-      INTEGER(4), INTENT(INOUT) :: VACODE
 !-----
       CODE=1
       CALL SPACETEST(IS,X1,CODE)
@@ -3538,39 +3206,23 @@
       END DO
       END IF
       RETURN
-      END SUBROUTINE VECADD_ORIGINAL
+      END
 !-----
 !******************************
       SUBROUTINE SPACETEST(IS,X1,CODE)
+!---- this tests, that all site occupancies are between 0 and 1
+!---- comment: maybe also test that all X1 are bewteen MINEM(IS,I) and MAXEM(IS,I)
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
 !-----END OF COMMON VARIABLES
       INTEGER(4) IS,ILX,IE,IK,I001,CODE
       REAL(8) X1(EMAX),XTEST,TOLER
-      LOGICAL CANBENEG
 !-----
 !----- if test OK, CODE remains unchanged, else CODE=0
 !      TOLER=1.0D-8
       TOLER=0.0D0
       I001=0
 !-
-      !-2022-05-09: Test for -EXT soln with illegal neg ppn.
-      ! For -EXT and NNEGEM>0, assume min ppn=-1, maxppn=1 or 2.
-      IF(MODELL(IS).EQ.'F'.AND.NNEGEM(IS).GT.0) THEN
-        DO IE=1, NEND(IS) 
-           !can this one be neg
-           CANBENEG=.FALSE.
-           DO IK=1, NNEGEM(IS)
-              IF(NEGEM(IS,IK).EQ.IE) CANBENEG=.TRUE.
-           END DO
-           IF(CANBENEG.EQV..FALSE.) THEN
-              IF(X1(IE).GT.1.0D0+TOLER .OR. X1(IE).LT.0.0D0) CODE = 0
-           ELSE
-              IF(X1(IE).LT.-1.0D0 .OR. X1(IE).GT.1.0D0) CODE = 0
-           END IF
-           IF(CODE==0) RETURN
-        END DO
-      END IF
       IF (NNEGEM(IS).NE.0) THEN
       DO ILX=1,NSIEL(IS)
         XTEST=0.0D0
@@ -3578,12 +3230,7 @@
           IE=EMQQ(IS,ILX,IK)
           XTEST=XTEST+EMXX(IS,ILX,IE)*X1(IE)
         END DO
-        IF (XTEST.LT.(0.0D0-TOLER).OR.XTEST.GT.(1.0D0+TOLER)) THEN
-          I001=1
-          CODE=0
-          RETURN  !dkt might as well just return if set CODE, as here
-        END IF
-        !dkt todo: add DOMINMAXSIELST from src20x
+        IF (XTEST.LT.(0.0D0-TOLER).OR.XTEST.GT.(1.0D0+TOLER)) I001=1
       END DO
 !-
       ELSE
@@ -3994,3 +3641,47 @@
 !=====
       RETURN
       END
+!-----
+!******************************
+! this is in preparation. Ignore if you are not me.
+      SUBROUTINE SELFSEED
+      IMPLICIT NONE
+      INCLUDE 'theriak.cmn'
+      include 'files.cmn'
+!-----END OF COMMON VARIABLES
+      INTEGER(4) I,II,IS
+      
+      
+      REAL(8) SELFXX(10,10)
+      INTEGER(4) NSELF,NSELFMAX,SELFIS(10)
+      NSELFMAX=10
+      NSELF=0
+!
+      WRITE (6,1000) LOO1
+ 1000 FORMAT (' SELFSEED CALLED, LOO1 = ',I6)
+ 
+      DO I=1,NUN2
+        IF (EMCODE(I).NE.0) THEN
+          NSELF=NSELF+1
+          IF (NSELF.GT.NSELFMAX) THEN
+            NSELF=NSELFMAX
+            RETURN
+          END IF
+          IS=EMCODE(I)
+          SELFIS(NSELF)=IS
+          DO II=1,NEND(IS)
+            SELFXX(NSELF,II)=XEM(IS,II)
+          END DO
+        END IF
+      END DO
+      NSELF=NSELF+1
+      IF (NSELF.GT.NSELFMAX) THEN
+        NSELF=NSELFMAX
+        RETURN
+      END IF
+!
+!=====
+      RETURN
+      END
+!-----
+!******************************
