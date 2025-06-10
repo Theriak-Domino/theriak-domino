@@ -53,6 +53,17 @@ MODULE FLAGS
   REAL(8)    :: EMDXSCALE = 2D-1      !!sr marmin: scale dxstart when starting
                                       !!min from em (dec to help get wide misc
                                       !!limb mins at low T)
+
+  REAL(8)    :: DXMSCALE1 = 1.0D-03   !!scale delxmin by this amount in SR THERIA
+                                      !!when LOO1 is 1/4 to LO1MAX
+  REAL(8)    :: DXMSCALE2 = 1.0D-03   !!scale delxmin by this amount in SR THERIA
+                                      !!when LOO1 is 1/2 to LO1MAX
+  REAL(8)    :: DXMSCALE3 = 1.0D-06   !!scale delxmin by this amount in SR THERIA
+                                      !!when LOO1 is 3/4 to LO1MAX
+  INTEGER(4) :: SSFAC1 = 5            !! scale STPSTA (from STPSTAR) when L001=1/4
+  INTEGER(4) :: SSFAC2 = 5            !! scale STPSTA again when L001=1/2
+  INTEGER(4) :: SSFAC3 = 5            !! scale STPSTA again when L001=3/4
+
   INTEGER(4) :: EMSTARTMOD = 10       !!sr addph: start min from em comp every X 
                                       !!loops; def is 10, 25 works a bit faster
 
@@ -140,7 +151,7 @@ MODULE FLAGS
           endif
           tstr1 = tdatstr(1:epos-1)
           tstr2 = tdatstr(epos+1:dpos-1) !/ drops the trailing ; from tstr2
-          tdatstr = tdatstr(dpos+1:)
+          tdatstr = tdatstr(dpos+1:MIN(LEN_TRIM(tdatstr),LEN(tdatstr))) // ''
           !keep CALL LOWUP for boolean flags tRuE/FalSE 
           SELECT case(tstr1)
             case("EMSTARTMOD")
@@ -194,6 +205,30 @@ MODULE FLAGS
             case("EMDXSCALE")
               if(tstr2 /= '') then
                 READ(tstr2,*) EMDXSCALE
+              endif
+            case("DXMSCALE1")
+              if(tstr2 /= '') then
+                READ(tstr2,*) DXMSCALE1
+              endif
+            case("DXMSCALE2")
+              if(tstr2 /= '') then
+                READ(tstr2,*) DXMSCALE2
+              endif
+            case("DXMSCALE3")
+              if(tstr2 /= '') then
+                READ(tstr2,*) DXMSCALE3
+              endif
+            case("SSFAC1")
+              if(tstr2 /= '') then
+                READ(tstr2,*) SSFAC1
+              endif
+            case("SSFAC2")
+              if(tstr2 /= '') then
+                READ(tstr2,*) SSFAC2
+              endif
+            case("SSFAC3")
+              if(tstr2 /= '') then
+                READ(tstr2,*) SSFAC3
               endif
             case("L1SCANMAX")
               if(tstr2 /= '') then

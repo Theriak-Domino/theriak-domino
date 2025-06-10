@@ -114,14 +114,15 @@
 !-----
 !******************************
       SUBROUTINE THERIA
-      USE FLAGS, ONLY: L1NEWSEED,DOAONNSEED
+      USE FLAGS, ONLY: L1NEWSEED,DOAONNSEED,DXMSCALE1,DXMSCALE2, &
+        DXMSCALE3,SSFAC1,SSFAC2,SSFAC3,SWAPGDIFF
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
 !-----END OF COMMON VARIABLES
       INTEGER(4) I,II,IIX,I001,K,LOO2,CLCOD,ADDCOD,J,I1,I2,ISE, &
-      IS,IE
-      REAL(8) SUMME,NEWN(COMAX),DAMAX,DMMAX
+      IS,IE,DXMLOOP1,DXMLOOP2,DXMLOOP3,STPSTASTORE
+      REAL(8) SUMME,NEWN(COMAX),DAMAX,DMMAX,DXMINSTORE
 !      REAL(8) TIM1,TIM2
 !      REAL(8) GSC,XXSC(EMAX)
       CHARACTER(1) CH1
@@ -133,6 +134,11 @@
 !====
 !      call cpu_time(TIM1)
 !====
+
+      !store global dxmin to restore to after scaling in loops
+      DXMINSTORE=DXMIN
+      STPSTASTORE=STPSTA
+
       IF (.NOT.GIBBSFLAG) THEN
         I1=1
         I2=NSOL
@@ -223,7 +229,30 @@
 
 !###################################################################
 !-----start main loop
+      DXMLOOP1=LO1MAX/4
+      DXMLOOP2=LO1MAX/2
+      DXMLOOP3=3*LO1MAX/4
       DO 650,LOO1=1,LO1MAX
+      !DKT: scaling DXMIN & STPSTA 1/4,1/2,3/4 through loops 
+      !     using values set in flags.f90/theriak.ini
+      IF(LOO1.EQ.DXMLOOP1) THEN
+        STPSTA=STPSTA*SSFAC1
+        DXMIN=DXMIN*DXMSCALE1
+        !write(unit=scr,fmt="('DXMIN  scaled to: ',1PE12.5)") DXMIN
+        !write(unit=scr,fmt="('STPSTA scaled to: ',I5)") STPSTA
+      END IF
+      IF(LOO1.EQ.DXMLOOP2) THEN
+        DXMIN=DXMIN*DXMSCALE2
+        STPSTA=STPSTA*SSFAC2
+        !write(unit=scr,fmt="('DXMIN  scaled to: ',1PE12.5)") DXMIN
+        !write(unit=scr,fmt="('STPSTA scaled to: ',I5)") STPSTA
+      END IF
+      IF(LOO1.EQ.DXMLOOP3) THEN
+        DXMIN=DXMIN*DXMSCALE3
+        STPSTA=STPSTA*SSFAC3
+        !write(unit=scr,fmt="('DXMIN  scaled to: ',1PE12.5)") DXMIN
+        !write(unit=scr,fmt="('STPSTA scaled to: ',I5)") STPSTA
+      END IF
 !C====
 !C      IF (LOO1.GT.50) TEST=-TEST
 !C====
@@ -527,7 +556,16 @@
         WRITE (UNIT=scr,FMT='(''end- '',I5)') STATI(3,3)
         WRITE (UNIT=scr,FMT='(''str+ '',I5)') STATI(3,4)
         WRITE (UNIT=scr,FMT='(''str- '',I5)') STATI(3,5)
-     END IF
+      END IF
+
+      !restore global dxmin and stpsta
+      IF(DXMIN.NE.DXMINSTORE) THEN
+        DXMIN=DXMINSTORE
+        STPSTA=STPSTASTORE
+      END IF
+      write(unit=scr,fmt="(A20,I4,A7,1PE12.5,A8,1PE12.5)") &
+          '       THERIA LOO1: ',LOO1,' at Tc=',TC,' and Pb=',P
+      
 !--
 !====
       CALL PRTCAL
@@ -1905,14 +1943,14 @@
 !-----START = 222:Initial gess from ideal solution
 !-----START = 777:reserved for test !!!
 !-----
-      USE flags, ONLY: ZEROEM,EMDXSCALE
+      USE flags, ONLY: ZEROEM,EMDXSCALE,EPSI,TINEE
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
 !-----END OF COMMON VARIABLES
       INTEGER(4) I,IS,START,STEP,STEP2,NSTEP,L3,L1,II,I001,I002, &
       I1,FRAC,COMBO(10),IC,BESTN,BESTS,ANUMBER,IPM,VERSUCH, &
-      GNOMSOFAR,DOMEM
+      GNOMSOFAR,DOMEM,STOK
       INTEGER(4) VACODE
       REAL(8) XXSC(EMAX),GSC,XXX(3,EMAX),GGG(3),AR001(EMAX), &
       AR002(EMAX),SUMME,F001,FF,LESCAN,MUE(EMAX), &
@@ -2126,9 +2164,9 @@
       IF (START.LT.0.AND.START.GE.-NEND(IS)) THEN
       II=-START
       DO I=1,NEND(IS)
-        XXEM(I)=0.0D0
+        XXEM(I)=TINEE
       END DO
-      XXEM(II)=1.0D0
+      XXEM(II)=1.0D0-TINEE*DBLE(NEND(IS)-1)
       GSOL=GG(EM(IS,II))
       DELTAX=DXSTAR*EMDXSCALE
       NSTEP=STPSTA
