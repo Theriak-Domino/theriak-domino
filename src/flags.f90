@@ -33,10 +33,6 @@ MODULE FLAGS
                                       !!0 = original. hard-coded vals
                                       !!1 = original+ STPZAL,STPZNN,STPVMIN
                                       !!2 = no bing business. 
-
-  INTEGER(4) :: DOACT     = 2         !!sr activi version
-                                      !!0 = sr activi, rver
-                                      !!2 = sr activi2 lver
   
   REAL(8)    :: STPZAL    = 2D-24     !!for DOSTP=1;  link to ZEROEM?
   REAL(8)    :: STPZNN    = 3D-55     !!for DOSTP=1;  link to PMINXXX?
