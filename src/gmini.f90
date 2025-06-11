@@ -115,7 +115,7 @@
 !******************************
       SUBROUTINE THERIA
       USE FLAGS, ONLY: L1NEWSEED,DOAONNSEED,DXMSCALE1,DXMSCALE2, &
-        DXMSCALE3,SSFAC1,SSFAC2,SSFAC3,SWAPGDIFF
+        DXMSCALE3,SSFAC1,SSFAC2,SSFAC3
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'

@@ -60,9 +60,9 @@ MODULE FLAGS
                                       !!when LOO1 is 1/2 to LO1MAX
   REAL(8)    :: DXMSCALE3 = 1.0D-06   !!scale delxmin by this amount in SR THERIA
                                       !!when LOO1 is 3/4 to LO1MAX
-  INTEGER(4) :: SSFAC1 = 5            !! scale STPSTA (from STPSTAR) when L001=1/4
-  INTEGER(4) :: SSFAC2 = 5            !! scale STPSTA again when L001=1/2
-  INTEGER(4) :: SSFAC3 = 5            !! scale STPSTA again when L001=3/4
+  INTEGER(4) :: SSFAC1 = 2            !! scale STPSTA (from STPSTAR) when L001=1/4
+  INTEGER(4) :: SSFAC2 = 2            !! scale STPSTA again when L001=1/2
+  INTEGER(4) :: SSFAC3 = 2            !! scale STPSTA again when L001=3/4
 
   INTEGER(4) :: EMSTARTMOD = 10       !!sr addph: start min from em comp every X 
                                       !!loops; def is 10, 25 works a bit faster
