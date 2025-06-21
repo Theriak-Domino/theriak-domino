@@ -382,26 +382,6 @@
       NAME(7)='ekL1'
       NAME(8)='hmL1'
       END IF
-!-----**hopo liquid - Tomlinson & Holland '21 Liq for peridotite melting**
-      !-----**Coded by dkt**
-      !     Known to not produce same results as TC due to size norm
-      IF (SOLNAM.EQ.'LIQTH21') THEN
-      N=14
-      NAME(1)='q3L'
-      NAME(2)='sl1L'
-      NAME(3)='wo1L'
-      NAME(4)='fo2L'
-      NAME(5)='fa2L'
-      NAME(6)='neL1'
-      NAME(7)='hmL'
-      NAME(8)='ekL'
-      NAME(9)='tiL'
-      NAME(10)='kjL'
-      NAME(11)='anL1'
-      NAME(12)='ab1L'
-      NAME(13)='enL1'
-      NAME(14)='kfL'
-      END IF
 !-----**hopo spinel**
       IF (SOLNAM.EQ.'SPINtc') THEN
       N=4
@@ -767,11 +747,6 @@
 !-----**hopo liquid - Holland et al '18 Liq**
       IF (SOLNAM.EQ.'LIQG25') THEN
       MODELL='Green et al. 2025. JPet. Corrigendum to NCKFMASHTOCr melting.'
-      END IF
-!-----**hopo liquid - Tomlinson & Holland '21 Liq**
-      !-----**Coded by dkt. Known to not reproduce TC yet.**
-      IF (SOLNAM.EQ.'LIQTH21') THEN
-      MODELL='Tomlinson & Holland 2021. JPet, 1-23. NCKFMASTOCr peridotite melting.'
       END IF
 !-----**hopo spinel**
       IF (SOLNAM.EQ.'SPINtc') THEN
@@ -1278,12 +1253,6 @@
       !Coded by D.K. Tinkham, Aug? 2018
       IF (SOLNAM.EQ.'LIQH18' .OR. SOLNAM.EQ.'LIQG25') THEN
       CALL LiqHGP18(X,A,N)
-      RETURN
-      ENDIF
-!-----** Liquid, Tomlinson & Holland (2021) **
-      !Coded by D.K. Tinkham, 2021 & 2022
-      IF (SOLNAM.EQ.'LIQTH21') THEN
-      CALL LiqTH21(X,A,N)
       RETURN
       ENDIF
 !-----**hopo spinel** white et al 2007
@@ -2405,135 +2374,6 @@
         END IF
         RETURN
       END SUBROUTINE LiqHGP18
-!-----
-!********************************
-!Tomlinson & Holland (2021) Peridotite melting. 
-      !Coded by dkt, Feb. 2021 (in-progress; bit of a mess, 
-      !stay tuned. Is in to test other code.)
-      SUBROUTINE LiqTH21(X,A,N)
-        USE flags, only : PMINXXX, PMINAAA 
-        IMPLICIT NONE
-        INTEGER(4),PARAMETER  :: emax = 15  !as in theriak.cmn
-        REAL(8),INTENT(IN)    :: X(emax)
-        REAL(8),INTENT(OUT)   :: A(emax)
-        INTEGER(4),INTENT(IN) :: N
-        REAL(8)               :: P(emax)
-        INTEGER(4) :: I
-        REAL(8) :: den, sumM
-        REAL(8) :: pq3L, psl1L, pwo1L, pfo2L, pfa2L, pneL1, phmL
-        REAL(8) :: pekL, ptiL, pkjL, panL1, pab1L, penL1, pkfL
-!        REAL(8) :: aq3L, asl1L, awo1L, afo2L, afa2L, aneL1, ahmL
-        REAL(8) :: asl1L, awo1L, afo2L, afa2L
-!        REAL(8) :: aekL, atiL, akjL, aanL1, aab1L, aenL1, akfL
-!        logical :: isnorm = .true.
-        ! ---------------------------
-        !   N=14  
-        !   q4L->q3L  jdL->neL1  ctL->anL1  +ab1L  +enL1  +kfL
-        !   X(1)='q3L'    X(8)='ekL'
-        !   X(2)='sl1L'   X(9)='tiL'
-        !   X(3)='wo1L'   X(10)='kjL'
-        !   X(4)='fo2L'   X(11)='anL1'
-        !   X(5)='fa2L'   X(12)='ab1L'
-        !   X(6)='neL1'   X(13)='enL1'
-        !   X(7)='hmL'    X(14)='kfL'
-        ! ---------------------------
-        !
-        ! Neg adj and P norm to 1
-        P(1:14) = X(1:14)
-        !print*,1.0D0-sum(P(1:14))
-        !P(11) = 1.0D0-sum(P(1:10))-P(12)  !didn't work
-        !   den = sum(P(1:12))
-        !   IF(ABS(1.0D0-den)>1.0D-15) THEN
-        !      print*, '---'
-        !      print*, 'sump1 = ',den
-        !   END IF
-        !2022-05-06: No longer force to be positive to test if neg ppn's possible
-        !  but, check for cutoff if !=0
-        DO I = 1, N
-          !IF(P(I).LT.0.0D0 .AND. ABS(P(I)).LT.PMINXXX) THEN
-          !   P(I) = -PMINXXX
-          !   CYCLE
-          !END IF
-          IF(P(I).LT.0.0D0) THEN 
-            P(I) = 0.0D0
-            CYCLE 
-          END IF
-          !IF(ABS(P(I)).GT.0.0D0 .AND. ABS(P(I)).LT.PMINXXX) P(I) = PMINXXX
-          IF(P(I).GT.0.0D0 .AND. P(I).LT.PMINXXX) P(I)=PMINXXX  !+PMINXXX*N
-        END DO
-        !norm to 1; save den and new sump
-        den = sum(P(1:14))
-        P(1:14) = P(1:14)/den  ! norm is REQUIRED to keep from getting many co-existing liquids in liq-only field!!
-        DO I = 1, N
-          IF((ABS(P(I)).GT.0.0D0 .AND. ABS(P(I)).LT.PMINXXX) .OR. P(I).GT.1.0D0) THEN
-            print*,'Undesired P(I) in LiqTH21: pc ',I,P(I)
-          END IF 
-        END DO
-        pq3L = P(1)  !1-sum rest. Already norm above
-        psl1L= P(2)
-        pwo1L= P(3)
-        pfo2L= P(4)
-        pfa2L= P(5)
-        pneL1= P(6)
-        phmL = P(7)
-        pekL = P(8)
-        ptiL = P(9)
-        pkjL = P(10)
-        panL1= P(11) !assoc species
-        pab1L= P(12) !assoc species
-        penL1= P(13) !assoc species
-        pkfL = P(14) !assoc species
-        ! site sums; calc in terms of pc ppns
-        sumM = 4.0D0*pfo2L + 4.0D0*pfa2L + pwo1L + psl1L           
-        
-        IF(sumM .GT. 0.0D0) THEN
-          asl1L = psl1L/sumM * psl1L  !P(2)
-          awo1L = pwo1L/sumM * pwo1L  !P(3)
-          IF(pfo2L.GT.1.0D-75) THEN
-            !afo2L = (4.0D0*pfo2L)**4 / (sumM**4) * (pfo2L+pfa2L)  !P(5) P(6)
-            afo2L = ((4.0D0*pfo2L) / sumM)**4 * (pfo2L+pfa2L)  !P(5) P(6)
-          ELSE 
-            afo2L = PMINAAA
-          END IF
-          IF(pfa2L.GT.1.0D-75) THEN
-            !afa2L = (4.0D0*pfa2L)**4 / (sumM**4) * (pfo2L+pfa2L)  !P(6) P(5)
-            afa2L = ((4.0D0*pfa2L) / sumM)**4 * (pfo2L+pfa2L)  !P(6) P(5)
-          ELSE 
-            afa2L = PMINAAA
-          END IF
-
-          !isnorm = ieee_is_normal(asl1L)
-          !if(isnorm.eqv..false.) print*, 'asl1L is not normal.'
-          !isnorm = ieee_is_normal(awo1L)
-          !if(isnorm.eqv..false.) print*, 'awo1L is not normal.'
-          !isnorm = ieee_is_normal(afo2L)
-          !if(isnorm.eqv..false.) print*, 'afo2L is not normal.'
-          !isnorm = ieee_is_normal(afa2L)
-          !if(isnorm.eqv..false.) print*, 'afa2L is not normal.'
-
-        ELSE 
-          asl1L=0.0D0
-          awo1L=0.0D0
-          afo2L=0.0D0
-          afa2L=0.0D0
-        END IF
-        A(1)=P(1)   !aq3L
-        A(2)=asl1L
-        A(3)=awo1L
-        A(4)=afo2L
-        A(5)=afa2L
-        A(6)=P(6)   !aneL1
-        A(7)=P(7)   !ahmL
-        A(8)=P(8)   !aekL
-        A(9)=P(9)   !atiL
-        A(10)=P(10) !akjL
-        A(11)=P(11) !aanL1
-        A(12)=P(12) !aab1L
-        A(13)=P(13) !aenL1
-        A(14)=P(14) !akfL
-        RETURN
-      END SUBROUTINE LiqTH21
-!********************************
 !-----
 !-----*************** end of solution definitions ****************
 !-----
