@@ -145,10 +145,15 @@
       RTA=RT*ALPHA(IS)
 !=====
       DO 501,N=1,NMARG(IS)
+        !eq3 de Capitani & Kischener (1998)
+        !sum x's involved in W indices, e.g. W112 -> X1+X2
+        !k = pol_degree - 2 for squared weighting (kohler)
+        !regular soln: k=2-2=0
         SJ(N)=0.0D0
         DO I=1,RANGE(IS,N)
           SJ(N)=SJ(N)+XXX(SJIND(IS,N,I))
         END DO
+        !if K is neg
         IF (WK(IS,N).LE.0.0D0.OR.SJ(N).LE.0.0D0) THEN
           FF(N)=WG(IS,N)
         ELSE

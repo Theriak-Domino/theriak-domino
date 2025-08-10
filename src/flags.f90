@@ -153,14 +153,10 @@ MODULE FLAGS
             case("EMSTARTMOD")
               if(tstr2 /= '') then
                 READ(tstr2,*) EMSTARTMOD
-            endif
+              endif
             case("DOSTP")
               if(tstr2 /= '') then
                 READ(tstr2,*) DOSTP
-            endif
-            case("DOACT")
-              if(tstr2 /= '') then
-                READ(tstr2,*) DOACT
             endif
             case("STPZAL")
               if(tstr2 /= '') then
