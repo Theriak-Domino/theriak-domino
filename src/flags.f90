@@ -75,6 +75,16 @@ MODULE FLAGS
   
   LOGICAL    :: DOAONNSEED   = .TRUE. !!sr theria; do addph in loop adding seends
 
+  !sr minn2
+  INTEGER(4) :: SELMINN   = 1         !!1 = default=slight mods on original; 2=cent fin diff
+  REAL(8)    :: SRMINNDXc = 2D-6      !!default DX for cent fd jacobian in MINN2
+  REAL(8)    :: SRMINNDXf = 2D-8      !!default DX for 1sid fd jacobian in MINN2 
+  INTEGER(4) :: SRMINNNRL = 20        !!NRLOOP
+  REAL(8)    :: LINRZER   = 0.0D0     !!lincomp rtest zero; def capi was 0.0D0
+  REAL(8)    :: BREMSDIV  = 10.0D0    !!dampening factor (denom) in MINN
+  REAL(8)    :: MINNCONV   = 1.0D-02  !conve check on sum of mue-gg0. def 0.01
+  REAL(8)    :: MINNREFCONV= 1.0D-02  !conv check on sum of mue-gg0 in refine stage. def 0.001
+
   !REAL(8)    :: RLOWEXP       = -706.0D0 !!not used
   !INTEGER(4) :: ILOWEXP       = -706     !!not used
   !LOGICAL    :: DOMINMAXSIELST= .FALSE.  !!not used; to add to sr spacetest
@@ -150,6 +160,38 @@ MODULE FLAGS
           tdatstr = tdatstr(dpos+1:MIN(LEN_TRIM(tdatstr),LEN(tdatstr))) // ''
           !keep CALL LOWUP for boolean flags tRuE/FalSE 
           SELECT case(tstr1)
+            case("SELMINN")
+              if(tstr2 /= '') then
+                READ(tstr2,*) SELMINN
+              endif
+            case("SRMINNDXc")
+              if(tstr2 /= '') then
+                READ(tstr2,*) SRMINNDXc
+              endif
+            case("SRMINNDXf")
+               if(tstr2 /= '') then
+                 READ(tstr2,*) SRMINNDXf
+               endif
+            case("SRMINNNRL")
+              if(tstr2 /= '') then
+                READ(tstr2,*) SRMINNNRL
+              endif
+            case("LINRZER")
+              if(tstr2 /= '') then
+                READ(tstr2,*) LINRZER
+              endif
+            case("BREMSDIV")
+              if(tstr2 /= '') then
+                READ(tstr2,*) BREMSDIV
+              endif
+            case("MINNCONV")
+              if(tstr2 /= '') then
+                READ(tstr2,*) MINNCONV
+              endif
+            case("MINNREFCONV")
+              if(tstr2 /= '') then
+                READ(tstr2,*) MINNREFCONV
+              endif
             case("EMSTARTMOD")
               if(tstr2 /= '') then
                 READ(tstr2,*) EMSTARTMOD
@@ -277,5 +319,40 @@ MODULE FLAGS
         end do
         return
     end subroutine CALCFLAGS
+
+      ! vectorizable bounds check of XXX against MINEM/MAXEM
+      !DIR$ ATTRIBUTES FORCEINLINE :: check_xxx
+      SUBROUTINE check_xxx(IS, XXXARR, num_bad, title)
+        IMPLICIT NONE
+        include 'theriak.cmn'
+        INTEGER(4), INTENT(IN)       :: IS
+        REAL(8), INTENT(IN)          :: XXXARR(EMAX)
+        INTEGER(4), INTENT(OUT)      :: num_bad
+        CHARACTER(LEN=*),INTENT(IN) :: title
+        INTEGER(4) :: i, n0
+        REAL(8) :: mn, mx, locx
+        !
+        !write(*,*) 'check_xxx called'
+        num_bad=0
+        !RETURN
+
+        n0 = NEND(IS)
+        num_bad = 0
+
+        !!OMP SIMD
+        DO i = 1, n0
+          locx = XXXARR(i)
+          mn = MINEM(IS,i) !- STTOLER  using this here bombs
+          mx = MAXEM(IS,i) !+ STTOLER  using this here bombs
+
+          IF (locx < mn .OR. locx > mx) THEN
+            num_bad = num_bad + 1
+!            WRITE(*,10) trim(title),I,locx,mn,mx,SUGCOD(0)
+! 10         FORMAT( '*** BOUNDS_CHECK FROM: ',A,' XXX(', I4, ') =', ES12.5, &
+!            &  '  not in [',           ES12.5, ',', ES12.5, ']', '  SUGCOD:',A )
+          END IF
+        END DO
+      END SUBROUTINE check_xxx
+
 
 END MODULE FLAGS

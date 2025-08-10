@@ -2783,6 +2783,28 @@
 !-----
 !******************************
       SUBROUTINE MINN(IS,XX0,GG0,NOREF,GAIN)
+        USE flags, ONLY: SELMINN
+        IMPLICIT NONE
+        INCLUDE 'theriak.cmn'
+        INCLUDE 'files.cmn'
+        INTEGER(4), INTENT(IN)    :: IS
+        REAL(8),    INTENT(INOUT) :: XX0(EMAX), GG0
+        INTEGER(4), INTENT(OUT)   :: NOREF
+        REAL(8),    INTENT(OUT)   :: GAIN
+        !
+        SELECT CASE (SELMINN)
+         CASE (1) !slight mods on original
+          CALL MINN1(IS,XX0,GG0,NOREF,GAIN)
+         CASE (2) !new with centered fin diff, but minem not enforced throughout
+          CALL MINN2(IS,XX0,GG0,NOREF,GAIN)
+         CASE DEFAULT
+          WRITE (*,*) '*** ERROR in MINN: unexpected SELMINN =', SELMINN
+          STOP 1
+        END SELECT
+      END SUBROUTINE MINN
+      !-----
+!******************************
+      SUBROUTINE MINN1(IS,XX0,GG0,NOREF,GAIN)
       IMPLICIT NONE
       INCLUDE 'theriak.cmn'
       include 'files.cmn'
@@ -3134,6 +3156,357 @@
       RETURN
       END
 !-----
+!*******************************
+! Alternate MINN. DKT 2025-08-10
+! Asymmetric centered & one-sided per-column finite difff based newton refinement.
+! Checks bounds based on MINEM/MAXEM. Requires robust MINEM/MAXEM from new AnalSol 
+! to be added to be effective. Better at low-conc ems/sites.
+!*******************************
+      SUBROUTINE MINN2(IS,XX0,GG0,NOREF,GAIN)
+        USE flags, ONLY: check_xxx, SRMINNDXc, SRMINNDXf, SRMINNNRL, &
+          PMINXXX, BREMSDIV, MINNCONV, MINNREFCONV, LINRZER
+        IMPLICIT NONE
+        INCLUDE 'theriak.cmn'
+        INCLUDE 'files.cmn'
+
+        INTEGER(4), INTENT(IN)    :: IS
+        REAL(8),    INTENT(INOUT) :: XX0(EMAX), GG0
+        INTEGER(4), INTENT(OUT)   :: NOREF
+        REAL(8),    INTENT(OUT)   :: GAIN
+
+        INTEGER(4) :: I, IE, JROW, N0, N1, IMEGA, ERRC, II
+        INTEGER(4) :: IP, IM, CODE, NBAD, PIV
+        REAL(8)    :: MUE0(EMAX), MUE1(EMAX), MUE2(EMAX)
+        REAL(8)    :: XX1(EMAX), XX2(EMAX), XX0N(EMAX)
+        REAL(8)    :: JACOB(COMAX,COMAX), CC0(COMAX), DX0(COMAX)
+        REAL(8)    :: FF, FFX, RTEST, BREMS
+        REAL(8)    :: GLAST, GPROG, GPROGTOT, TTEST
+        REAL(8)    :: plus_i, minus_i, plus_p0, minus_p0
+        REAL(8)    :: h, h_plus, h_minus, h_forw, h_back
+        REAL(8)    :: GG1, GG2
+        REAL(8)    :: eta
+        REAL(8)    :: DXc, DXf
+        LOGICAL    :: ok_asymm, need_one_sided, ok_one, accepted
+
+        INTEGER(4) :: PINDEX(COMAX), MINDEX(COMAX)   ! per-column: i vs pivot p0
+        INTEGER(4) :: CASEMODE                       ! 1=centered(asym), 2=forward, 3=backward
+
+        ! ---------- init ----------
+        DXc = SRMINNDXc       ! centered cap (≈ ε^(1/3),  1d-6)
+        DXf = SRMINNDXf       ! one-sided cap (≈ sqrt(ε), 1d-8)
+        TTEST = TEST
+        NOREF    = 0
+        GAIN     = 0D0
+        ERRC     = 0
+        RTEST    = 0D0
+        GPROGTOT = 0D0
+        GPROG    = 0D0
+        GLAST    = 0D0
+        eta      = 5.0D-1  !4D-1
+
+        MUE0=0D0
+        MUE1=0D0
+        MUE2=0D0
+        !full init for vectorizer on unused lanes
+        XX1=PMINXXX
+        XX2=PMINXXX
+        XX0N=PMINXXX
+
+        JACOB=0D0; CC0=0D0; DX0=0D0
+        N0 = NEND(IS)
+        CALL MUECAL(IS, XX0, MUE0)
+        CALL GOFMUE(IS, XX0, MUE0, GG0)
+
+        FF = 0D0
+        DO I=1,N0
+          FF = FF + DABS(MUE0(I)-GG0)
+        END DO
+        FF = FF / DBLE(MAX(1,N0))
+        MINCOUNT = MINCOUNT + 1
+        IF (FF .LT. MINNCONV) THEN
+          MINCHECK = MINCHECK + 1
+          NOREF = 1
+          TEST  = TTEST
+          RETURN
+        END IF
+
+        TOTNEW = TOTNEW + 1
+      
+        PIV = 1; h = XX0(1)
+        DO I=2,N0
+          IF (XX0(I) .GT. h) THEN
+            PIV = I
+            h   = XX0(I)
+          END IF
+        END DO
+        N1 = N0 - 1
+        DO I = 1, N1
+          PINDEX(I) = MOD(I+PIV-2, N0) + 1
+          MINDEX(I) = MOD(I+PIV-1, N0) + 1
+        END DO
+
+        ! ---------- Newton loop ----------
+        GLAST = GG0                 
+        FF = 1D0
+        DO IMEGA = 1, SRMINNNRL
+          IF (FF .LT. MINNREFCONV) EXIT
+          BREMS = 1D0
+
+          DO I = 1, N1
+            CC0(I) = -(MUE0(PINDEX(I)) - MUE0(MINDEX(I)))
+          END DO
+
+          JACOB = 0D0
+
+          DO IE = 1, N1
+            IP = PINDEX(IE)
+            IM = MINDEX(IE)          
+
+            plus_i   = MAXEM(IS,IP) - XX0(IP)       ! i can go up
+            minus_i  = XX0(IP)      - MINEM(IS,IP)  ! i can go down
+            plus_p0  = MAXEM(IS,IM) - XX0(IM)       ! p0 can go up
+            minus_p0 = XX0(IM)      - MINEM(IS,IM)  ! p0 can go down
+
+            CASEMODE = 0
+            FFX      = 1D0
+            XX1 = XX0;  XX2 = XX0
+
+            !===============================
+            ! (A) Asymmetric centered attempt
+            !===============================
+            ok_asymm        = .FALSE.
+            need_one_sided  = .FALSE.
+
+            h_plus  = eta * MIN( DXc, plus_i,  minus_p0 )   
+            h_minus = eta * MIN( DXc, minus_i, plus_p0 )    
+
+            IF (h_plus .GT. 0D0 .AND. h_minus .GT. 0D0) THEN
+              CASEMODE = 1
+              XX1(IP) = XX0(IP) + h_plus
+              XX1(IM) = XX0(IM) - h_plus
+              XX2(IP) = XX0(IP) - h_minus
+              XX2(IM) = XX0(IM) + h_minus
+              FFX     = h_plus + h_minus
+
+              DO II = 1, 3
+                CALL SPACETEST(IS, XX1, CODE)
+                IF (CODE .EQ. 0) THEN
+                  h_plus = 0.5D0*h_plus
+                  XX1(IP)=XX0(IP)+h_plus
+                  XX1(IM)=XX0(IM)-h_plus
+                  FFX = h_plus + h_minus
+                  !WRITE(*,*) 'MINN2: asymm shrink (XX1)  IE=',IE,' SOL=',TRIM(SOLNAM(IS)), &
+                  !            ' try=',II,' h_plus=',h_plus,' h_minus=',h_minus
+                  CYCLE
+                END IF
+
+                CALL SPACETEST(IS, XX2, CODE)
+                IF (CODE .EQ. 0) THEN
+                  h_minus = 0.5D0*h_minus
+                  XX2(IP)=XX0(IP)-h_minus
+                  XX2(IM)=XX0(IM)+h_minus
+                  FFX = h_plus + h_minus
+                  !WRITE(*,*) 'MINN2: asymm shrink (XX2)  IE=',IE,' SOL=',TRIM(SOLNAM(IS)), &
+                  !            ' try=',II,' h_plus=',h_plus,' h_minus=',h_minus
+                  CYCLE
+                END IF
+
+                ok_asymm = .TRUE.
+                EXIT
+              END DO
+
+              IF (ok_asymm) THEN
+                !WRITE(*,*) 'MINN2: asymm PASS           IE=',IE,' SOL=',TRIM(SOLNAM(IS)), &
+                !            ' h_plus=',h_plus,' h_minus=',h_minus,' FFX=',FFX
+              ELSE
+                !WRITE(*,*) 'MINN2: asymm FAIL→fallback  IE=',IE,' SOL=',TRIM(SOLNAM(IS)), &
+                !            ' last h+/-=',h_plus,'/',h_minus
+                need_one_sided = .TRUE.
+              END IF
+            ELSE
+              need_one_sided = .TRUE.
+              !WRITE(*,*) 'MINN2: asymm not feasible    IE=',IE,' SOL=',TRIM(SOLNAM(IS)), &
+              !            ' h_plus=',h_plus,' h_minus=',h_minus
+            END IF
+
+            !=======================================
+            ! (B) One-sided fallback, if still needed
+            !=======================================
+            IF (need_one_sided) THEN
+              ok_one = .FALSE.
+
+              h_forw = eta * MIN( DXf, plus_i, minus_p0 )
+              IF (h_forw .GT. 0D0) THEN
+                CASEMODE = 2
+                XX1 = XX0; XX2 = XX0
+                XX1(IP) = XX0(IP) + h_forw
+                XX1(IM) = XX0(IM) - h_forw
+                FFX     =  h_forw
+
+                DO II = 1, 3
+                  CALL SPACETEST(IS, XX1, CODE)
+                  IF (CODE .EQ. 0) THEN
+                    h_forw = 0.5D0*h_forw
+                    XX1(IP)=XX0(IP)+h_forw; XX1(IM)=XX0(IM)-h_forw
+                    FFX = h_forw
+                    !WRITE(*,*) 'MINN2: 1-sidedF shrink    IE=',IE,' SOL=',TRIM(SOLNAM(IS)), &
+                    !            ' try=',II,' h_forw=',h_forw
+                    CYCLE
+                  END IF
+                  ok_one = .TRUE.
+                  EXIT
+                END DO
+
+                !IF (ok_one) THEN
+                !  WRITE(*,*) 'MINN2: 1-sidedF PASS       IE=',IE,' SOL=',TRIM(SOLNAM(IS)), &
+                !              ' h_forw=',h_forw,' FFX=',FFX
+                !ELSE
+                !  WRITE(*,*) 'MINN2: 1-sidedF FAIL       IE=',IE,' SOL=',TRIM(SOLNAM(IS))
+                !END IF
+              END IF
+
+              IF (.NOT. ok_one) THEN
+                h_back = eta * MIN( DXf, minus_i, plus_p0 )
+                IF (h_back .GT. 0D0) THEN
+                  CASEMODE = 3
+                  XX1 = XX0; XX2 = XX0
+                  XX1(IP) = XX0(IP) - h_back
+                  XX1(IM) = XX0(IM) + h_back
+                  FFX     = -h_back
+
+                  DO II = 1, 3
+                    CALL SPACETEST(IS, XX1, CODE)
+                    IF (CODE .EQ. 0) THEN
+                      h_back = 0.5D0*h_back
+                      XX1(IP)=XX0(IP)-h_back; XX1(IM)=XX0(IM)+h_back
+                      FFX = -h_back
+                      !WRITE(*,*) 'MINN2: 1-sidedB shrink    IE=',IE,' SOL=',TRIM(SOLNAM(IS)), &
+                      !            ' try=',II,' h_back=',h_back
+                      CYCLE
+                    END IF
+                    ok_one = .TRUE.
+                    EXIT
+                  END DO
+
+                  !IF (ok_one) THEN
+                  !  WRITE(*,*) 'MINN2: 1-sidedB PASS       IE=',IE,' SOL=',TRIM(SOLNAM(IS)), &
+                  !              ' h_back=',h_back,' FFX=',FFX
+                  !ELSE
+                  !  WRITE(*,*) 'MINN2: 1-sidedB FAIL       IE=',IE,' SOL=',TRIM(SOLNAM(IS))
+                  !END IF
+                END IF
+              END IF
+
+              IF (.NOT. ok_one) THEN
+                CASEMODE = 0
+                XX1 = XX0;  XX2 = XX0
+                FFX = 1D0
+                JACOB(IE,IE) = JACOB(IE,IE) + 1D-10
+                !WRITE(*,*) 'MINN2: REGULARIZE COLUMN    IE=',IE,' SOL=',TRIM(SOLNAM(IS)), &
+                !            ' (+diag 1D-10)'
+              END IF
+            END IF
+
+            IF (DABS(FFX) .LT. 1D-50) FFX = SIGN(1D-50, FFX)
+
+            CALL MUECAL(IS, XX1, MUE1)
+            CALL GOFMUE(IS, XX1, MUE1, GG1)
+
+            SELECT CASE (CASEMODE)
+            CASE (1)    
+              CALL MUECAL(IS, XX2, MUE2)
+              CALL GOFMUE(IS, XX2, MUE2, GG2)
+            CASE (2,3)  
+              MUE2 = MUE0
+              GG2  = GG0
+            CASE DEFAULT
+              MUE2 = MUE0
+              GG2  = GG0
+            END SELECT
+
+            DO JROW = 1, N1
+              JACOB(IE,JROW) = ( (MUE1(PINDEX(JROW)) - MUE1(MINDEX(JROW))) - &
+                                (MUE2(PINDEX(JROW)) - MUE2(MINDEX(JROW))) ) / FFX
+            END DO
+
+            !WRITE(*,*) 'MINN2: COL DONE              IE=',IE,' SOL=',TRIM(SOLNAM(IS)), &
+            !            ' CASE=',CASEMODE,' FFX=',FFX
+            !WRITE(*,*) '----'
+          END DO  ! IE columns
+
+          ! ---- solve J*DX0 = -r and apply damped, feasibility-checked update ----
+          ERRC = 0; RTEST = LINRZER
+          !tested with LINCOMP5 (LU based)
+          CALL LINCOMP(N1, JACOB, CC0, DX0, RTEST, ERRC)
+          IF (ERRC .NE. 0) THEN
+            TEST = TTEST
+            RETURN
+          END IF
+
+          accepted = .FALSE.
+          GPROG    = 0D0
+
+          DO II = 1, 5
+            XX0N = XX0
+            DO I = 1, N1
+              IP = PINDEX(I);  IM = MINDEX(I)
+              XX0N(IP) = XX0N(IP) + DX0(I)*BREMS
+              XX0N(IM) = XX0N(IM) - DX0(I)*BREMS
+            END DO
+
+            NBAD=0
+            !Replace with spacetest?
+            CALL check_xxx(IS, XX0N, NBAD, 'MINN2: XX0N damped')
+            IF (NBAD>0) THEN
+              BREMS = BREMS / BREMSDIV
+              CYCLE
+            END IF
+
+            CALL SPACETEST(IS, XX0N, CODE)
+            IF (CODE .NE. 0) THEN      
+              
+              CALL MUECAL(IS, XX0N, MUE0)
+              CALL GOFMUE(IS, XX0N, MUE0, GG1)   
+
+              GPROG = GG1 - GLAST   ! < 0 is improvement
+              IF (GPROG .LT. 0D0) THEN
+                ! ACCEPT: accumulate progress
+                XX0        = XX0N
+                GG0        = GG1
+                GLAST      = GG1
+                GPROGTOT   = GPROGTOT + GPROG
+                accepted   = .TRUE.
+                EXIT
+              ELSE
+                BREMS = BREMS / BREMSDIV        
+              END IF
+            ELSE
+              BREMS = BREMS / BREMSDIV          
+            END IF
+          END DO
+
+          IF (.NOT. accepted) THEN
+            TEST = TTEST
+            RETURN
+          END IF
+
+          CALL MUECAL(IS, XX0, MUE0)
+          CALL GOFMUE(IS, XX0, MUE0, GG0)
+
+          FF = 0D0
+          DO I=1,N0
+            FF = FF + DABS(MUE0(I)-GG0)
+          END DO
+          FF = FF / DBLE(MAX(1,N0))
+          ! (GPROGTOT already updated at accept time)
+
+        END DO  ! IMEGA
+
+        GAIN = GPROGTOT
+        TEST = TTEST
+        RETURN
+      END SUBROUTINE MINN2
+!-----      
 !******************************
       !This is another steep that is essentially the same as original steep
       !but uses the following user set flags:
