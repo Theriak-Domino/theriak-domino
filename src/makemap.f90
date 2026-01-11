@@ -782,8 +782,9 @@
       WRITE (svg,2000) DICKE*CMPX,SVGSTRO(1:J1), &
       (X)*CMPX,595.0D0-Y*CMPX, &
       (X+1.0D0)*CMPX,595.0D0-Y*CMPX
- 2000 FORMAT ('<path stroke-width="',F10.4,'"', &
-      ' stroke="',A,'" fill="none" d=" M',2F10.4,' L',2F10.4, &
+      !Leading spaces after quotes fixed, for chromium browsers.
+ 2000 FORMAT ('<path stroke-width="',F0.4,'"', &
+      ' stroke="',A,'" fill="none" d=" M ',1X,2(F0.4,1X),' L ',2(F0.4,1X), &
       '" />')
       LINCOL=0
       FILCOL=0
@@ -837,14 +838,14 @@
       WRITE (svg,2010) FAT*CMPX,SVGSTRO(1:J1), &
       (X-0.5D0)*CMPX,595.0D0-(Y+0.1D0)*CMPX, &
       (X-0.3D0)*CMPX,595.0D0-(Y+0.1D0)*CMPX
- 2010 FORMAT ('<path stroke-width="',F10.4,'"', &
-      ' stroke="',A,'" fill="none" d=" M',2F10.4,' L',2F10.4, &
+ 2010 FORMAT ('<path stroke-width="',F0.4,'"', &
+      ' stroke="',A,'" fill="none" d=" M ',2(F0.4,1X),' L ',2(F0.4,1X), &
       '" />')
 
       WRITE (svg,2020) (X)*CMPX,595.0D0-(Y)*CMPX,0.4D0*CMPX, &
       CH16(I1:I2+INACH)
- 2020 FORMAT ('<text x="',F10.4,'" y="',F10.4, &
-      '" font-family="Arial" font-size="',F10.4, &
+ 2020 FORMAT ('<text x="',F0.4,'" y="',F0.4, &
+      '" font-family="Arial" font-size="',F0.4, &
       '" style="fill: #000000; stroke: none">',A,'</text>')
       END IF
 
@@ -1369,12 +1370,13 @@
         CALL VPSTROKE
         CALL SVGPATHEND
         IF (DABS(SYM-98.0D0).LT.1D-12) THEN
-         CALL VPMOVE (X,Y)
+         !naked move, don't do for svg 
+         CALL VPMOVE_PS (X,Y)
          CALL VPTHERDOM(GRS)
          CALL SVGTHERDOM(X,Y,GRS)
         END IF
       END IF
-      CALL VPMOVE (X,Y)
+      CALL VPMOVE_PS (X,Y)
 
       RETURN
       END
@@ -1473,11 +1475,11 @@
       (X+X0+DELX)*CMPX, &
       595.0D0-(Y+Y0-DELY)*CMPX
  1000 FORMAT ('<defs> ', &
-      ' <path id="kreis" d="M ',F10.4,',',F10.4,' A', &
-      F10.4,',',F10.4,' 0 1 1 ', &
-      F10.4,',',F10.4,'"/> </defs>')
+      ' <path id="kreis" d="M ',F0.4,',',F0.4,' A', &
+      F0.4,',',F0.4,' 0 1 1 ', &
+      F0.4,',',F0.4,'"/> </defs>')
       WRITE (svg,1010) FSIZ*CMPX
- 1010 FORMAT ('<text font-size="',F10.4,'" ', &
+ 1010 FORMAT ('<text font-size="',F0.4,'" ', &
       ' font-family="Arial" ', &
       'stroke="none">',/,'<textPath xlink:href="#kreis" >', &
       'T h e r i a k  -  D o m i n o', &
@@ -1563,8 +1565,9 @@
 !!          XC=(X+X0-GRS*FF/2.0D0+XCOR*1.0D0+DBLE(IX-1)*GRS/DBLE(NX))*CMPX
           XC=(X+X0-GRS*FF/2.0D0+XCOR*0.0D0+DBLE(IX-1)*GRS/DBLE(NX))*CMPX
           WRITE (svg,2000) XC,YC,RY,RY,HXCOL,HXCOL,HXCOL
- 2000     FORMAT ('<rect x="',F10.4,'" y="',F10.4, &
-          '" height="',F10.4,'" width="',F10.4, &
+          !F0.4 to remove leading spaces for chrom based browsers
+ 2000     FORMAT ('<rect x="',F0.4,'" y="',F0.4, &
+          '" height="',F0.4,'" width="',F0.4, &
           '" fill="#',A2,A2,A2,'"/>')
           END IF
         END DO
@@ -1654,6 +1657,30 @@
       RETURN
       END
 !
+! ADDING _PS and _SVG specific versions to fix svg writing naked ' M ' case outside svg path
+      SUBROUTINE VPMOVE_PS(X1,Y1)
+      IMPLICIT NONE
+      INCLUDE 'files.cmn'
+      INCLUDE 'map.cmn'
+      REAL(8) X1,Y1
+      IF (MAKEPS) THEN
+        WRITE(pst,1000) X1+X0, Y1+Y0
+ 1000   FORMAT (F10.4,1X,F10.4,' moveto ')
+      END IF
+      RETURN
+      END
+!
+      SUBROUTINE VPMOVE_SVG(X1,Y1)
+      IMPLICIT NONE
+      INCLUDE 'files.cmn'
+      INCLUDE 'map.cmn'
+      REAL(8) X1,Y1
+      IF (MAKESVG) THEN
+      WRITE(svg,1005) (X1+X0)*CMPX,595.0D0-(Y1+Y0)*CMPX
+ 1005 FORMAT ('M ',F0.4,1X,F0.4)
+      END IF
+      RETURN
+      END
 !***************
       SUBROUTINE VPDRAW(X1,Y1)
       IMPLICIT NONE
@@ -1733,7 +1760,7 @@
       CALL VPSTROKE
       WRITE(pst,1000) XI
  1000 FORMAT (F7.4,' ff ')
-      CALL VPMOVE(X1,Y1)
+      CALL VPMOVE_PS(X1,Y1)
       IF (DABS(THETA).GT.1D-12) THEN
       WRITE (pst,1010) THETA
  1010 FORMAT (F9.3,' rotate')
@@ -1798,9 +1825,10 @@
       WRITE (svg,2000) (X1+X0)*CMPX,595.0D0-(Y1+Y0)*CMPX, &
       -THETA,(X1+X0)*CMPX,595.0D0-(Y1+Y0)*CMPX, &
       SVGFONT(1:J3),GRS*CMPX*1.3715D0,SVGSTRO(1:J1),TEXT(1:J2)
- 2000 FORMAT ('<text x="',F10.4,'" y="',F10.4,'"', &
-      /,' transform="rotate(',F10.4,',',F10.4,',',F10.4,')"', &
-      /,' font-family="''',A,'''" font-size="',F10.4,'"', &
+      !change F10.4 to F0.4 to remove leading spaces, for chromium based browsers
+ 2000 FORMAT ('<text x="',F0.4,'" y="',F0.4,'"', &
+      /,' transform="rotate(',F0.4,',',F0.4,',',F0.4,')"', &
+      /,' font-family="''',A,'''" font-size="',F0.4,'"', &
       /,' style="fill: ',A,'; stroke: none">',A,'</text>')
       END IF
 !!--- end for svg
@@ -1977,13 +2005,14 @@
       IF (LINDASH) THEN
       WRITE (svg,1000) DICKE,STRO(1:J1),VOLL(1:J2), &
       DASH1*CMPX,GAP1*CMPX,DASH2*CMPX,GAP2*CMPX
- 1000 FORMAT ('<path stroke-width="',F10.4,'"', &
+      !change F10.4 to F0.4 to remove leading spaces, for chromium based browsers
+ 1000 FORMAT ('<path stroke-width="',F0.4,'"', &
       ' stroke="',A,'" fill="',A, &
-      '" stroke-dasharray="',4F10.4, &
+      '" stroke-dasharray="',4(F0.4,1X), &
       '" d=" ')
       ELSE
       WRITE (svg,1010) DICKE,STRO(1:J1),VOLL(1:J2)
- 1010 FORMAT ('<path stroke-width="',F10.4,'"', &
+ 1010 FORMAT ('<path stroke-width="',F0.4,'"', &
       ' stroke="',A,'" fill="',A,'" d=" ')
       END IF
 
@@ -2013,9 +2042,10 @@
       CALL LABLA(VOLL,J2)
       WRITE (svg,1000) (X+X0)*CMPX,595.0D0-(Y+Y0)*CMPX, &
       GRS*CMPX/2.0D0,DICKE,STRO(1:J1),VOLL(1:J2)
- 1000 FORMAT ('<circle cx="',F10.4,'" cy="',F10.4, &
-      '" r="',F10.4, &
-      '" stroke-width="',F10.4,'"', &
+      !change F10.4 to F0.4 to remove leading spaces, for chromium based browsers
+ 1000 FORMAT ('<circle cx="',F0.4,'" cy="',F0.4, &
+      '" r="',F0.4, &
+      '" stroke-width="',F0.4,'"', &
       ' stroke="',A,'" fill="',A,'" /> ')
       END IF
       RETURN
